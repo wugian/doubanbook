@@ -5,6 +5,8 @@ import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 
 import com.googlecode.androidannotations.annotations.rest.Rest;
 
+//test for help
+
 @Rest(rootUrl = "https://api.douban.com/v2", converters = {
 		StringHttpMessageConverter.class, SimpleXmlHttpMessageConverter.class })
 public interface IApi {
