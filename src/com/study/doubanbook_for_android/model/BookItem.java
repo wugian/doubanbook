@@ -171,7 +171,7 @@ public class BookItem {
 	}
 
 	public void setTags(List<TagItem> tags) {
-		this.tags = tags;
+		this.tags = tags;   
 	}
 
 	public String getBinding() {
