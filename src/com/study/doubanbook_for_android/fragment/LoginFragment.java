@@ -15,6 +15,6 @@ public class LoginFragment extends BaseFragment {
 	@Override
 	protected void initWidgets() {
 		super.initWidgets();
-		
+
 	}
 }
