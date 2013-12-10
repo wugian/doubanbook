@@ -10,12 +10,14 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+
+import android.util.Log;
 
 public class NetUtils {
 	public static String downloadStr(String urlstr) {
 		StringBuffer result = new StringBuffer();
+		Log.i("NET", "request url:" + urlstr);
 		try {
 			URL url = new URL(urlstr);
 			URLConnection connection = url.openConnection();
@@ -28,8 +30,6 @@ public class NetUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(result.length());
-		System.out.println(result.toString());
 		return result.toString();
 	}
 
@@ -39,8 +39,8 @@ public class NetUtils {
 		HttpClient client = new DefaultHttpClient();
 		HttpParams httpParams = client.getParams();
 		// 设置网络超时参数
-		HttpConnectionParams.setConnectionTimeout(httpParams, 3000);
-		HttpConnectionParams.setSoTimeout(httpParams, 5000);
+		// HttpConnectionParams.setConnectionTimeout(httpParams, 3000);
+		// HttpConnectionParams.setSoTimeout(httpParams, 5000);
 		HttpResponse response = client.execute(new HttpGet(url));
 		HttpEntity entity = response.getEntity();
 		if (entity != null) {

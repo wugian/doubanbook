@@ -1,22 +1,31 @@
 package com.study.doubanbook_for_android.utils;
 
+import java.util.List;
+
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.study.doubanbook_for_android.model.Book;
-import com.study.doubanbook_for_android.model.BookItem;
+import com.study.doubanbook_for_android.activity.BaseActivity;
 import com.study.doubanbook_for_android.model.GeneralResult;
 
 public class ModelUtils {
 	private static String rootUrl = "https://api.douban.com";
 	private static String bookSerchUrl = "/v2/book/search";
 
-	public static String getSerchList(String about) {
-		// ArrayList<Book> book = null;
+	// private static String getAddParm(String baseUrl, List<String> key,
+	// List<String> value) {
+	// return null;
+	// }
+
+	public static String getSerchList(String about, int start) {
 		String result = "";
 		try {
 			result = NetUtils
-					.downloadStr("https://api.douban.com/v2/book/search?q=book");
-			System.out.println(result);
+					.downloadStr("https://api.douban.com/v2/book/search?q="
+							+ about + "&start=" + start + "&count="
+							+ BaseActivity.PAGE_COUNT);
+			Log.i("NET", result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -24,27 +33,17 @@ public class ModelUtils {
 		return result;
 	}
 
-	public static GeneralResult<BookItem> getBookList(String s) {
-		String result = getSerchList(s);
+	public static GeneralResult getBookList(String s, int start) {
+		String result = getSerchList(s, start);
 		Gson gson = new Gson();
-		GeneralResult<BookItem> all = gson.fromJson(result,
-				new TypeToken<GeneralResult<BookItem>>() {
+		GeneralResult all = gson.fromJson(result,
+				new TypeToken<GeneralResult>() {
 				}.getType());
 		if (all != null)
 			return all;
 		else
 			return null;
 
-	}
-
-	public static void getSerchList() {
-		try {
-			String result = NetUtils
-					.downloadStr("https://api.douban.com/v2/book/search?q=book&start=0&count=1");
-			System.out.println(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private static String getUrl() {

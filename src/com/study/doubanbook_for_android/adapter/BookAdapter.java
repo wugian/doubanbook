@@ -1,25 +1,26 @@
 package com.study.doubanbook_for_android.adapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
+import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 import com.study.doubanbook_for_android.model.BookItem;
 
 public class BookAdapter extends BaseAdapter {
 
-	private List<BookItem> books;
+	private ArrayList<BookItem> books;
 	private Context context;
 
-	public BookAdapter(List<BookItem> books, Context context) {
+	public BookAdapter(ArrayList<BookItem> books, Context context) {
 		super();
 		this.books = books;
 		this.context = context;
@@ -27,8 +28,8 @@ public class BookAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// return books.size();
-		return 5;
+		return books.size();
+		// return 5;
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class BookAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		// ImageDownloader imgDownloader = new ImageDownloader(context);
+		ImageDownloader imgDownloader = new ImageDownloader(context);
 		BookItem item = books.get(position);
 		ViewHolder holder = new ViewHolder();
 
@@ -54,30 +55,30 @@ public class BookAdapter extends BaseAdapter {
 			holder.img = (ImageView) convertView.findViewById(R.id.bookImg_iv);
 			holder.title = (TextView) convertView
 					.findViewById(R.id.bookName_tv);
-			holder.author = (LinearLayout) convertView
-					.findViewById(R.id.bookAuthor_lyt);
+			holder.author = (TextView) convertView
+					.findViewById(R.id.bookAuthor_tv);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
 		/* 设置 */
-		// holder.name.setText(item.getOther_name());
-		// holder.msg.setText(item.getMsg());
-		// holder.unread.setText(item.getUnread_count() + "");
+		holder.title.setText(item.getTitle());
+		imgDownloader.download(item.getImage(), holder.img, null);
+		StringBuffer stringBuffer = new StringBuffer();
+		for (String s : item.getAuthor()) {
+			stringBuffer.append(s);
+			stringBuffer.append(" ");
 
-		// try {
-		// imgDownloader.download(infoListItem.getOther_logo(),
-		// holder.img, null);
-		// } catch (Exception e) {
-		// //
-		// }
+		}
+		holder.author.setText(stringBuffer.toString());
+		holder.author.setTextColor(Color.BLUE);
 		return convertView;
 	}
 
 	static class ViewHolder {
 		ImageView img;
 		TextView title;
-		LinearLayout author;
+		TextView author;
 	}
 }

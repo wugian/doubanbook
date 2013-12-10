@@ -16,20 +16,6 @@ import com.study.doubanbook_for_android.utils.ModelUtils;
 @EActivity(R.layout.activity_loading_page)
 public class LoadingPage extends FragmentActivity {
 
-	@AfterViews
-	void test() {
-		new Thread() {
-			public void run() {
-				GeneralResult<BookItem> aal = ModelUtils.getBookList("ss");
-				if (aal != null) {
-					System.out.println(aal.getBooks().size());
-				}
-			};
-		}.start();
-
-	}
-
-	// @AfterViews
 	void init() {
 		// new Thread() {
 		// public void run() {
@@ -72,10 +58,10 @@ public class LoadingPage extends FragmentActivity {
 				+ "'author_intro':'莫提默·J. 艾德勒（1902－2001）以学者、教育家、编辑人等多重面貌享有盛名。除了写作《如何阅读一本书》外，以主编《西方世界的经典人并担任1974年第十五版《大英百科全书》的编辑相异而闻名于世。\n查尔斯·范多伦（1926－）先曾任美国哥伦比亚大学教授。后因故离任，和艾德勒一起工作。一方面襄助艾德勒编辑《大英百科全书》，一方面将本书1940年初版内容大幅度增补改写。','summary':'每本书的封面之下都有一套自己的骨架，作为一个分析阅读的读者，责任就是要找出这个骨架。一本书出现在面前时，肌肉包着骨头，衣服包裹着肌肉，可说是盛装而来。读者用不着揭开它的外衣或是撕去它的肌肉来得到在柔软表皮下的那套骨架，但是一定要用一双X光般的透视眼来看这本书，因为那是了解一本书、掌握其骨架的基础。\n《如何阅读一本书》初版于1940年，1972年大幅增订改写为新版。不懂阅读的人，初探阅读的人，读这本书可以少走冤枉路。对阅读有所体会的人，读这本书可以有更深的印证和领悟。',"
 				+ "'price':'38.00元'}]}";
 		Gson gson = new Gson();
-		GeneralResult<BookItem> all = gson.fromJson(s,
-				new TypeToken<GeneralResult<BookItem>>() {
-				}.getType());
-		System.out.println(all.toString());
+		// GeneralResult<BookItem> all = gson.fromJson(s,
+		// new TypeToken<GeneralResult<BookItem>>() {
+		// }.getType());
+		// System.out.println(all.toString());
 		List<TagItem> tg = gson.fromJson(
 				"[{'count':4881,'name':'阅读','title':'阅读'},"
 						+ "{'count':3561,'name':'阅读方法','title':'阅读方法'},"

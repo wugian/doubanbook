@@ -7,11 +7,12 @@
     <include
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        layout="@layout/bar_all" />
+        layout="@layout/bar_all"
+        android:visibility="gone" />
 
     <include
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         layout="@layout/p2r" />
 
 </LinearLayout>

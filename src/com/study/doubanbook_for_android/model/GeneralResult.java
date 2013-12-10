@@ -2,12 +2,12 @@ package com.study.doubanbook_for_android.model;
 
 import java.util.List;
 
-public class GeneralResult<T> {
+public class GeneralResult {
 
 	private int count;// :1,
 	private int start;// ":0,
 	private int total;// ":1227731,
-	private List<T> books;
+	private List<BookItem> books;
 
 	public int getCount() {
 		return count;
@@ -33,11 +33,11 @@ public class GeneralResult<T> {
 		this.total = total;
 	}
 
-	public List<T> getBooks() {
+	public List<BookItem> getBooks() {
 		return books;
 	}
 
-	public void setBooks(List<T> books) {
+	public void setBooks(List<BookItem> books) {
 		this.books = books;
 	}
 
