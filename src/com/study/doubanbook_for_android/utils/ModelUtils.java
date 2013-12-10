@@ -25,7 +25,7 @@ public class ModelUtils {
 					.downloadStr("https://api.douban.com/v2/book/search?q="
 							+ about + "&start=" + start + "&count="
 							+ BaseActivity.PAGE_COUNT);
-			Log.i("NET", result);
+			Log.i("NET", "request result:"+result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
