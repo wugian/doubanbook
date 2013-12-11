@@ -15,7 +15,7 @@ import com.study.doubanbook_for_android.utils.ModelUtils;
 
 public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	private MessageHandler msgHandler;
-	String serchContent = "book";
+	String serchContent = "";
 	protected int pageIndex = 1;
 	GeneralResult result;
 
@@ -40,7 +40,11 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		Looper looper = Looper.myLooper();
 		msgHandler = new MessageHandler(looper);
 		initP2RLv();
-		fetchData();
+		serchContent = getIntent().getStringExtra("searchContent");
+		if (serchContent.equals("")) {
+			finish();
+		} else
+			fetchData();
 	}
 
 	@Override
@@ -55,7 +59,7 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 					Message message = Message.obtain();
 					message.obj = aal;
 					// 通过Handler发布携带有天 气情况的消息
-					msgHandler.sendMessage(message); 
+					msgHandler.sendMessage(message);
 				}
 			}
 		}.start();

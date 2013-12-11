@@ -3,6 +3,7 @@ package com.study.doubanbook_for_android.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 public class BaseActivity extends Activity {
 
@@ -12,10 +13,6 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		logD("TTT", "base Activity oncreate");
-
-		findViews();
-		initWidgets();
-		initListners();
 	}
 
 	void findViews() {
@@ -38,4 +35,7 @@ public class BaseActivity extends Activity {
 		Log.d(tag, msg);
 	}
 
+	String getText(TextView tv) {
+		return tv.getText().toString().trim();
+	}
 }

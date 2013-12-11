@@ -1,12 +1,18 @@
 package com.study.doubanbook_for_android.model;
 
+import java.io.Serializable;
+
 /**
  * subclass of book item
  * 
  * @author tezuka-pc
  * 
  */
-public class TagItem {
+public class TagItem implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9069698144219203836L;
 	private int count;// :2416,"
 	private String name;// ":"小王子
 	private String title;

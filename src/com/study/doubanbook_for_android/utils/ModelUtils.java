@@ -1,7 +1,5 @@
 package com.study.doubanbook_for_android.utils;
 
-import java.util.List;
-
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -25,11 +23,10 @@ public class ModelUtils {
 					.downloadStr("https://api.douban.com/v2/book/search?q="
 							+ about + "&start=" + start + "&count="
 							+ BaseActivity.PAGE_COUNT);
-			Log.i("NET", "request result:"+result);
+			Log.i("NET", "request result:" + result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return result;
 	}
 

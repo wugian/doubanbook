@@ -1,12 +1,18 @@
 package com.study.doubanbook_for_android.model;
 
+import java.io.Serializable;
+
 /**
  * subclass of book item
  * 
  * @author tezuka-pc
  * 
  */
-public class ImageItem {
+public class ImageItem implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6298352661736246847L;
 	private String small;// "http:\/\/img1.douban.com\/spic\/s1001902.jpg",
 	private String large;// "http:\/\/img1.douban.com\/lpic\/s1001902.jpg",
 	private String medium;// "http:\/\/img1.douban.com\/mpic\/s1001902.jpg"

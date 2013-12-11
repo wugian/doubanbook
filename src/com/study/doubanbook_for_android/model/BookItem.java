@@ -1,8 +1,13 @@
 package com.study.doubanbook_for_android.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BookItem {
+public class BookItem implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7594567088657327459L;
 	private int id;// :"1003078",douban id
 	private String isbn10;// :"7505715666",book isbn10
 	private String isbn13;// :"9787505715660",

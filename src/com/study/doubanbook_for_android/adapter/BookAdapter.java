@@ -64,6 +64,7 @@ public class BookAdapter extends BaseAdapter {
 
 		/* 设置 */
 		holder.title.setText(item.getTitle());
+		// TODO GET THE image's size
 		imgDownloader.download(item.getImage(), holder.img, null);
 		StringBuffer stringBuffer = new StringBuffer();
 		for (String s : item.getAuthor()) {

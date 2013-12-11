@@ -1,12 +1,18 @@
 package com.study.doubanbook_for_android.model;
 
+import java.io.Serializable;
+
 /**
  * subclass of bookItem
  * 
  * @author tezuka-pc
  * 
  */
-public class Rating {
+public class Rating implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7981289183680766588L;
 	private int max;
 	private int numRaters;
 	private double average;

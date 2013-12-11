@@ -6,5 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="comment">评论</string>
     <string name="some_describe">in this layout,you can put what you want display</string>
+    <string name="serch_book_hint">书名  作者</string>
+    <string name="book">读书</string>
+    <string name="reader">读者</string>
 
 </resources>

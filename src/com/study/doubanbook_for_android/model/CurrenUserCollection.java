@@ -1,7 +1,13 @@
 package com.study.doubanbook_for_android.model;
 
-public class CurrenUserCollection {
+import java.io.Serializable;
 
+public class CurrenUserCollection implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6118583398582823347L;
 	private String status;// ":"read",
 	private Rating rating;
 	private String updated;// ":"2012-11-2012:08:04",
