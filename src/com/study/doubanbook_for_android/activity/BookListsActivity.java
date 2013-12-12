@@ -1,22 +1,25 @@
 package com.study.doubanbook_for_android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.adapter.BookAdapter;
+import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.GeneralResult;
-import com.study.doubanbook_for_android.utils.ModelUtils;
 
 public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	private MessageHandler msgHandler;
-	String serchContent = "";
-	protected int pageIndex = 1;
+	String searchContent = "";
+	protected int pageIndex = 0;
 	GeneralResult result;
 
 	class MessageHandler extends Handler {
@@ -40,8 +43,8 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		Looper looper = Looper.myLooper();
 		msgHandler = new MessageHandler(looper);
 		initP2RLv();
-		serchContent = getIntent().getStringExtra("searchContent");
-		if (serchContent.equals("")) {
+		searchContent = getIntent().getStringExtra("searchContent");
+		if (searchContent.equals("")) {
 			finish();
 		} else
 			fetchData();
@@ -52,13 +55,17 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		super.fetchData();
 		new Thread() {
 			public void run() {
-				GeneralResult aal = ModelUtils.getBookList(serchContent,
-						pageIndex * PAGE_COUNT);
+				DoubanBusiness db = new DoubanBusiness();
+				GeneralResult aal = db.getSearchList(searchContent, pageIndex
+						* PAGE_COUNT + 1, PAGE_COUNT);/*
+													 * ModelUtils.getBookList(
+													 * searchContent, pageIndex
+													 * * PAGE_COUNT);
+													 */
 				if (aal != null) {
 					pageIndex++;
 					Message message = Message.obtain();
 					message.obj = aal;
-					// 通过Handler发布携带有天 气情况的消息
 					msgHandler.sendMessage(message);
 				}
 			}
@@ -74,5 +81,17 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 			refreshCompleted();
 		}
 
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
+		super.onItemClick(arg0, arg1, position, arg3);
+		Intent intent = new Intent(this, BookDetailActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("bookItem", dataList.get(position - 1));
+		intent.putExtras(bundle);
+
+		startActivity(intent);
 	}
 }

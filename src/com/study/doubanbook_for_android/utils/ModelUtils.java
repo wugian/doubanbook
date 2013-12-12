@@ -1,5 +1,7 @@
 package com.study.doubanbook_for_android.utils;
 
+import java.net.URLEncoder;
+
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -11,18 +13,15 @@ public class ModelUtils {
 	private static String rootUrl = "https://api.douban.com";
 	private static String bookSerchUrl = "/v2/book/search";
 
-	// private static String getAddParm(String baseUrl, List<String> key,
-	// List<String> value) {
-	// return null;
-	// }
-
-	public static String getSerchList(String about, int start) {
+	public static String getSerchList(String searchContent, int start) {
 		String result = "";
 		try {
-			result = NetUtils
-					.downloadStr("https://api.douban.com/v2/book/search?q="
-							+ about + "&start=" + start + "&count="
-							+ BaseActivity.PAGE_COUNT);
+			// TODO 将中文GBK编码转化成UTF-8编成,否则产生URL乱码
+			String cur = URLEncoder.encode(searchContent, "UTF-8");
+
+			result = NetUtils.downloadStr(rootUrl + bookSerchUrl + "?" + "q="
+					+ cur + "&start=" + (start + 1) + "&count="
+					+ BaseActivity.PAGE_COUNT);
 			Log.i("NET", "request result:" + result);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,10 +40,6 @@ public class ModelUtils {
 		else
 			return null;
 
-	}
-
-	private static String getUrl() {
-		return rootUrl + bookSerchUrl;
 	}
 
 }
