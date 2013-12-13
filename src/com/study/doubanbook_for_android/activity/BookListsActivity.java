@@ -44,10 +44,10 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		msgHandler = new MessageHandler(looper);
 		initP2RLv();
 		searchContent = getIntent().getStringExtra("searchContent");
-		if (searchContent.equals("")) {
-			finish();
-		} else
-			fetchData();
+		// if (searchContent.equals("")) {
+		// finish();
+		// } else
+		fetchData();
 	}
 
 	@Override
@@ -56,12 +56,9 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		new Thread() {
 			public void run() {
 				DoubanBusiness db = new DoubanBusiness();
-				GeneralResult aal = db.getSearchList(searchContent, pageIndex
-						* PAGE_COUNT + 1, PAGE_COUNT);/*
-													 * ModelUtils.getBookList(
-													 * searchContent, pageIndex
-													 * * PAGE_COUNT);
-													 */
+				GeneralResult aal = null;
+				aal = db.getSearchList(searchContent, pageIndex * PAGE_COUNT
+						+ 1, PAGE_COUNT);
 				if (aal != null) {
 					pageIndex++;
 					Message message = Message.obtain();
