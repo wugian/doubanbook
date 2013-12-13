@@ -17,4 +17,14 @@ public class EncodeUtils {
 		}
 		return str;
 	}
+
+	public static String getEncodedStr(String s) {
+		try {
+			return URLEncoder.encode(s, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

@@ -2,33 +2,48 @@ package com.study.doubanbook_for_android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.adapter.BookAdapter;
-import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.GeneralResult;
 
-public class BookListsActivity extends BaseP2RActivity<BookItem> {
-
+public class CopyOfBookListsActivity extends BaseP2RActivity<BookItem> {
+	private MessageHandler msgHandler;
 	String searchContent = "";
 	protected int pageIndex = 0;
 	GeneralResult result;
 	DoubanBusiness db = new DoubanBusiness();
+
+	class MessageHandler extends Handler {
+		public MessageHandler(Looper looper) {
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			// 处理收到的消 息，把天气信息显示在title上
+			result = (GeneralResult) (msg.obj);
+			addData(result.getBooks());
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.f_comment_list);
 		adapter = new BookAdapter(dataList, this);
+		Looper looper = Looper.myLooper();
+		msgHandler = new MessageHandler(looper);
 		initP2RLvAndThread();
 		searchContent = getIntent().getStringExtra("searchContent");
 		// if (searchContent.equals("")) {
@@ -38,39 +53,19 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	}
 
 	@Override
-	public void selfHandleMsg(Message msg) {
-		super.selfHandleMsg(msg);
-		int arg1 = msg.arg1;
-		switch (arg1) {
-		case SUCCESS:
-			result = (GeneralResult) (msg.obj);
-			addData(result.getBooks());
-			break;
-		case FAILURE:
-			WrongMsg w = (WrongMsg) (msg.obj);
-			Toast.makeText(this,
-					w.getCode() + " " + w.getMsg() + " " + w.getRequest(),
-					Toast.LENGTH_SHORT).show();
-			finish();
-			break;
-		default:
-			break;
-		}
-	}
-
-	@Override
 	public void fetchData() {
 		super.fetchData();
 		db.getSearchList(searchContent, pageIndex * PAGE_COUNT + 1,
 				new AsynCallback<GeneralResult>() {
 					public void onSuccess(GeneralResult data) {
 						pageIndex++;
-						sendMessage(data, SUCCESS);
+						Message message = Message.obtain();
+						message.obj = data;
+						msgHandler.sendMessage(message);
 					};
 
 					public void onFailure(
 							com.study.doubanbook_for_android.api.WrongMsg caught) {
-						sendMessage(caught, FAILURE);
 					};
 				});
 

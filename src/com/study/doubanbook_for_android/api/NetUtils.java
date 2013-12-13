@@ -59,7 +59,7 @@ public class NetUtils {
 		HttpResponse httpResponse = null;
 		StringBuffer result = new StringBuffer();
 		switch (method) {
-		case 3:
+		case GET:
 			HttpGet httpGet = new HttpGet(getUrlStr(urls, values, keys));
 			try {
 				httpResponse = getNewHttpClient().execute(httpGet);
@@ -87,17 +87,18 @@ public class NetUtils {
 				}
 			} else {
 				// get the wrong msg will return upstairs will charge
-				// log out the status code and descirbe
+				// log out the status code and describe
 				try {
-					// log out the result
+					// log out the result,in business will be received by
+					// wrongMsg model
 					result = new StringBuffer(EntityUtils.toString(httpResponse
 							.getEntity()));
 					Log.d("NET", result.toString());
 				} catch (org.apache.http.ParseException e) {
-					// TODO Auto-generated catch block
+					Log.d("NET", e.getMessage());
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					Log.d("NET", e.getMessage());
 					e.printStackTrace();
 				}
 				Log.d("NET", "status code:  "
@@ -113,7 +114,7 @@ public class NetUtils {
 		/**
 		 * 这个不用使用SSL协议的客服端认证,以前的使用方便现在放弃 updatatime: 2013-12-13
 		 */
-		case GET:
+		case 3 /* old get */:
 			try {
 				URL url = new URL(getUrlStr(urls, values, keys));
 				URLConnection connection = url.openConnection();
@@ -145,7 +146,7 @@ public class NetUtils {
 		if (keys.size() >= 1) {
 			// params start
 			urlBuffer.append("?");
-			// ensure the right url encode
+			// ensure the right Url encode
 			urlBuffer.append(keys.get(0)).append("=").append(values.get(0));
 			for (int i = 1; i < keys.size(); i++) {
 				// another key value pair
@@ -155,19 +156,6 @@ public class NetUtils {
 		}
 		Log.d("NET", urlBuffer.toString());
 		return urlBuffer.toString();
-	}
-
-	@SuppressWarnings("unused")
-	// current not must need
-	private static String getEncodedStr(String s) {
-		try {
-			return URLEncoder.encode(s, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch
-			Log.d("NET", e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	/**

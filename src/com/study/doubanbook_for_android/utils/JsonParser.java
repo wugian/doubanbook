@@ -21,6 +21,12 @@ public class JsonParser {
 		return gson.fromJson(json, token.getType());
 	}
 
+	public static <T> T getFromJsonstr(String json, TypeToken<?> token) {
+		Gson gson = new Gson();
+		// ArrayList<T> all = gson.fromJson(json, token.getType());
+		return gson.fromJson(json, token.getType());
+	}
+
 	/**
 	 * ��ArrayList<TYPE>ת����JSON��ʽ���ַ�
 	 * 

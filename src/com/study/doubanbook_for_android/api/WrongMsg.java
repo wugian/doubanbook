@@ -1,6 +1,10 @@
 package com.study.doubanbook_for_android.api;
 
-public class WrongMsg {
+public class WrongMsg extends Throwable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7457964260418110305L;
 	// "msg":"uri_not_found",
 	// "code":1001,
 	// "request":"GET \/v2\/photo\/132"
