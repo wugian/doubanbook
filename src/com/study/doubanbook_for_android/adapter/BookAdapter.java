@@ -3,9 +3,6 @@ package com.study.doubanbook_for_android.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
-import com.study.doubanbook_for_android.imagedownloader.ImageDownloaderListener;
 import com.study.doubanbook_for_android.model.BookItem;
 
 public class BookAdapter extends BaseAdapter {

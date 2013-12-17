@@ -6,16 +6,19 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.security.KeyStore;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -23,6 +26,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -31,8 +35,6 @@ import org.apache.http.util.EntityUtils;
 
 import android.net.ParseException;
 import android.util.Log;
-
-import com.study.doubanbook_for_android.model.URLMananeger;
 
 public class NetUtils {
 
@@ -93,7 +95,6 @@ public class NetUtils {
 					// wrongMsg model
 					result = new StringBuffer(EntityUtils.toString(httpResponse
 							.getEntity()));
-					Log.d("NET", result.toString());
 				} catch (org.apache.http.ParseException e) {
 					Log.d("NET", e.getMessage());
 					e.printStackTrace();
@@ -108,7 +109,46 @@ public class NetUtils {
 			}
 			break;
 		case POST:
-
+			HttpPost httpPost = new HttpPost(urls);
+			try {
+				// 设置httpPost请求参数
+				String tag;
+				Log.d("NET", "POST " + urls);
+				httpPost.setEntity(new UrlEncodedFormEntity(getNameValuePair(
+						keys, values), HTTP.UTF_8));
+				httpResponse = new DefaultHttpClient().execute(httpPost);
+				// System.out.println(httpResponse.getStatusLine().getStatusCode());
+				if (httpResponse.getStatusLine().getStatusCode() == 200) {
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+				} else {
+					// get the wrong msg will return upstairs will charge
+					// log out the status code and describe
+					try {
+						// log out the result,in business will be received by
+						// wrongMsg model
+						result = new StringBuffer(
+								EntityUtils.toString(httpResponse.getEntity()));
+						Log.d("NET", result.toString());
+					} catch (org.apache.http.ParseException e) {
+						Log.d("NET", e.getMessage());
+						e.printStackTrace();
+					} catch (IOException e) {
+						Log.d("NET", e.getMessage());
+						e.printStackTrace();
+					}
+					Log.d("NET", "status code:  "
+							+ httpResponse.getStatusLine().getStatusCode());
+					Log.d("NET", "status describe:  "
+							+ httpResponse.getStatusLine().getReasonPhrase());
+				}
+			} catch (ClientProtocolException e) {
+				Log.d("NET", e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.d("NET", e.getMessage());
+				e.printStackTrace();
+			}
 			break;
 
 		/**
@@ -131,31 +171,40 @@ public class NetUtils {
 		default:
 			break;
 		}
+		Log.d("NET", result.toString());
 		return result.toString();
 	}
 
 	// ------other basic method
-	private static String getBasicUrl(String url) {
-		return URLMananeger.ROOT_ULR + url;
-	}
-
+	/**
+	 * attach params to url
+	 * 
+	 * @param urls
+	 * @param values
+	 * @param keys
+	 * @return
+	 */
 	private static String getUrlStr(String urls, List<String> values,
 			List<String> keys) {
-		StringBuffer urlBuffer = new StringBuffer();
-		urlBuffer.append(getBasicUrl(urls));
+		StringBuffer urlBuffer = new StringBuffer(urls);
 		if (keys.size() >= 1) {
 			// params start
 			urlBuffer.append("?");
 			// ensure the right Url encode
 			urlBuffer.append(keys.get(0)).append("=").append(values.get(0));
+			Log.d("NET",
+					"parms" + (1) + ":" + keys.get(0) + "=" + values.get(0));
 			for (int i = 1; i < keys.size(); i++) {
-				// another key value pair
+				// another key value pair and show the params
 				urlBuffer.append("&");
 				urlBuffer.append(keys.get(i)).append("=").append(values.get(i));
+				Log.d("NET", "parms" + (i + 1) + ":" + keys.get(i) + "="
+						+ values.get(i));
 			}
 		}
-		Log.d("NET", urlBuffer.toString());
+		Log.d("NET", "url:" + urlBuffer.toString());
 		return urlBuffer.toString();
+
 	}
 
 	/**
@@ -193,5 +242,18 @@ public class NetUtils {
 		} catch (Exception e) {
 			return new DefaultHttpClient();
 		}
+	}
+
+	private static List<NameValuePair> getNameValuePair(List<String> keys,
+			List<String> values) {
+		// 设置HTTP POST请求参数必须用NameValuePair对象
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		if (keys != null)
+			for (int i = 0; i < keys.size(); i++) {
+				params.add(new BasicNameValuePair(keys.get(i), values.get(i)));
+				Log.d("NET", "parms" + (i + 1) + ":" + keys.get(i) + "="
+						+ values.get(i));
+			}
+		return params;
 	}
 }

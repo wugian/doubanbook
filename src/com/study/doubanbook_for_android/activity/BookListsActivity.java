@@ -31,16 +31,25 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		adapter = new BookAdapter(dataList, this);
 		initP2RLvAndThread();
 		searchContent = getIntent().getStringExtra("searchContent");
-		// if (searchContent.equals("")) {
-		// finish();
-		// } else
+
 		fetchData();
 	}
 
 	@Override
 	public void selfHandleMsg(Message msg) {
-		super.selfHandleMsg(msg);
 		int arg1 = msg.arg1;
+		// if (SUCCESS == arg1) {
+		// result = (GeneralResult) (msg.obj);
+		// addData(result.getBooks());
+		// }
+		// if (arg1 == FAILURE) {
+		// WrongMsg w = (WrongMsg) (msg.obj);
+		// Toast.makeText(this,
+		// w.getCode() + " " + w.getMsg() + " " + w.getRequest(),
+		// Toast.LENGTH_SHORT).show();
+		//
+		// }
+
 		switch (arg1) {
 		case SUCCESS:
 			result = (GeneralResult) (msg.obj);

@@ -24,8 +24,7 @@ public class DoubanBusiness {
 			final AsynCallback<GeneralResult> callback) {
 		new Thread() {
 			public void run() {
-				boolean isRightModle = false;
-				WrongMsg wrongMsg = null;
+				WrongMsg wrongMsg = new WrongMsg();
 				GeneralResult result = null;
 				Gson gson = new Gson();
 				String s = "";
@@ -48,24 +47,32 @@ public class DoubanBusiness {
 
 				callback.onStart();
 				s = NetUtils.getHttpEntity(
-						URLMananeger.BOOK_WRITER_SEARCHR_ULR, 3, keys, values);
-				Log.d("NET", s);
-
-				try {
-					wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
-					}.getType());
+						getBasicUrl(URLMananeger.BOOK_WRITER_SEARCHR_ULR),
+						NetUtils.GET, keys, values);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+					Log.d("NET", "wrongmsg model");
 					callback.onFailure(wrongMsg);
-				} catch (Exception e) {
-					isRightModle = true;
-				}
-				if (!isRightModle) {
+				} else {
+					Log.d("NET", "right model");
 					result = gson.fromJson(s, new TypeToken<GeneralResult>() {
 					}.getType());
 					callback.onSuccess(result);
 				}
 				callback.onDone();
-
 			};
 		}.start();
 	}
+
+	/**
+	 * get request url
+	 * 
+	 * @param url
+	 * @return
+	 */
+	private static String getBasicUrl(String url) {
+		return URLMananeger.ROOT_ULR + url;
+	}
+
 }
