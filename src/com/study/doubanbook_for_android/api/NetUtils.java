@@ -40,6 +40,15 @@ public class NetUtils {
 
 	public static final int GET = 0;
 	public static final int POST = 1;
+	private String actoken;
+
+	public String getActoken() {
+		return actoken;
+	}
+
+	public void setActoken(String actoken) {
+		this.actoken = actoken;
+	}
 
 	/**
 	 * 如果不是返回服务端,或者客服端的错误则在日志里面查看具体错误,用的是NET作为TAG
@@ -114,6 +123,131 @@ public class NetUtils {
 				// 设置httpPost请求参数
 				String tag;
 				Log.d("NET", "POST " + urls);
+				// "Authorization: Bearer a14afef0f66fcffce3e0fcd2e34f6ff4"
+				httpPost.addHeader("Authorization: Bearer ", urls);
+				httpPost.setEntity(new UrlEncodedFormEntity(getNameValuePair(
+						keys, values), HTTP.UTF_8));
+				httpResponse = new DefaultHttpClient().execute(httpPost);
+				// System.out.println(httpResponse.getStatusLine().getStatusCode());
+				if (httpResponse.getStatusLine().getStatusCode() == 200) {
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+				} else {
+					// get the wrong msg will return upstairs will charge
+					// log out the status code and describe
+					try {
+						// log out the result,in business will be received by
+						// wrongMsg model
+						result = new StringBuffer(
+								EntityUtils.toString(httpResponse.getEntity()));
+						Log.d("NET", result.toString());
+					} catch (org.apache.http.ParseException e) {
+						Log.d("NET", e.getMessage());
+						e.printStackTrace();
+					} catch (IOException e) {
+						Log.d("NET", e.getMessage());
+						e.printStackTrace();
+					}
+					Log.d("NET", "status code:  "
+							+ httpResponse.getStatusLine().getStatusCode());
+					Log.d("NET", "status describe:  "
+							+ httpResponse.getStatusLine().getReasonPhrase());
+				}
+			} catch (ClientProtocolException e) {
+				Log.d("NET", e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.d("NET", e.getMessage());
+				e.printStackTrace();
+			}
+			break;
+
+		/**
+		 * 这个不用使用SSL协议的客服端认证,以前的使用方便现在放弃 updatatime: 2013-12-13
+		 */
+		case 3 /* old get */:
+			try {
+				URL url = new URL(getUrlStr(urls, values, keys));
+				URLConnection connection = url.openConnection();
+				String line;
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						connection.getInputStream(), "UTF-8"));
+				while ((line = in.readLine()) != null) {
+					result.append(line);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		default:
+			break;
+		}
+		Log.d("NET", result.toString());
+		return result.toString();
+	}
+
+	public static String getHttpPost(String urls, List<String> keys,
+			List<String> values, String code) {
+
+		HttpResponse httpResponse = null;
+		StringBuffer result = new StringBuffer();
+		int method = POST;
+		switch (method) {
+		case GET:
+			HttpGet httpGet = new HttpGet(getUrlStr(urls, values, keys));
+			try {
+				httpResponse = getNewHttpClient().execute(httpGet);
+			} catch (ClientProtocolException e) {
+				Log.d("NET", e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.d("NET", e.getMessage());
+				e.printStackTrace();
+			}
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				try {
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+					// log out the result
+					Log.d("NET", result.toString());
+				} catch (ParseException e) {
+					// log out the exception
+					Log.d("NET", e.getMessage());
+					e.printStackTrace();
+				} catch (IOException e) {
+					Log.d("NET", e.getMessage());
+					e.printStackTrace();
+				}
+			} else {
+				// get the wrong msg will return upstairs will charge
+				// log out the status code and describe
+				try {
+					// log out the result,in business will be received by
+					// wrongMsg model
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+				} catch (org.apache.http.ParseException e) {
+					Log.d("NET", e.getMessage());
+					e.printStackTrace();
+				} catch (IOException e) {
+					Log.d("NET", e.getMessage());
+					e.printStackTrace();
+				}
+				Log.d("NET", "status code:  "
+						+ httpResponse.getStatusLine().getStatusCode());
+				Log.d("NET", "status describe:  "
+						+ httpResponse.getStatusLine().getReasonPhrase());
+			}
+			break;
+		case POST:
+			HttpPost httpPost = new HttpPost(urls);
+			try {
+				// 设置httpPost请求参数
+				String tag;
+				Log.d("NET", "POST " + urls);
+				// "Authorization: Bearer a14afef0f66fcffce3e0fcd2e34f6ff4"
+				httpPost.addHeader("Authorization: Bearer ", code);
 				httpPost.setEntity(new UrlEncodedFormEntity(getNameValuePair(
 						keys, values), HTTP.UTF_8));
 				httpResponse = new DefaultHttpClient().execute(httpPost);

@@ -38,4 +38,11 @@ public class AcToken {
 		this.douban_user_id = douban_user_id;
 	}
 
+	@Override
+	public String toString() {
+		return "AcToken [access_token=" + access_token + ", expires_in="
+				+ expires_in + ", refresh_token=" + refresh_token
+				+ ", douban_user_id=" + douban_user_id + "]";
+	}
+
 }

@@ -6,6 +6,9 @@ import java.util.List;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -18,11 +21,54 @@ import com.google.gson.reflect.TypeToken;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.R.id;
 import com.study.doubanbook_for_android.api.NetUtils;
-import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.LoginBusiness;
 import com.study.doubanbook_for_android.model.AcToken;
 
 public class TestActivity extends BaseActivity {
+
+	String testUrl = "https://api.douban.com/v2/book/72719211/collection";
+	// thread
+	private MessageHandler msgHandler;
+
+	class MessageHandler extends Handler {
+		public MessageHandler(Looper looper) {
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			// 处理收到的消 息，把天气信息显示在title上
+			AcToken result = (AcToken) (msg.obj);
+			Log.d("NET", result.toString());
+			System.out.println();
+			testPost(result.getAccess_token());
+
+		}
+	}
+
+	/**
+	 * 利用MESSAGEHANDLER发送消息到UI线程
+	 * 
+	 * @param b
+	 * @param status
+	 */
+	void sendMessage(Object b) {
+		Message message = Message.obtain();
+		message.obj = b;
+		msgHandler.sendMessage(message);
+	}
+
+	public void testPost(final String string) {
+		new Thread() {
+			public void run() {
+				System.out.println(NetUtils.getHttpPost(testUrl, null, null,
+						string));// (testUrl
+				/* + "&access_token=" + string */// , NetUtils.POST,
+				// null, null));
+			};
+		}.start();
+
+	}
 
 	WebView webView;
 	private String url1 = "https://www.douban.com/service/auth2/auth";
@@ -45,6 +91,10 @@ public class TestActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading_page);
 
+		// init msgHandler
+		Looper looper = Looper.myLooper();
+		msgHandler = new MessageHandler(looper);
+
 		webView = (WebView) findViewById(id.webView);
 		WebSettings webSettings = webView.getSettings();
 		webSettings.setJavaScriptEnabled(true); // Soutenir Javascript
@@ -57,11 +107,8 @@ public class TestActivity extends BaseActivity {
 				handler.proceed();
 			}
 		});
-		new Thread() {
-			public void run() {
-				webView.loadUrl("https://www.douban.com/service/auth2/auth?client_id=09561172f001e8251c023458d005b86f&redirect_uri=http://sns.whalecloud.com/douban/callback&response_type=code");
-			};
-		}.start();
+
+		webView.loadUrl("https://www.douban.com/service/auth2/auth?client_id=09561172f001e8251c023458d005b86f&redirect_uri=http://sns.whalecloud.com/douban/callback&response_type=code");
 
 		// webView.
 		final LoginBusiness lb = new LoginBusiness();
@@ -81,10 +128,6 @@ public class TestActivity extends BaseActivity {
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			// TODO Auto-generated method stub
 			super.onPageStarted(view, url, favicon);
-		}
-
-		private void OnCompletionListener() {
-
 		}
 
 		/**
@@ -125,6 +168,11 @@ public class TestActivity extends BaseActivity {
 	List<String> keys1 = new ArrayList<String>();
 	List<String> values1 = new ArrayList<String>();
 
+	/**
+	 * 2.handle authcode get AcToken
+	 * 
+	 * @param code2
+	 */
 	public void handleAuthCode(String code2) {
 
 		// keys
@@ -133,7 +181,7 @@ public class TestActivity extends BaseActivity {
 		keys1.add("redirect_uri");
 		// this two may changed
 		keys1.add("grant_type");
-		//code may change to a refresh_token
+		// code may change to a refresh_token
 		keys1.add("code");
 		// values
 		values1.add(client_id);
@@ -146,16 +194,12 @@ public class TestActivity extends BaseActivity {
 			public void run() {
 				String re = NetUtils.getHttpEntity(url2, NetUtils.POST, keys1,
 						values1);
-				handleAcToken(re);
+				Gson gson = new Gson();
+				AcToken acToken = gson.fromJson(re, new TypeToken<AcToken>() {
+				}.getType());
+				sendMessage(acToken);
 			};
 		}.start();
-	}
-
-	protected void handleAcToken(String re) {
-		Gson gson = new Gson();
-		AcToken acToken = gson.fromJson(re, new TypeToken<WrongMsg>() {
-		}.getType());
-		
 	}
 
 	/**
