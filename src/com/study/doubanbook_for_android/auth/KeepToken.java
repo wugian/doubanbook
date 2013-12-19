@@ -15,14 +15,18 @@ import android.content.SharedPreferences.Editor;
  */
 public class KeepToken {
 	private static final String PREFERENCES_NAME = "douban_android_sdk";
-	
+
 	/**
 	 * 保存accesstoken到SharedPreferences
-	 * @param context Activity 上下文环境
-	 * @param token AccessToken
+	 * 
+	 * @param context
+	 *            Activity 上下文环境
+	 * @param token
+	 *            AccessToken
 	 */
 	public static void keepAccessToken(Context context, AccessToken token) {
-		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
+		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
+				Context.MODE_APPEND);
 		Editor editor = pref.edit();
 		editor.putString("access_token", token.getToken());
 		editor.putLong("expires_time", token.getExpiresTime());
@@ -30,25 +34,30 @@ public class KeepToken {
 		editor.putString("douban_user_id", token.getDoubanUserId());
 		editor.commit();
 	}
+
 	/**
 	 * 清空sharepreference
+	 * 
 	 * @param context
 	 */
-	public static void clear(Context context){
-	    SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
-	    Editor editor = pref.edit();
-	    editor.clear();
-	    editor.commit();
+	public static void clear(Context context) {
+		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
+				Context.MODE_APPEND);
+		Editor editor = pref.edit();
+		editor.clear();
+		editor.commit();
 	}
 
 	/**
 	 * 从SharedPreferences读取accessstoken
+	 * 
 	 * @param context
 	 * @return AccessToken
 	 */
-	public static AccessToken readAccessToken(Context context){
+	public static AccessToken readAccessToken(Context context) {
 		AccessToken token = new AccessToken();
-		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
+		SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
+				Context.MODE_APPEND);
 		token.setToken(pref.getString("access_token", ""));
 		token.setExpiresTime(pref.getLong("expires_time", 0));
 		token.setRefreshToken(pref.getString("refresh_token", ""));
