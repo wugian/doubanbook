@@ -59,7 +59,7 @@ public class DoubanDialog extends Dialog {
 			@Override
 			public boolean onKey(DialogInterface dialog, int keyCode,
 					KeyEvent event) {
-				//onBack();
+				// onBack();
 				return false;
 			}
 

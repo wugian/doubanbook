@@ -17,7 +17,7 @@ import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.Annotations;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
 
-public class BookNoteActivity extends BaseP2RActivity<Annotations> {
+public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 
 	String bookid = null;
 	GeneralNoteResult result;
@@ -41,6 +41,8 @@ public class BookNoteActivity extends BaseP2RActivity<Annotations> {
 		switch (arg1) {
 		case SUCCESS:
 			result = (GeneralNoteResult) (msg.obj);
+			if (result.getAnnotations().size() == 0)
+				finish();
 			addData(result.getAnnotations());
 			break;
 		case FAILURE:
@@ -76,9 +78,10 @@ public class BookNoteActivity extends BaseP2RActivity<Annotations> {
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		super.onRefresh(refreshView);
-		if (pageIndex < pageIndex * PAGE_COUNT)
+		if (pageIndex < pageIndex * PAGE_COUNT) {
 			fetchData();
-		else {
+			refreshCompleted();
+		} else {
 			refreshCompleted();
 		}
 

@@ -86,9 +86,10 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		super.onRefresh(refreshView);
-		if (pageIndex < pageIndex * PAGE_COUNT)
+		if (pageIndex < pageIndex * PAGE_COUNT) {
 			fetchData();
-		else {
+			refreshCompleted();
+		} else {
 			refreshCompleted();
 		}
 

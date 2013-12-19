@@ -1,5 +1,8 @@
 package com.study.doubanbook_for_android.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
+import com.study.doubanbook_for_android.api.NetUtils;
 import com.study.doubanbook_for_android.model.BookItem;
 
 public class BookDetailActivity extends BaseActivity {
@@ -23,6 +27,7 @@ public class BookDetailActivity extends BaseActivity {
 	TextView grade;
 	Button comment;
 	private String bookid;
+	private Button collect_btn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class BookDetailActivity extends BaseActivity {
 		publisher = (TextView) findViewById(R.id.bookPublisher_tv);
 		grade = (TextView) findViewById(R.id.bookGrade_tv);
 		comment = (Button) findViewById(R.id.comment_btn);
+		collect_btn = (Button) findViewById(R.id.collect_btn);
 	}
 
 	@Override
@@ -90,9 +96,29 @@ public class BookDetailActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context, BookNoteActivity.class);
+				Intent intent = new Intent(context, BookNoteListActivity.class);
 				intent.putExtra("bookid", bookid);
 				startActivity(intent);
+			}
+		});
+		collect_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// collect url https://api.douban.com/v2/book/:id/collection
+				new Thread() {
+					public void run() {
+						List<String> keys = new ArrayList<String>();
+						List<String> values = new ArrayList<String>();
+						keys.add("status");
+						values.add("wish");
+						String s = NetUtils.getHttpEntity(
+								"https://api.douban.com/v2/book/" + bookid
+										+ "/collection", NetUtils.POST, keys,
+								values, context);
+						System.out.println(s);
+					};
+				}.start();
 			}
 		});
 	}

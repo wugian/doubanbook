@@ -1,5 +1,7 @@
 package com.study.doubanbook_for_android.activity;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +14,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
+import com.study.doubanbook_for_android.api.NetUtils;
+import com.study.doubanbook_for_android.auth.Douban;
+import com.study.doubanbook_for_android.auth.DoubanDialogError;
+import com.study.doubanbook_for_android.auth.DoubanException;
+import com.study.doubanbook_for_android.auth.DoubanOAuthListener;
+import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
+import com.study.doubanbook_for_android.auth.Token;
 
 public class SerchImputActivity extends BaseActivity {
 
@@ -19,6 +28,7 @@ public class SerchImputActivity extends BaseActivity {
 	Button search_btn;
 	TextView clear_tv;
 	private Context context;
+	private Button authBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,8 @@ public class SerchImputActivity extends BaseActivity {
 		search_et = (EditText) this.findViewById(R.id.serchContent_et);
 		search_btn = (Button) this.findViewById(R.id.search_btn);
 		clear_tv = (TextView) this.findViewById(R.id.clear_tv);
+		authBtn = (Button) this.findViewById(R.id.authBtn);
+
 	}
 
 	@Override
@@ -92,5 +104,29 @@ public class SerchImputActivity extends BaseActivity {
 			}
 		});
 
+		authBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (test == false) {
+					Douban douban = Douban.getInstance();
+					douban.authorize(context, new SimpleDoubanOAuthListener());
+					test = true;
+				} else {
+					new Thread() {
+						public void run() {
+							String s = NetUtils.getHttpEntity(
+									"https://api.douban.com/v2/user/~me",
+									NetUtils.GET, new ArrayList<String>(),
+									new ArrayList<String>(), context);
+							System.out.println(s);
+						};
+					}.start();
+				}
+			}
+		});
+
 	}
+
+	boolean test = false;
 }
