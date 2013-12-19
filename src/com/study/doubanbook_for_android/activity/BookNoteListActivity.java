@@ -21,7 +21,7 @@ public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 
 	String bookid = null;
 	GeneralNoteResult result;
-	DoubanBusiness db = new DoubanBusiness();
+	DoubanBusiness db = new DoubanBusiness(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

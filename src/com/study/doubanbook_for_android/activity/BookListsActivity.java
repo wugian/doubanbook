@@ -21,7 +21,7 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 
 	String searchContent = "";
 	GeneralResult result;
-	DoubanBusiness db = new DoubanBusiness();
+	DoubanBusiness db = new DoubanBusiness(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
