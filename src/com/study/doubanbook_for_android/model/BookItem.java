@@ -44,6 +44,8 @@ public class BookItem implements Serializable {
 	private String catalog;// ":"序言：法兰西玫瑰\n小王子\n圣埃克苏佩里年表\n"
 	private CurrenUserCollection current_user_collection;
 
+	
+	
 	public CurrenUserCollection getCurrent_user_collection() {
 		return current_user_collection;
 	}

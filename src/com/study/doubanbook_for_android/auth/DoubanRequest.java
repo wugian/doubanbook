@@ -22,7 +22,7 @@ public class DoubanRequest {
 	 */
 	public static Token requestAccessToken(DoubanParameters params) {
 		String s = NetUtils.getHttpEntity(Douban.URL_OAUTH2_ACCESS_TOKEN,
-				NetUtils.POST, params.getmKeys(), params.getmValues());
+				NetUtils.POST, params.getmKeys(), params.getmValues(), null);
 		return JsonUtil.fromJsonObject(s, Token.class);
 	}
 

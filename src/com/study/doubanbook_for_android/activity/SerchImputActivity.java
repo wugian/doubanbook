@@ -42,7 +42,7 @@ public class SerchImputActivity extends BaseActivity {
 	void initWidgets() {
 		super.initWidgets();
 		clear_tv.setVisibility(View.GONE);
-		search_et.setText("鲁迅");
+		search_et.setText("乔布斯");
 	}
 
 	@Override

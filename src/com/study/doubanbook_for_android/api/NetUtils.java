@@ -10,7 +10,6 @@ import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
@@ -34,6 +33,10 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import com.study.doubanbook_for_android.auth.AccessToken;
+import com.study.doubanbook_for_android.auth.KeepToken;
+
+import android.content.Context;
 import android.net.ParseException;
 import android.util.Log;
 
@@ -66,7 +69,7 @@ public class NetUtils {
 	 * @throws UnsupportedEncodingException
 	 */
 	public static String getHttpEntity(String urls, int method,
-			List<String> keys, List<String> values) {
+			List<String> keys, List<String> values, Context context) {
 
 		HttpResponse httpResponse = null;
 		StringBuffer result = new StringBuffer();
@@ -124,12 +127,19 @@ public class NetUtils {
 				// 设置httpPost请求参数
 				String tag;
 				Log.d("NET", "POST " + urls);
-				// "Authorization: Bearer a14afef0f66fcffce3e0fcd2e34f6ff4"
-				httpPost.addHeader("Authorization: Bearer ", urls);
+				// add access_token if need,just send context to this is ok
+				if (context != null) {
+					AccessToken accessToken = KeepToken
+							.readAccessToken(context);
+					httpPost.addHeader("Authorization",
+							"Bearer " + accessToken.getToken());
+					httpPost.addHeader("access_token", accessToken.getToken());
+				}
+
 				httpPost.setEntity(new UrlEncodedFormEntity(getNameValuePair(
 						keys, values), HTTP.UTF_8));
-				httpResponse = new DefaultHttpClient().execute(httpPost);
-				// System.out.println(httpResponse.getStatusLine().getStatusCode());
+				// here remember user New HttpClient with ssl protocol
+				httpResponse = getNewHttpClient().execute(httpPost);
 				if (httpResponse.getStatusLine().getStatusCode() == 200) {
 					result = new StringBuffer(EntityUtils.toString(httpResponse
 							.getEntity()));
@@ -247,10 +257,6 @@ public class NetUtils {
 				// 设置httpPost请求参数
 				String tag;
 				Log.d("NET", "POST " + urls);
-				// "Authorization: Bearer a14afef0f66fcffce3e0fcd2e34f6ff4"
-				// HttpHeader headers = httpPost.getHeader();
-				// headers.setAuthorization("Bearer " + this.accessToken);
-				// httpPost.addHeader("Authorization", "Bearer " + code);
 				httpPost.addHeader("access_token", code);
 				Log.d("NET", "accesstoken is:" + code);
 				httpPost.setEntity(new UrlEncodedFormEntity(getNameValuePair(

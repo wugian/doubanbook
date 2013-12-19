@@ -10,48 +10,38 @@ import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
-import com.study.doubanbook_for_android.adapter.BookAdapter;
+import com.study.doubanbook_for_android.adapter.UserNoteAdapter;
 import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
-import com.study.doubanbook_for_android.model.BookItem;
-import com.study.doubanbook_for_android.model.GeneralResult;
+import com.study.doubanbook_for_android.model.Annotations;
+import com.study.doubanbook_for_android.model.GeneralNoteResult;
 
-public class BookListsActivity extends BaseP2RActivity<BookItem> {
+public class BookNoteActivity extends BaseP2RActivity<Annotations> {
 
-	String searchContent = "";
-	GeneralResult result;
+	String bookid = null;
+	GeneralNoteResult result;
 	DoubanBusiness db = new DoubanBusiness();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.f_comment_list);
-		adapter = new BookAdapter(dataList, this);
+		pageIndex = 0;
+
+		adapter = new UserNoteAdapter(dataList, context);
 		initP2RLvAndThread();
-		searchContent = getIntent().getStringExtra("searchContent");
+		bookid = getIntent().getStringExtra("bookid");
 		fetchData();
 	}
 
 	@Override
 	public void selfHandleMsg(Message msg) {
 		int arg1 = msg.arg1;
-		// if (SUCCESS == arg1) {
-		// result = (GeneralResult) (msg.obj);
-		// addData(result.getBooks());
-		// }
-		// if (arg1 == FAILURE) {
-		// WrongMsg w = (WrongMsg) (msg.obj);
-		// Toast.makeText(this,
-		// w.getCode() + " " + w.getMsg() + " " + w.getRequest(),
-		// Toast.LENGTH_SHORT).show();
-		//
-		// }
-
 		switch (arg1) {
 		case SUCCESS:
-			result = (GeneralResult) (msg.obj);
-			addData(result.getBooks());
+			result = (GeneralNoteResult) (msg.obj);
+			addData(result.getAnnotations());
 			break;
 		case FAILURE:
 			WrongMsg w = (WrongMsg) (msg.obj);
@@ -68,9 +58,9 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	@Override
 	public void fetchData() {
 		super.fetchData();
-		db.getSearchList(searchContent, pageIndex * PAGE_COUNT + 1,
-				new AsynCallback<GeneralResult>() {
-					public void onSuccess(GeneralResult data) {
+		db.getNoteList(bookid, pageIndex * PAGE_COUNT + 1,
+				new AsynCallback<GeneralNoteResult>() {
+					public void onSuccess(GeneralNoteResult data) {
 						pageIndex++;
 						sendMessage(data, SUCCESS);
 					};
@@ -98,9 +88,9 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		super.onItemClick(arg0, arg1, position, arg3);
-		Intent intent = new Intent(this, BookDetailActivity.class);
+		Intent intent = new Intent(this, NoteAndUserDetailActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("bookItem", dataList.get(position - 1));
+		bundle.putSerializable("annotations", dataList.get(position - 1));
 		intent.putExtras(bundle);
 
 		startActivity(intent);

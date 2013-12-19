@@ -1,6 +1,10 @@
 package com.study.doubanbook_for_android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,12 +15,14 @@ public class BookDetailActivity extends BaseActivity {
 	ImageView bookImg;
 	TextView authorSumary_tv;
 	TextView bookSumary;
-	BookItem bookItem;
+	BookItem bookItem = null;
 	TextView title;
 	TextView author;
 	TextView price;
 	TextView publisher;
 	TextView grade;
+	Button comment;
+	private String bookid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,7 @@ public class BookDetailActivity extends BaseActivity {
 		initDatas();
 		initWidgets();
 		initWidgets();
+		initListners();
 	}
 
 	@Override
@@ -39,6 +46,7 @@ public class BookDetailActivity extends BaseActivity {
 		price = (TextView) findViewById(R.id.bookPrice_tv);
 		publisher = (TextView) findViewById(R.id.bookPublisher_tv);
 		grade = (TextView) findViewById(R.id.bookGrade_tv);
+		comment = (Button) findViewById(R.id.comment_btn);
 	}
 
 	@Override
@@ -48,6 +56,7 @@ public class BookDetailActivity extends BaseActivity {
 		if (bookItem == null) {
 			logD("TTT", "BOOKITEM IS NULL");
 		}
+		bookid = String.valueOf(bookItem.getId());
 	}
 
 	@Override
@@ -77,6 +86,14 @@ public class BookDetailActivity extends BaseActivity {
 	@Override
 	void initListners() {
 		super.initListners();
-	}
+		comment.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, BookNoteActivity.class);
+				intent.putExtra("bookid", bookid);
+				startActivity(intent);
+			}
+		});
+	}
 }

@@ -24,7 +24,8 @@ public class LoginBusiness {
 		values.add(client_id);
 		values.add(redirect_uri);
 		values.add(response_type);
-		String s = NetUtils.getHttpEntity(url1, NetUtils.GET, keys, values);
+		String s = NetUtils.getHttpEntity(url1, NetUtils.GET, keys, values,
+				null);
 		return s;
 	}
 }

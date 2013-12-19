@@ -13,6 +13,7 @@ import com.study.doubanbook_for_android.activity.BaseActivity;
 import com.study.doubanbook_for_android.api.NetUtils;
 import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.callback.AsynCallback;
+import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.URLMananeger;
 
@@ -47,8 +48,8 @@ public class DoubanBusiness {
 
 				callback.onStart();
 				s = NetUtils.getHttpEntity(
-						getBasicUrl(URLMananeger.BOOK_WRITER_SEARCHR_ULR),
-						NetUtils.GET, keys, values);
+						getBasicUrl(URLMananeger.BOOK_WRITER_SEARCHR_URL),
+						NetUtils.GET, keys, values, null);
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
@@ -58,6 +59,45 @@ public class DoubanBusiness {
 					Log.d("NET", "right model");
 					result = gson.fromJson(s, new TypeToken<GeneralResult>() {
 					}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
+	}
+
+	public void getNoteList(final String bookid, final int start,
+			final AsynCallback<GeneralNoteResult> callback) {
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				GeneralNoteResult result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+
+				// init keys
+				keys.add("start");
+				keys.add("count");
+				// init values
+				values.add(start + "");
+				values.add(BaseActivity.PAGE_COUNT + "");
+				callback.onStart();
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.BOOK_NOTE_LIST_URL.replace(
+								":id", bookid)), NetUtils.GET, keys, values,
+						null);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+					Log.d("NET", "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+					Log.d("NET", "right model");
+					result = gson.fromJson(s,
+							new TypeToken<GeneralNoteResult>() {
+							}.getType());
 					callback.onSuccess(result);
 				}
 				callback.onDone();

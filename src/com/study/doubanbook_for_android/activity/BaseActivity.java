@@ -1,21 +1,24 @@
 package com.study.doubanbook_for_android.activity;
 
-import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
-
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 
 public class BaseActivity extends Activity {
 
 	public final static int PAGE_COUNT = 10;
 	protected ImageDownloader imageDownloader;
+	protected Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		logD("TTT", "base Activity oncreate");
+		context = this;
 		imageDownloader = new ImageDownloader(this);
 	}
 
