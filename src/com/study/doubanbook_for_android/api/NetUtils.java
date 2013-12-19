@@ -10,6 +10,7 @@ import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
@@ -247,11 +248,14 @@ public class NetUtils {
 				String tag;
 				Log.d("NET", "POST " + urls);
 				// "Authorization: Bearer a14afef0f66fcffce3e0fcd2e34f6ff4"
-				httpPost.addHeader("Authorization: Bearer ", code);
+				// HttpHeader headers = httpPost.getHeader();
+				// headers.setAuthorization("Bearer " + this.accessToken);
+				// httpPost.addHeader("Authorization", "Bearer " + code);
+				httpPost.addHeader("access_token", code);
+				Log.d("NET", "accesstoken is:" + code);
 				httpPost.setEntity(new UrlEncodedFormEntity(getNameValuePair(
 						keys, values), HTTP.UTF_8));
 				httpResponse = new DefaultHttpClient().execute(httpPost);
-				// System.out.println(httpResponse.getStatusLine().getStatusCode());
 				if (httpResponse.getStatusLine().getStatusCode() == 200) {
 					result = new StringBuffer(EntityUtils.toString(httpResponse
 							.getEntity()));

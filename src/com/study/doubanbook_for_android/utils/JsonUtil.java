@@ -38,6 +38,22 @@ public class JsonUtil {
 
 	}
 
+	public static <T> T fromJsonObject(String json, Class<T> classOfT) {
+		return gson.fromJson(json, classOfT);
+	}
+
+	public static <T> String toJsonObject(T t) {
+		return gson.toJson(t);
+	}
+
+	public static <T> List<T> fromJsonArray(String json, Type type) {
+		return gson.fromJson(json, type);
+	}
+
+	public static <T> String toJsonArray(List<T> list, Type type) {
+		return gson.toJson(list, type);
+	}
+
 	/**
 	 * 将对象转换成json格式
 	 * 
@@ -101,7 +117,7 @@ public class JsonUtil {
 	 * @param type
 	 * @return
 	 */
-	public static List<?> jsonToList(String jsonStr,Type type) {
+	public static List<?> jsonToList(String jsonStr, Type type) {
 		List<?> objList = null;
 		if (gson != null) {
 			objList = gson.fromJson(jsonStr, type);

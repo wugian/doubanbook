@@ -10,10 +10,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -21,14 +24,18 @@ import com.google.gson.reflect.TypeToken;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.R.id;
 import com.study.doubanbook_for_android.api.NetUtils;
+import com.study.doubanbook_for_android.auth.Douban;
+import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.business.LoginBusiness;
 import com.study.doubanbook_for_android.model.AcToken;
 
 public class TestActivity extends BaseActivity {
 
 	String testUrl = "https://api.douban.com/v2/book/72719211/collection";
-	// thread
+	// thread "https://api.douban.com/v2/user/~me";//
 	private MessageHandler msgHandler;
+
+	Button testbtn;
 
 	class MessageHandler extends Handler {
 		public MessageHandler(Looper looper) {
@@ -90,6 +97,17 @@ public class TestActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading_page);
+
+		testbtn = (Button) findViewById(R.id.testbtn);
+		testbtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Douban douban = Douban.getInstance();
+				douban.authorize(TestActivity.this,
+						new SimpleDoubanOAuthListener());
+			}
+		});
 
 		// init msgHandler
 		Looper looper = Looper.myLooper();
