@@ -26,8 +26,14 @@ public class DoubanRequest {
 		return JsonUtil.fromJsonObject(s, Token.class);
 	}
 
+	/**
+	 * TODO think
+	 * may i should use the spring frame to simplify the net access?
+	 * @param params
+	 * @return
+	 */
 	public static Token requestAccessToken1(DoubanParameters params) {
-		int statusCode = 0;
+		//int statusCode = 0;
 		// try {
 		// RestTemplate restTemplate = new RestTemplate();
 		// restTemplate.getMessageConverters().add(

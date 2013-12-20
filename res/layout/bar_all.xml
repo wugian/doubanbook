@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="#ff323892" >
+    android:background="@color/light_blue" >
 
     <TextView
         android:id="@+id/pageTitle_tv"

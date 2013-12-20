@@ -18,6 +18,7 @@ import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.model.GeneralResult;
+import com.study.doubanbook_for_android.model.GeneralUserResult;
 import com.study.doubanbook_for_android.model.URLMananeger;
 
 public class DoubanBusiness {
@@ -272,7 +273,7 @@ public class DoubanBusiness {
 	
 	
 	
-	//TODO NOT FIND TEST BY POSTMAN
+	//TODO NOT FIND TEST BY POSTMAN DONE BY 2013-12-20-20:39
 	/**
 	 * GET  https://api.douban.com/v2/user/search
 		参数	意义	备注
@@ -281,48 +282,42 @@ public class DoubanBusiness {
 		start	取结果的offset	默认为0
 		count	取结果的条数	默认为20，最大为100
  	
-	 * @param bookid
+	 * @param userName
 	 * @param collectmsg
 	 * @param start
 	 * @param callback
 	 */
 	
-	public void searchUser(final String bookid,final CollectBookMsg collectmsg, final int start,
-			final AsynCallback<CollectSuccessResult> callback) {
+	public void searchUser(final String userName,final int start,
+			final AsynCallback<GeneralUserResult> callback) {
 		new Thread() {
 			public void run() {
 				WrongMsg wrongMsg = new WrongMsg();
-				CollectSuccessResult result = null;
+				GeneralUserResult result = null;
 				Gson gson = new Gson();
 				String s = "";
 				List<String> keys = new ArrayList<String>();
 				List<String> values = new ArrayList<String>();
-
 				// init keys
+				keys.add("q");
+				keys.add("start");
+				keys.add("count");
 				// init values
-				keys.add("status");
-				values.add(collectmsg.getStatus());
-				//TODO NOT USE YET
-				//keys.add("tags");
-				if(collectmsg.getComment()!=null){
-					values.add(collectmsg.getComment());
-					keys.add("comment");
+				try {
+					// change the encode when necessary
+					values.add(URLEncoder.encode(userName, "UTF-8"));
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
 				}
-				if(collectmsg.getPrivacy()){
-					keys.add("privacy");
-					values.add("private");
-				}
-				if(collectmsg.getRating()>=1&&collectmsg.getRating()<=5){
-					keys.add("rating");
-					values.add(String.valueOf(collectmsg.getRating()));
-				}
-				 
+				values.add(start + "");
+				values.add(BaseActivity.PAGE_COUNT + "");
+
 				callback.onStart();
 				
 				s = NetUtils.getHttpEntity(
-						getBasicUrl(URLMananeger.BOOK_COLLECT_URL.replace(
-								":id", bookid)), NetUtils.POST, keys, values,
-						context);
+						getBasicUrl(URLMananeger.USER_SEARCH_URL),
+						NetUtils.GET, keys, values, null);
+				
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
@@ -330,11 +325,12 @@ public class DoubanBusiness {
 					callback.onFailure(wrongMsg);
 				} else {
 					Log.d("NET", "right model");
-					result = gson.fromJson(s,
-							new TypeToken<CollectSuccessResult>() {
-							}.getType());
+					result = gson.fromJson(s, new TypeToken<GeneralUserResult>() {
+					}.getType());
+					
 					callback.onSuccess(result);
 				}
+				
 				callback.onDone();
 			};
 		}.start();

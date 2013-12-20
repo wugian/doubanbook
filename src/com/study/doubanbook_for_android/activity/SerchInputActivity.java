@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,19 +17,21 @@ import android.widget.TextView;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.api.NetUtils;
 import com.study.doubanbook_for_android.auth.Douban;
-import com.study.doubanbook_for_android.auth.DoubanDialogError;
-import com.study.doubanbook_for_android.auth.DoubanException;
-import com.study.doubanbook_for_android.auth.DoubanOAuthListener;
 import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
-import com.study.doubanbook_for_android.auth.Token;
 
-public class SerchImputActivity extends BaseActivity {
+public class SerchInputActivity extends BaseActivity {
 
 	EditText search_et;
 	Button search_btn;
 	TextView clear_tv;
 	private Context context;
 	private Button authBtn;
+	private TextView readerSearch;
+	private TextView bookSearch;
+	private static final int SEARCH_BOOK = 0;// search book flag
+	private static final int SEARCH_READER = 1;// search reader flag
+
+	private int flag = SEARCH_BOOK;// search flag
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class SerchImputActivity extends BaseActivity {
 		search_btn = (Button) this.findViewById(R.id.search_btn);
 		clear_tv = (TextView) this.findViewById(R.id.clear_tv);
 		authBtn = (Button) this.findViewById(R.id.authBtn);
+		bookSearch = (TextView) this.findViewById(R.id.bookSearch_tv);
+		readerSearch = (TextView) this.findViewById(R.id.readerSearch_tv);
 
 	}
 
@@ -54,6 +59,7 @@ public class SerchImputActivity extends BaseActivity {
 	void initWidgets() {
 		super.initWidgets();
 		clear_tv.setVisibility(View.GONE);
+		bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
 		search_et.setText("乔布斯");
 	}
 
@@ -65,11 +71,20 @@ public class SerchImputActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(context, BookListsActivity.class);
-				String s = getText(search_et);
-				intent.putExtra("searchContent", s);
-				startActivity(intent);
+				System.out.println(flag);
+				if (flag == SEARCH_BOOK) {
+					Intent intent = new Intent();
+					intent.setClass(context, BookListsActivity.class);
+					String s = getText(search_et);
+					intent.putExtra("searchContent", s);
+					startActivity(intent);
+				} else if (flag == SEARCH_READER) {
+					Intent intent = new Intent();
+					intent.setClass(context, UserListActivity.class);
+					String s = getText(search_et);
+					intent.putExtra("searchContent", s);
+					startActivity(intent);
+				}
 			}
 		});
 		search_et.addTextChangedListener(new TextWatcher() {
@@ -123,6 +138,31 @@ public class SerchImputActivity extends BaseActivity {
 						};
 					}.start();
 				}
+			}
+		});
+		bookSearch.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
+				// readerSearch.getPaint().setFlags(Paint.););
+				search_et.setHint(getResources().getString(
+						R.string.search_book_hint));
+				flag = SEARCH_BOOK;
+				System.out.println(flag);
+			}
+		});
+
+		readerSearch.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				readerSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
+				// readerSearch.getPaint().setFlags(Paint.););
+				search_et.setHint(getResources().getString(
+						R.string.search_reader_hint));
+				flag = SEARCH_READER;
+				System.out.println(flag);
 			}
 		});
 
