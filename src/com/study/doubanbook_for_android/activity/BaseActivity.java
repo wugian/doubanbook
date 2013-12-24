@@ -3,11 +3,11 @@ package com.study.doubanbook_for_android.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
+import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ToastUtils;
 
 public class BaseActivity extends Activity {
 
@@ -18,35 +18,37 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		logD("TTT", "base Activity oncreate");
+		DebugUtils.d("TTT", "base Activity oncreate");
 		context = this;
 		imageDownloader = new ImageDownloader(this);
 	}
 
 	void findViews() {
-		logD("TTT", "base Activity findview");
+		DebugUtils.d("TTT", "base Activity findview");
 	}
 
 	void initDatas() {
-		logD("TTT", "base Activity initDatas");
+		DebugUtils.d("TTT", "base Activity initDatas");
 	}
 
 	void initWidgets() {
-		logD("TTT", "base Activity initwidgets");
+		DebugUtils.d("TTT", "base Activity initwidgets");
 	}
 
 	void initListners() {
-		logD("TTT", "base Activity initlisternser");
-	}
-
-	void logD(String tag, String msg) {
-		Log.d(tag, msg);
+		DebugUtils.d("TTT", "base Activity initlisternser");
 	}
 
 	String getText(TextView tv) {
 		return tv.getText().toString().trim();
 	}
 
+	/**
+	 * 不为0
+	 * 
+	 * @param k
+	 * @return
+	 */
 	boolean notZero(int k) {
 		if (k != 0)
 			return true;
@@ -54,14 +56,25 @@ public class BaseActivity extends Activity {
 			return false;
 	}
 
+	/**
+	 * 不为空并不为""空串
+	 * 
+	 * @param k
+	 * @return
+	 */
 	boolean notNull(String k) {
-		if (k != null)
+		if (k != null && !k.equals(""))
 			return true;
 		else
 			return false;
 	}
 
-	void showToast(String msg) {
-		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+	/**
+	 * 显示简单文字提示
+	 * 
+	 * @param msg
+	 */
+	void toast(String msg) {
+		ToastUtils.toast(context, msg);
 	}
 }

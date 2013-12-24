@@ -95,7 +95,6 @@ public class Douban {
 			@Override
 			public void onComplete(Token token) {
 				// ensure any cookies set by the dialog are saved
-
 				if (null == accessToken) {
 					accessToken = new AccessToken();
 				}

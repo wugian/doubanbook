@@ -2,6 +2,11 @@ package com.study.doubanbook_for_android.auth;
 
 import android.text.TextUtils;
 
+/**
+ * for charge the token is vailed
+ * @author tezuka-pc
+ *
+ */
 public class AccessToken {
 	private String mAccessToken = "";
 	private String mRefreshToken = "";

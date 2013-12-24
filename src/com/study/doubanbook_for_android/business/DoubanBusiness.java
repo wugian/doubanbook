@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.study.doubanbook_for_android.activity.BaseActivity;
@@ -22,6 +20,7 @@ import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
 import com.study.doubanbook_for_android.model.URLMananeger;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
 
 public class DoubanBusiness {
@@ -84,10 +83,10 @@ public class DoubanBusiness {
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
-					Log.d("NET", "wrongmsg model");
+					DebugUtils.d("NET", "wrongmsg model");
 					callback.onFailure(wrongMsg);
 				} else {
-					Log.d("NET", "right model");
+					DebugUtils.d("NET", "right model");
 					result = gson.fromJson(s, new TypeToken<GeneralResult>() {
 					}.getType());
 					callback.onSuccess(result);
@@ -131,10 +130,10 @@ public class DoubanBusiness {
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
-					Log.d("NET", "wrongmsg model");
+						DebugUtils.d("NET",  "wrongmsg model");
 					callback.onFailure(wrongMsg);
 				} else {
-					Log.d("NET", "right model");
+						DebugUtils.d("NET",  "right model");
 					result = gson.fromJson(s,
 							new TypeToken<GeneralNoteResult>() {
 							}.getType());
@@ -198,10 +197,10 @@ public class DoubanBusiness {
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
-					Log.d("NET", "wrongmsg model");
+						DebugUtils.d("NET",  "wrongmsg model");
 					callback.onFailure(wrongMsg);
 				} else {
-					Log.d("NET", "right model");
+						DebugUtils.d("NET",  "right model");
 					result = gson.fromJson(s,
 							new TypeToken<CollectSuccessResult>() {
 							}.getType());
@@ -265,10 +264,10 @@ public class DoubanBusiness {
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
-					Log.d("NET", "wrongmsg model");
+						DebugUtils.d("NET",  "wrongmsg model");
 					callback.onFailure(wrongMsg);
 				} else {
-					Log.d("NET", "right model");
+						DebugUtils.d("NET",  "right model");
 					result = gson.fromJson(s,
 							new TypeToken<CollectSuccessResult>() {
 							}.getType());
@@ -330,10 +329,10 @@ public class DoubanBusiness {
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
-					Log.d("NET", "wrongmsg model");
+						DebugUtils.d("NET",  "wrongmsg model");
 					callback.onFailure(wrongMsg);
 				} else {
-					Log.d("NET", "right model");
+						DebugUtils.d("NET",  "right model");
 					result = gson.fromJson(s, new TypeToken<GeneralUserResult>() {
 					}.getType());
 					

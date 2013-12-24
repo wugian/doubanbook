@@ -15,6 +15,11 @@ import android.widget.TextView;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 
+/**
+ * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
+ * @author tezuka-pc
+ *
+ */
 public class SerchInputActivity extends BaseActivity {
 
 	EditText search_et;
@@ -38,7 +43,6 @@ public class SerchInputActivity extends BaseActivity {
 		findViews();
 		initWidgets();
 		initListners();
-
 		// auto auth
 		DoubanBusiness db = new DoubanBusiness(context);
 		db.auth();
@@ -53,7 +57,6 @@ public class SerchInputActivity extends BaseActivity {
 		authBtn = (Button) this.findViewById(R.id.authBtn);
 		bookSearch = (TextView) this.findViewById(R.id.bookSearch_tv);
 		readerSearch = (TextView) this.findViewById(R.id.readerSearch_tv);
-
 	}
 
 	@Override

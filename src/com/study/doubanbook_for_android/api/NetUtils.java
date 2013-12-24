@@ -3,7 +3,6 @@ package com.study.doubanbook_for_android.api;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.KeyStore;
@@ -33,12 +32,12 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import com.study.doubanbook_for_android.auth.AccessToken;
-import com.study.doubanbook_for_android.auth.KeepToken;
-
 import android.content.Context;
 import android.net.ParseException;
-import android.util.Log;
+
+import com.study.doubanbook_for_android.auth.AccessToken;
+import com.study.doubanbook_for_android.auth.KeepToken;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
 public class NetUtils {
 	public static final int GET = 0;
@@ -52,12 +51,14 @@ public class NetUtils {
 	 * @param method
 	 *            get or post
 	 * @param keys
-	 *            想要传递给服务器的键值
+	 *            想要传递给服务器的键值列表
 	 * @param values
-	 *            想要传递给服务器的参数
+	 *            想要传递给服务器的参数列表
 	 * @return
-	 * @throws UnsupportedEncodingException
 	 */
+	// TODO 2013-12-24 AFTER GET ACCESSTOKEN CHARGE NULL,IF NULL RETURN AND REQUEST
+	// USER TO
+	// AUTH,ELSE RIGTH FLOW RELATIVED TO SEARCHINPUTACTIVITY.JAVA
 	public static String getHttpEntity(String urls, int method,
 			List<String> keys, List<String> values, Context context) {
 
@@ -67,7 +68,6 @@ public class NetUtils {
 		case GET:
 			HttpGet httpGet = new HttpGet(getUrlStr(urls, values, keys));
 			// add access_token if need,just send context to this is ok
-
 			if (context != null) {
 				AccessToken accessToken = KeepToken.readAccessToken(context);
 				httpGet.addHeader("Authorization",
@@ -77,10 +77,10 @@ public class NetUtils {
 			try {
 				httpResponse = getNewHttpClient().execute(httpGet);
 			} catch (ClientProtocolException e) {
-				Log.d("NET", e.getMessage());
+				DebugUtils.d("NET", e.getMessage());
 				e.printStackTrace();
 			} catch (IOException e) {
-				Log.d("NET", e.getMessage());
+				DebugUtils.d("NET", e.getMessage());
 				e.printStackTrace();
 			}
 			int statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -88,14 +88,12 @@ public class NetUtils {
 				try {
 					result = new StringBuffer(EntityUtils.toString(httpResponse
 							.getEntity()));
-					// log out the result
-					Log.d("NET", result.toString());
 				} catch (ParseException e) {
 					// log out the exception
-					Log.d("NET", e.getMessage());
+					DebugUtils.d("NET", e.getMessage());
 					e.printStackTrace();
 				} catch (IOException e) {
-					Log.d("NET", e.getMessage());
+					DebugUtils.d("NET", e.getMessage());
 					e.printStackTrace();
 				}
 			} else {
@@ -107,15 +105,15 @@ public class NetUtils {
 					result = new StringBuffer(EntityUtils.toString(httpResponse
 							.getEntity()));
 				} catch (org.apache.http.ParseException e) {
-					Log.d("NET", e.getMessage());
+					DebugUtils.d("NET", e.getMessage());
 					e.printStackTrace();
 				} catch (IOException e) {
-					Log.d("NET", e.getMessage());
+					DebugUtils.d("NET", e.getMessage());
 					e.printStackTrace();
 				}
-				Log.d("NET", "status code:  "
+				DebugUtils.d("NET", "status code:  "
 						+ httpResponse.getStatusLine().getStatusCode());
-				Log.d("NET", "status describe:  "
+				DebugUtils.d("NET", "status describe:  "
 						+ httpResponse.getStatusLine().getReasonPhrase());
 			}
 			break;
@@ -123,7 +121,7 @@ public class NetUtils {
 			HttpPost httpPost = new HttpPost(urls);
 			try {
 				// 设置httpPost请求参数
-				Log.d("NET", "POST " + urls);
+				DebugUtils.d("NET", "POST " + urls);
 				// add access_token if need,just send context to this is ok
 				if (context != null) {
 					AccessToken accessToken1 = KeepToken
@@ -147,24 +145,23 @@ public class NetUtils {
 						// wrongMsg model
 						result = new StringBuffer(
 								EntityUtils.toString(httpResponse.getEntity()));
-						Log.d("NET", result.toString());
 					} catch (org.apache.http.ParseException e) {
-						Log.d("NET", e.getMessage());
+						DebugUtils.d("NET", e.getMessage());
 						e.printStackTrace();
 					} catch (IOException e) {
-						Log.d("NET", e.getMessage());
+						DebugUtils.d("NET", e.getMessage());
 						e.printStackTrace();
 					}
-					Log.d("NET", "status code:  "
+					DebugUtils.d("NET", "status code:  "
 							+ httpResponse.getStatusLine().getStatusCode());
-					Log.d("NET", "status describe:  "
+					DebugUtils.d("NET", "status describe:  "
 							+ httpResponse.getStatusLine().getReasonPhrase());
 				}
 			} catch (ClientProtocolException e) {
-				Log.d("NET", e.getMessage());
+				DebugUtils.d("NET", e.getMessage());
 				e.printStackTrace();
 			} catch (IOException e) {
-				Log.d("NET", e.getMessage());
+				DebugUtils.d("NET", e.getMessage());
 				e.printStackTrace();
 			}
 			break;
@@ -189,7 +186,7 @@ public class NetUtils {
 		default:
 			break;
 		}
-		Log.d("NET", result.toString());
+		DebugUtils.d("NET", result.toString());
 		return result.toString();
 	}
 
@@ -210,19 +207,18 @@ public class NetUtils {
 		if (keys.size() >= 1) {
 			// params start
 			urlBuffer.append("?");
-			// ensure the right Url encode
 			urlBuffer.append(keys.get(0)).append("=").append(values.get(0));
-			Log.d("NET",
-					"parms" + (1) + ":" + keys.get(0) + "=" + values.get(0));
+			DebugUtils.d("NET", "parms" + (1) + ":" + keys.get(0) + "="
+					+ values.get(0));
 			for (int i = 1; i < keys.size(); i++) {
 				// another key value pair and show the params
 				urlBuffer.append("&");
 				urlBuffer.append(keys.get(i)).append("=").append(values.get(i));
-				Log.d("NET", "parms" + (i + 1) + ":" + keys.get(i) + "="
+				DebugUtils.d("NET", "parms" + (i + 1) + ":" + keys.get(i) + "="
 						+ values.get(i));
 			}
 		}
-		Log.d("NET", "url:" + urlBuffer.toString());
+		DebugUtils.d("NET", "url:" + urlBuffer.toString());
 		return urlBuffer.toString();
 
 	}
@@ -271,7 +267,7 @@ public class NetUtils {
 		if (keys != null)
 			for (int i = 0; i < keys.size(); i++) {
 				params.add(new BasicNameValuePair(keys.get(i), values.get(i)));
-				Log.d("NET", "parms" + (i + 1) + ":" + keys.get(i) + "="
+				DebugUtils.d("NET", "parms" + (i + 1) + ":" + keys.get(i) + "="
 						+ values.get(i));
 			}
 		return params;

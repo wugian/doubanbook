@@ -19,11 +19,14 @@ import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.api.WrongMsg;
+import com.study.doubanbook_for_android.auth.AccessToken;
+import com.study.doubanbook_for_android.auth.KeepToken;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
 public class BookDetailActivity extends BaseActivity {
 	ImageView bookImg;
@@ -42,6 +45,9 @@ public class BookDetailActivity extends BaseActivity {
 	private Button done;
 	private PopupWindow popwindow;
 	private LinearLayout bookDetail;
+	private LinearLayout collet_lyt;
+
+	private String popTitleStr = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +69,17 @@ public class BookDetailActivity extends BaseActivity {
 				WindowManager.LayoutParams.WRAP_CONTENT,
 				WindowManager.LayoutParams.WRAP_CONTENT);
 
+		TextView popTitle_tv = (TextView) view.findViewById(R.id.popTitle_tv);
 		final EditText tag_et = (EditText) view.findViewById(R.id.tag_et);
 		final RatingBar ratingBar_rb = (RatingBar) view
 				.findViewById(R.id.ratingBar_rb);
 		final EditText comment_et = (EditText) view
 				.findViewById(R.id.comment_et);
+
 		Button cancle_btn = (Button) view.findViewById(R.id.cancle_btn);
 		Button ok_btn = (Button) view.findViewById(R.id.ok_btn);
 
+		popTitle_tv.setText(popTitleStr);
 		ok_btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -102,6 +111,7 @@ public class BookDetailActivity extends BaseActivity {
 			collectBookMsg.setTags(title);
 		if (notNull(comment))
 			collectBookMsg.setComment(comment);
+
 		DoubanBusiness doubanBusiness = new DoubanBusiness(this);
 		doubanBusiness.collectBook(bookid, collectBookMsg,
 				new AsynCallback<CollectSuccessResult>() {
@@ -136,6 +146,7 @@ public class BookDetailActivity extends BaseActivity {
 	void findViews() {
 		super.findViews();
 		bookDetail = (LinearLayout) findViewById(R.id.bookDetail_lyt);
+		collet_lyt = (LinearLayout) findViewById(R.id.collet_lyt);
 		bookImg = (ImageView) findViewById(R.id.bookImg_iv);
 		authorSumary_tv = (TextView) findViewById(R.id.authorSumary_tv);
 		bookSumary = (TextView) findViewById(R.id.bookSumary_tv);
@@ -155,7 +166,7 @@ public class BookDetailActivity extends BaseActivity {
 		super.initDatas();
 		bookItem = (BookItem) getIntent().getSerializableExtra("bookItem");
 		if (bookItem == null) {
-			logD("TTT", "BOOKITEM IS NULL");
+			DebugUtils.d("TTT", "BOOKITEM IS NULL");
 		}
 		bookid = String.valueOf(bookItem.getId());
 	}
@@ -182,19 +193,26 @@ public class BookDetailActivity extends BaseActivity {
 
 		}
 		author.setText(stringBuffer.toString());
-
-		if (bookItem.getCurrent_user_collection() == null) {
-			resetTextColor(wish, reading, done);
-			wish.setTextColor(Color.GRAY);
+		// get accessToken
+		AccessToken accessToken = KeepToken.readAccessToken(context);
+		// if not login do not show collect and wish status
+		if (!notNull(accessToken.getToken())) {
+			collet_lyt.setVisibility(View.GONE);
 		} else {
-			String status = bookItem.getCurrent_user_collection().getStatus();
-			// 想读：wish 在读：reading 或 doing 读过：read 或 done）
-			if (status.equals("wish")) {
+			if (bookItem.getCurrent_user_collection() == null) {
 				resetTextColor(wish, reading, done);
-			} else if (status.equals("reading") || status.equals("doing")) {
-				resetTextColor(reading, wish, done);
-			} else if (status.equals("done") || status.equals("read")) {
-				resetTextColor(done, wish, reading);
+				wish.setTextColor(Color.GRAY);
+			} else {
+				String status = bookItem.getCurrent_user_collection()
+						.getStatus();
+				// 想读：wish 在读：reading 或 doing 读过：read 或 done）
+				if (status.equals("wish")) {
+					resetTextColor(wish, reading, done);
+				} else if (status.equals("reading") || status.equals("doing")) {
+					resetTextColor(reading, wish, done);
+				} else if (status.equals("done") || status.equals("read")) {
+					resetTextColor(done, wish, reading);
+				}
 			}
 		}
 	}
@@ -223,9 +241,31 @@ public class BookDetailActivity extends BaseActivity {
 			public void onClick(View v) {
 				// 想读：wish 在读：reading 或 doing 读过：read 或 done）
 				resetTextColor(wish, reading, done);
+				popTitleStr = getPopTitle("想读");
 				showPop();
-
 			}
 		});
+		reading.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// 想读：wish 在读：reading 或 doing 读过：read 或 done）
+				resetTextColor(reading, wish, done);
+				popTitleStr = getPopTitle("在读");
+				showPop();
+			}
+		});
+		done.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// 想读：wish 在读：reading 或 doing 读过：read 或 done）
+				resetTextColor(done, reading, wish);
+				popTitleStr = getPopTitle("在读");
+				showPop();
+			}
+		});
+	}
+
+	String getPopTitle(String fix) {
+		return fix + bookItem.getTitle();
 	}
 }
