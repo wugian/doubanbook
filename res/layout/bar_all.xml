@@ -23,7 +23,7 @@
         android:background="@drawable/ic_back" />
 
     <Button
-        android:id="@+id/done_btn"
+        android:id="@+id/read_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

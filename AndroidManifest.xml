@@ -29,7 +29,7 @@
         </activity>
         <!-- START PAGE -->
         <activity
-            android:name="com.study.doubanbook_for_android.activity.SerchImputActivity"
+            android:name="com.study.doubanbook_for_android.activity.SerchInputActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +51,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="com.study.doubanbook_for_android.activity.BookNoteActivity"
+            android:name="com.study.doubanbook_for_android.activity.BookNoteListActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -60,6 +60,14 @@
         </activity>
         <activity
             android:name="com.study.doubanbook_for_android.activity.NoteAndUserDetailActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.study.doubanbook_for_android.activity.UserListActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.study.doubanbook_for_android.activity.UserDetailActivity"
             android:label="@string/app_name" >
         </activity>
     </application>

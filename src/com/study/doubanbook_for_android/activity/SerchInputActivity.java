@@ -1,10 +1,8 @@
 package com.study.doubanbook_for_android.activity;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,9 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
-import com.study.doubanbook_for_android.api.NetUtils;
-import com.study.doubanbook_for_android.auth.Douban;
-import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
+import com.study.doubanbook_for_android.business.DoubanBusiness;
 
 public class SerchInputActivity extends BaseActivity {
 
@@ -37,10 +33,15 @@ public class SerchInputActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_serch_input);
+
 		context = this;
 		findViews();
 		initWidgets();
 		initListners();
+
+		// auto auth
+		DoubanBusiness db = new DoubanBusiness(context);
+		db.auth();
 	}
 
 	@Override
@@ -59,8 +60,8 @@ public class SerchInputActivity extends BaseActivity {
 	void initWidgets() {
 		super.initWidgets();
 		clear_tv.setVisibility(View.GONE);
-		bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
-		search_et.setText("乔布斯");
+		// bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
+		readerSearch.setTextColor(Color.GRAY);
 	}
 
 	@Override
@@ -119,33 +120,15 @@ public class SerchInputActivity extends BaseActivity {
 			}
 		});
 
-		authBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (test == false) {
-					Douban douban = Douban.getInstance();
-					douban.authorize(context, new SimpleDoubanOAuthListener());
-					test = true;
-				} else {
-					new Thread() {
-						public void run() {
-							String s = NetUtils.getHttpEntity(
-									"https://api.douban.com/v2/user/~me",
-									NetUtils.GET, new ArrayList<String>(),
-									new ArrayList<String>(), context);
-							System.out.println(s);
-						};
-					}.start();
-				}
-			}
-		});
 		bookSearch.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
+				// bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//
+				// 下划线
 				// readerSearch.getPaint().setFlags(Paint.););
+				bookSearch.setTextColor(Color.BLACK);
+				readerSearch.setTextColor(Color.GRAY);
 				search_et.setHint(getResources().getString(
 						R.string.search_book_hint));
 				flag = SEARCH_BOOK;
@@ -157,8 +140,12 @@ public class SerchInputActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				readerSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
+				// readerSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//
+				// 下划线
 				// readerSearch.getPaint().setFlags(Paint.););
+
+				bookSearch.setTextColor(Color.GRAY);
+				readerSearch.setTextColor(Color.BLACK);
 				search_et.setHint(getResources().getString(
 						R.string.search_reader_hint));
 				flag = SEARCH_READER;

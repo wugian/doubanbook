@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 
@@ -44,5 +45,23 @@ public class BaseActivity extends Activity {
 
 	String getText(TextView tv) {
 		return tv.getText().toString().trim();
+	}
+
+	boolean notZero(int k) {
+		if (k != 0)
+			return true;
+		else
+			return false;
+	}
+
+	boolean notNull(String k) {
+		if (k != null)
+			return true;
+		else
+			return false;
+	}
+
+	void showToast(String msg) {
+		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 	}
 }

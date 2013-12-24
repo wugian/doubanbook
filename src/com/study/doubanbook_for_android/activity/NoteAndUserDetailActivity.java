@@ -1,7 +1,6 @@
 package com.study.doubanbook_for_android.activity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ public class NoteAndUserDetailActivity extends BaseActivity {
 		findViews();
 		initWidgets();
 		initListners();
-
 	}
 
 	@Override

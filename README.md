@@ -1,4 +1,4 @@
-doubanbook
-==========
+doubanbook4android
+==================
 
-a public project for douban book
+a new repo of douban book 

@@ -9,13 +9,11 @@ public class CollectBookMsg implements Serializable {
 	 */
 	private static final long serialVersionUID = -5263072570721071206L;
 	
-	//POST  https://api.douban.com/v2/book/:id/collection
-	//	参数	意义	备注
-		private String	status;//	收藏状态	必填（想读：wish 在读：reading 或 doing 读过：read 或 done）
-		private String tags;//	收藏标签字符串	选填，用空格分隔
+		private String	status;	//	收藏状态	必填（想读：wish 在读：reading 或 doing 读过：read 或 done）
+		private String tags;	//	收藏标签字符串	选填，用空格分隔
 		private String	comment;//	短评文本	选填，最多350字
 		private boolean	privacy;//	隐私设置	选填，值为'private'为设置成仅自己可见，其他默认为公开
-		private int	rating;//	星评	选填，数字1～5为合法值，其他信息默认为不评星
+		private int	rating;		//	星评	选填，数字1～5为合法值，其他信息默认为不评星
 		
 		public String getStatus() {
 			return status;

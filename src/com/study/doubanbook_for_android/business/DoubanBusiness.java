@@ -13,6 +13,8 @@ import com.google.gson.reflect.TypeToken;
 import com.study.doubanbook_for_android.activity.BaseActivity;
 import com.study.doubanbook_for_android.api.NetUtils;
 import com.study.doubanbook_for_android.api.WrongMsg;
+import com.study.doubanbook_for_android.auth.Douban;
+import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
@@ -20,6 +22,7 @@ import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
 import com.study.doubanbook_for_android.model.URLMananeger;
+
 
 public class DoubanBusiness {
 	
@@ -30,8 +33,13 @@ public class DoubanBusiness {
 		super();
 		this.context = context;
 	}
+	
+	public void auth(){
+		Douban douban = Douban.getInstance();
+		douban.authorize(context, new SimpleDoubanOAuthListener());
+	}
 
-	// TODO 修改整个方法,利用线程,回调,得到
+	// TODO 修改整个方法,利用线程,回调,得到 DONE
 	// 得到字符串,转化成MODEL时没有TRY CATCH,怎样判断是否是错误信息,先变成WRONGMSG
 	// MODEL?判断CODE?添加TAG,CODE==0转化成对应模型否则转化成WRONGMSG
 	/**
@@ -72,7 +80,7 @@ public class DoubanBusiness {
 				callback.onStart();
 				s = NetUtils.getHttpEntity(
 						getBasicUrl(URLMananeger.BOOK_WRITER_SEARCHR_URL),
-						NetUtils.GET, keys, values, null);
+						NetUtils.GET, keys, values, context);
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
@@ -136,8 +144,11 @@ public class DoubanBusiness {
 			};
 		}.start();
 	}
-
+ 
 	/**
+	 * 
+	 * 用户收藏图书或者修改收藏状态
+	 * 
 	 *  POST  https://api.douban.com/v2/book/:id/collection
 		参数		意义			备注
 		status	收藏状态		必填（想读：wish 在读：reading 或 doing 读过：read 或 done）
@@ -150,7 +161,7 @@ public class DoubanBusiness {
 	 * @param callback
 	 */
 	//TODO NEED TEST when success show toast
-	public void collectBook(final String bookid,final CollectBookMsg collectmsg, final int start,
+	public void collectBook(final String bookid,final CollectBookMsg collectmsg,
 			final AsynCallback<CollectSuccessResult> callback) {
 		new Thread() {
 			public void run() {
@@ -161,9 +172,7 @@ public class DoubanBusiness {
 				List<String> keys = new ArrayList<String>();
 				List<String> values = new ArrayList<String>();
 
-				// init keys
-				// init values
-				keys.add("status");
+				keys.add("status");//NOT NULL
 				values.add(collectmsg.getStatus());
 				//TODO NOT USE YET
 				//keys.add("tags");
@@ -206,11 +215,11 @@ public class DoubanBusiness {
 	/**
 	 * 
 		GET  https://api.douban.com/v2/book/user/:name/collections
-		参数	意义	备注
-		status	收藏状态	选填（想读：wish 在读：reading 读过：read）默认为所有状态
-		tag	收藏标签	选填
-		from	按收藏更新时间过滤的起始时间	选填，格式为符合rfc3339的字符串，例如"2012-10-19T17:14:11"，其他信息默认为不传此项
-		to	按收藏更新时间过滤的结束时间	同上
+		参数			意义						备注
+		status		收藏状态					选填（想读：wish 在读：reading 读过：read）默认为所有状态
+		tag			收藏标签					选填
+		from		按收藏更新时间过滤的起始时间	选填，格式为符合rfc3339的字符串，例如"2012-10-19T17:14:11"，其他信息默认为不传此项
+		to			按收藏更新时间过滤的结束时间	同上
 		rating	星评	选填，数字1～5为合法值，其他信息默认为不区分星评
 	 * @param bookid
 	 * @param collectmsg
@@ -275,7 +284,7 @@ public class DoubanBusiness {
 	
 	//TODO NOT FIND TEST BY POSTMAN DONE BY 2013-12-20-20:39
 	/**
-	 * GET  https://api.douban.com/v2/user/search
+	 * GET  https://api.douban.com/v2/user
 		参数	意义	备注
 		q	查询关键字	q和tag必传其一
 		tag	查询的tag	q和tag必传其一

@@ -27,19 +27,22 @@
                     android:id="@+id/bookSearch_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/book" />
+                    android:text="@string/book"
+                    android:textSize="@dimen/middle_text_size" />
 
                 <TextView
                     android:id="@+id/readerSearch_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin"
-                    android:text="@string/reader" />
+                    android:text="@string/reader"
+                    android:textSize="@dimen/middle_text_size" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_margin"
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="horizontal" >

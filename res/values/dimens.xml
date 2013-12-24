@@ -49,5 +49,9 @@
     <dimen name="edit_text_padding">3dip</dimen>
     <dimen name="list_img_width">75dp</dimen>
     <dimen name="list_img_height">105dp</dimen>
+    <dimen name="small_btn_w">36dp</dimen>
+    <dimen name="small_btn_h">22dp</dimen>
+    <dimen name="small_txt_size">10dp</dimen>
+    
 
 </resources>

@@ -1,4 +1,4 @@
-package com.study.doubanbook_for_android.adapter;
+﻿package com.study.doubanbook_for_android.adapter;
 
 import java.util.ArrayList;
 
@@ -48,11 +48,11 @@ public class UserListAdapter extends BaseAdapter {
 		ViewHolder holder = new ViewHolder();
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(
-					R.layout.i_user, null);
+			convertView = LayoutInflater.from(context).inflate(R.layout.i_user,
+					null);
 			holder.img = (ImageView) convertView.findViewById(R.id.portrait_iv);
 			holder.userName = (TextView) convertView
-					.findViewById(R.id.username_et);
+					.findViewById(R.id.userName_tv);
 			holder.introduce = (TextView) convertView
 					.findViewById(R.id.introduce_tv);
 			convertView.setTag(holder);
@@ -61,9 +61,12 @@ public class UserListAdapter extends BaseAdapter {
 		}
 
 		/* 设置 */
-		holder.userName.setText(item.getName());
-		holder.introduce.setText(item.getDesc());
-		// TODO change to get the w and h is must? 
+		if (item.getName() == null)
+			holder.userName.setVisibility(View.GONE);
+		else
+			holder.userName.setText(item.getName().trim() + "");
+		holder.introduce.setText(item.getCreated().trim()+"  " + item.getLoc_name());
+		// TODO change to get the w and h is must?
 		imgDownloader.download(item.getAvatar(), holder.img, null);
 		return convertView;
 	}

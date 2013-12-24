@@ -1,15 +1,5 @@
 package com.study.doubanbook_for_android.activity;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.study.doubanbook_for_android.R;
-import com.study.doubanbook_for_android.adapter.BookAdapter;
-import com.study.doubanbook_for_android.api.WrongMsg;
-import com.study.doubanbook_for_android.business.DoubanBusiness;
-import com.study.doubanbook_for_android.callback.AsynCallback;
-import com.study.doubanbook_for_android.model.BookItem;
-import com.study.doubanbook_for_android.model.GeneralResult;
-import com.study.doubanbook_for_android.model.GeneralUserResult;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -18,17 +8,27 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class UserListActivity extends BaseP2RActivity<BookItem> {
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.study.doubanbook_for_android.R;
+import com.study.doubanbook_for_android.adapter.UserListAdapter;
+import com.study.doubanbook_for_android.api.WrongMsg;
+import com.study.doubanbook_for_android.business.DoubanBusiness;
+import com.study.doubanbook_for_android.callback.AsynCallback;
+import com.study.doubanbook_for_android.model.AuthorUser;
+import com.study.doubanbook_for_android.model.GeneralUserResult;
+
+public class UserListActivity extends BaseP2RActivity<AuthorUser> {
 
 	String searchContent = "";
-	GeneralResult result;
+	GeneralUserResult result;
 	DoubanBusiness db = new DoubanBusiness(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.f_comment_list);
-		adapter = new BookAdapter(dataList, this);
+		pageIndex = 0;
+		adapter = new UserListAdapter(dataList, this);
 		initP2RLvAndThread();
 		searchContent = getIntent().getStringExtra("searchContent");
 		fetchData();
@@ -39,8 +39,8 @@ public class UserListActivity extends BaseP2RActivity<BookItem> {
 		int arg1 = msg.arg1;
 		switch (arg1) {
 		case SUCCESS:
-			result = (GeneralResult) (msg.obj);
-			addData(result.getBooks());
+			result = (GeneralUserResult) (msg.obj);
+			addData(result.getUsers());
 			break;
 		case FAILURE:
 			WrongMsg w = (WrongMsg) (msg.obj);
@@ -92,7 +92,6 @@ public class UserListActivity extends BaseP2RActivity<BookItem> {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("userDetail", dataList.get(position - 1));
 		intent.putExtras(bundle);
-
 		startActivity(intent);
 	}
 }

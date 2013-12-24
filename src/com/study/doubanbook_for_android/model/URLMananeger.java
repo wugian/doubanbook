@@ -12,7 +12,7 @@ public class URLMananeger {
 	// get the user's collection url
 	public static final String USER_COLLECTION_URL = "/v2/book/user/:name/collections";
 	//user search url
-	public static final String USER_SEARCH_URL = "/v2/user/search";
+	public static final String USER_SEARCH_URL = "/v2/user";
 
 
 }

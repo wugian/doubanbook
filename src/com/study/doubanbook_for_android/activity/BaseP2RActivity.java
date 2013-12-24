@@ -34,7 +34,7 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 	protected ArrayList<T> dataList = new ArrayList<T>();
 	public static final int REQUEST_CODE_PUBLISH = 0;
 	protected BaseAdapter adapter;
-	protected int pageIndex = 1;
+	protected int pageIndex = 0;
 
 	public static final int SUCCESS = 0;
 	public static final int FAILURE = 1;

@@ -123,7 +123,6 @@ public class NetUtils {
 			HttpPost httpPost = new HttpPost(urls);
 			try {
 				// 设置httpPost请求参数
-				String tag;
 				Log.d("NET", "POST " + urls);
 				// add access_token if need,just send context to this is ok
 				if (context != null) {
