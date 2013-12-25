@@ -91,7 +91,20 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("bookItem", dataList.get(position - 1));
 		intent.putExtras(bundle);
-
-		startActivity(intent);
+		startActivityForResult(intent, REQUEST_CODE_CHANGED);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(requestCode==REQUEST_CODE_CHANGED)
+			if(data!=null)
+				reUpdateData();
+			else{
+				data = getIntent();
+				
+			}
+	}
+
 }

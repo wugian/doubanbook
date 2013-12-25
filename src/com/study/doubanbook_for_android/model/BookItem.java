@@ -239,4 +239,19 @@ public class BookItem implements Serializable {
 		this.catalog = catalog;
 	}
 
+	@Override
+	public String toString() {
+		return "BookItem [id=" + id + ", isbn10=" + isbn10 + ", isbn13="
+				+ isbn13 + ", title=" + title + ", origin_title="
+				+ origin_title + ", alt_title=" + alt_title + ", subtitle="
+				+ subtitle + ", url=" + url + ", alt=" + alt + ", image="
+				+ image + ", images=" + images + ", author=" + author
+				+ ", translator=" + translator + ", publisher=" + publisher
+				+ ", pubdate=" + pubdate + ", rating=" + rating + ", tags="
+				+ tags + ", binding=" + binding + ", price=" + price
+				+ ", pages=" + pages + ", author_intro=" + author_intro
+				+ ", summary=" + summary + ", catalog=" + catalog
+				+ ", current_user_collection=" + current_user_collection + "]";
+	}
+
 }

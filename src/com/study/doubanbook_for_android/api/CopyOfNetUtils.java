@@ -1,7 +1,10 @@
 package com.study.doubanbook_for_android.api;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +16,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -37,11 +38,9 @@ import android.net.ParseException;
 
 import com.study.doubanbook_for_android.auth.AccessToken;
 import com.study.doubanbook_for_android.auth.KeepToken;
-import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.utils.DebugUtils;
-import com.study.doubanbook_for_android.utils.JsonUtil;
 
-public class NetUtils {
+public class CopyOfNetUtils {
 	public static final int GET = 0;
 	public static final int POST = 1;
 	public static final int DELETE = 2;
@@ -67,104 +66,181 @@ public class NetUtils {
 	public static String getHttpEntity(String urls, int method,
 			List<String> keys, List<String> values, Context context) {
 
-		// super class of HttpGet ,HttpPost,HttpDelete ,HttpPut
 		HttpRequestBase generalRequest = null;
-		// response result
 		HttpResponse httpResponse = null;
-		// result StringBuffer
+		
 		StringBuffer result = new StringBuffer();
-
-		//log out request urls
-		DebugUtils.d("NET",urls);
-		// initial the method
 		switch (method) {
 		case GET:
+			HttpGet httpGet = new HttpGet(getUrlStr(urls, values, keys));
 			generalRequest = new HttpGet(getUrlStr(urls, values, keys));
-			break;
-		case POST:
-			generalRequest = new HttpPost(urls);
+			
+
+			// add access_token if need,just send context
+			if (context != null) {
+				AccessToken accessToken = KeepToken.readAccessToken(context);
+				httpGet.addHeader("access_token", accessToken.getToken());
+			}
 			try {
-				((HttpPost) generalRequest).setEntity(new UrlEncodedFormEntity(
-						getNameValuePair(keys, values), HTTP.UTF_8));
-			} catch (UnsupportedEncodingException e1) {
-				DebugUtils.d("NET", e1.getMessage());
-				e1.printStackTrace();
+				httpResponse = getNewHttpClient().execute(httpGet);
+			} catch (ClientProtocolException e) {
+				DebugUtils.d("NET", e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				DebugUtils.d("NET", e.getMessage());
+				e.printStackTrace();
+			}
+			int statusCode = httpResponse.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				try {
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+				} catch (ParseException e) {
+					// log out the exception
+					DebugUtils.d("NET", e.getMessage());
+					e.printStackTrace();
+				} catch (IOException e) {
+					DebugUtils.d("NET", e.getMessage());
+					e.printStackTrace();
+				}
+			} else {
+				// get the wrong msg will return upstairs will charge
+				// log out the status code and describe
+				try {
+					// log out the result,in business will be received by
+					// wrongMsg model
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+				} catch (org.apache.http.ParseException e) {
+					DebugUtils.d("NET", e.getMessage());
+					e.printStackTrace();
+				} catch (IOException e) {
+					DebugUtils.d("NET", e.getMessage());
+					e.printStackTrace();
+				}
+				DebugUtils.d("NET", "status code:  "
+						+ httpResponse.getStatusLine().getStatusCode());
+				DebugUtils.d("NET", "status describe:  "
+						+ httpResponse.getStatusLine().getReasonPhrase());
 			}
 			break;
-		case DELETE:
-			generalRequest = new HttpDelete(urls);
-			break;
-		case PUT:
-			generalRequest = new HttpPut(urls);
+		case POST:
+			HttpPost httpPost = new HttpPost(urls);
 			try {
-				((HttpPut) generalRequest).setEntity(new UrlEncodedFormEntity(
-						getNameValuePair(keys, values), HTTP.UTF_8));
-			} catch (UnsupportedEncodingException e1) {
-				DebugUtils.d("NET", e1.getMessage());
-				e1.printStackTrace();
+				// 设置httpPost请求参数
+				DebugUtils.d("NET", "POST " + urls);
+				// add access_token if need,just send context to this is ok
+				if (context != null) {
+					AccessToken accessToken1 = KeepToken
+							.readAccessToken(context);
+					httpPost.addHeader("Authorization", "Bearer "
+							+ accessToken1.getToken());
+					httpPost.addHeader("access_token", accessToken1.getToken());
+				}
+				httpPost.setEntity(new UrlEncodedFormEntity(getNameValuePair(
+						keys, values), HTTP.UTF_8));
+				// here remember user New HttpClient with SSL protocol
+				httpResponse = getNewHttpClient().execute(httpPost);
+				if (httpResponse.getStatusLine().getStatusCode() == 200) {
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+				} else {
+					// get the wrong msg will return upstairs will charge
+					// log out the status code and describe
+					try {
+						// log out the result,in business will be received by
+						// wrongMsg model
+						result = new StringBuffer(
+								EntityUtils.toString(httpResponse.getEntity()));
+					} catch (org.apache.http.ParseException e) {
+						DebugUtils.d("NET", e.getMessage());
+						e.printStackTrace();
+					} catch (IOException e) {
+						DebugUtils.d("NET", e.getMessage());
+						e.printStackTrace();
+					}
+					DebugUtils.d("NET", "status code:  "
+							+ httpResponse.getStatusLine().getStatusCode());
+					DebugUtils.d("NET", "status describe:  "
+							+ httpResponse.getStatusLine().getReasonPhrase());
+				}
+			} catch (ClientProtocolException e) {
+				DebugUtils.d("NET", e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				DebugUtils.d("NET", e.getMessage());
+				e.printStackTrace();
+			}
+			break;
+
+		case DELETE:
+			HttpPost httpDelete = new HttpPost(urls);
+			try {
+				// 设置httpPost请求参数
+				DebugUtils.d("NET", "DELETE " + urls);
+				// add access_token if need,just send context to this is ok
+				if (context != null) {
+					AccessToken accessToken1 = KeepToken
+							.readAccessToken(context);
+					httpDelete.addHeader("access_token",
+							accessToken1.getToken());
+				}
+				httpDelete.setEntity(new UrlEncodedFormEntity(getNameValuePair(
+						keys, values), HTTP.UTF_8));
+				// here remember user New HttpClient with SSL protocol
+				httpResponse = getNewHttpClient().execute(httpDelete);
+				if (httpResponse.getStatusLine().getStatusCode() == 200) {
+					result = new StringBuffer(EntityUtils.toString(httpResponse
+							.getEntity()));
+				} else {
+					// get the wrong msg will return upstairs will charge
+					// log out the status code and describe
+					try {
+						// log out the result,in business will be received by
+						// wrongMsg model
+						result = new StringBuffer(
+								EntityUtils.toString(httpResponse.getEntity()));
+					} catch (org.apache.http.ParseException e) {
+						DebugUtils.d("NET", e.getMessage());
+						e.printStackTrace();
+					} catch (IOException e) {
+						DebugUtils.d("NET", e.getMessage());
+						e.printStackTrace();
+					}
+					DebugUtils.d("NET", "status code:  "
+							+ httpResponse.getStatusLine().getStatusCode());
+					DebugUtils.d("NET", "status describe:  "
+							+ httpResponse.getStatusLine().getReasonPhrase());
+				}
+			} catch (ClientProtocolException e) {
+				DebugUtils.d("NET", e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				DebugUtils.d("NET", e.getMessage());
+				e.printStackTrace();
+			}
+			break;
+
+		/**
+		 * 这个不用使用SSL协议的客服端认证,以前的使用方便现在放弃 updatatime: 2013-12-13
+		 */
+		// TODO add delete and put http... then the NetUtils is done
+		case 3 /* old get */:
+			try {
+				URL url = new URL(getUrlStr(urls, values, keys));
+				URLConnection connection = url.openConnection();
+				String line;
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						connection.getInputStream(), "UTF-8"));
+				while ((line = in.readLine()) != null) {
+					result.append(line);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			break;
 		default:
 			break;
-		}
-		// add access token
-		if (context != null) {
-			AccessToken accessToken = KeepToken.readAccessToken(context);
-			generalRequest.addHeader("Authorization",
-					"Bearer " + accessToken.getToken());
-			generalRequest.addHeader("access_token", accessToken.getToken());
-		}
-		// execute the request
-		try {
-			httpResponse = getNewHttpClient().execute(generalRequest);
-		} catch (ClientProtocolException e) {
-			DebugUtils.d("NET", e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			DebugUtils.d("NET", e.getMessage());
-			e.printStackTrace();
-		}
-
-		int statusCode = httpResponse.getStatusLine().getStatusCode();
-
-		if (statusCode == HttpStatus.SC_OK) {
-			try {
-				result = new StringBuffer(EntityUtils.toString(httpResponse
-						.getEntity()));
-			} catch (ParseException e) {
-				// log out the exception
-				DebugUtils.d("NET", e.getMessage());
-				e.printStackTrace();
-			} catch (IOException e) {
-				DebugUtils.d("NET", e.getMessage());
-				e.printStackTrace();
-			}
-		} else if (statusCode == 204) {// status = 204 无返回信息 如删除收藏图书 删除笔记
-			// TODO add a delete success model and revert it to json
-			DeleteSuccess del = new DeleteSuccess();
-			del.setDelCode(200);
-			del.setDelMessage("delet success");
-			result = new StringBuffer(JsonUtil.toJsonObject(del));
-		} else {
-			// get the wrong message will return upstairs will charge in
-			// business level
-			// log out the status code and describe
-			try {
-				// log out the result,in business will be received by
-				// WrongMsg model
-				result = new StringBuffer(EntityUtils.toString(httpResponse
-						.getEntity()));
-			} catch (org.apache.http.ParseException e) {
-				DebugUtils.d("NET", e.getMessage());
-				e.printStackTrace();
-			} catch (IOException e) {
-				DebugUtils.d("NET", e.getMessage());
-				e.printStackTrace();
-			}
-			DebugUtils.d("NET", "status code:  "
-					+ httpResponse.getStatusLine().getStatusCode());
-			DebugUtils.d("NET", "status describe:  "
-					+ httpResponse.getStatusLine().getReasonPhrase());
 		}
 		DebugUtils.d("NET", result.toString());
 		return result.toString();
@@ -198,6 +274,7 @@ public class NetUtils {
 						+ values.get(i));
 			}
 		}
+		DebugUtils.d("NET", "url:" + urlBuffer.toString());
 		return urlBuffer.toString();
 
 	}
@@ -243,13 +320,12 @@ public class NetUtils {
 			List<String> values) {
 		// 设置HTTP POST请求参数必须用NameValuePair对象
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		if (keys != null) {
+		if (keys != null)
 			for (int i = 0; i < keys.size(); i++) {
 				params.add(new BasicNameValuePair(keys.get(i), values.get(i)));
 				DebugUtils.d("NET", "parms" + (i + 1) + ":" + keys.get(i) + "="
 						+ values.get(i));
 			}
-		}
 		return params;
 	}
 }

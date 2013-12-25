@@ -152,7 +152,7 @@
                             android:textSize="@dimen/small_txt_size" />
 
                         <Button
-                            android:id="@+id/writeComment_btn"
+                            android:id="@+id/delCollect_btn"
                             android:layout_width="48dp"
                             android:layout_height="@dimen/small_btn_h"
                             android:layout_marginLeft="@dimen/small_margin"
@@ -179,8 +179,9 @@
             <Button
                 android:id="@+id/comment_btn"
                 android:layout_width="wrap_content"
+                android:background="@drawable/btn_selector"
                 android:layout_height="wrap_content"
-                android:text="showComment" />
+                android:text="show note" />
         </LinearLayout>
     </ScrollView>
 

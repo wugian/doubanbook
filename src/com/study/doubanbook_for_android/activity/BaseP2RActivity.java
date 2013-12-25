@@ -3,6 +3,8 @@ package com.study.doubanbook_for_android.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -32,7 +34,7 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 
 	PullToRefreshListView p2r_lv;
 	protected ArrayList<T> dataList = new ArrayList<T>();
-	public static final int REQUEST_CODE_PUBLISH = 0;
+	public static final int REQUEST_CODE_CHANGED = 1;
 	protected BaseAdapter adapter;
 	protected int pageIndex = 0;
 
@@ -49,9 +51,6 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 
 		@Override
 		public void handleMessage(Message msg) {
-			// 处理收到的消 息，把天气信息显示在title上
-			// result = (GeneralResult) (msg.obj);
-			// addData(result.getBooks());
 			selfHandleMsg(msg);
 		}
 	}
@@ -113,6 +112,7 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 
 	// 重新刷新数据
 	protected void reUpdateData() {
+		pageIndex = 0;
 		dataList.clear();
 		fetchData();
 	}

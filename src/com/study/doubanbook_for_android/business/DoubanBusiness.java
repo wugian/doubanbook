@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.study.doubanbook_for_android.activity.BaseActivity;
@@ -16,6 +17,7 @@ import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
+import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
@@ -83,7 +85,7 @@ public class DoubanBusiness {
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
-					DebugUtils.d("NET", "wrongmsg model");
+					DebugUtils.e("NET", "wrongmsg model");
 					callback.onFailure(wrongMsg);
 				} else {
 					DebugUtils.d("NET", "right model");
@@ -160,7 +162,7 @@ public class DoubanBusiness {
 	 * @param callback
 	 */
 	//TODO NEED TEST when success show toast
-	public void collectBook(final String bookid,final CollectBookMsg collectmsg,
+	public void collectBook(final String bookid,final CollectBookMsg collectmsg,final boolean hasCollect,
 			final AsynCallback<CollectSuccessResult> callback) {
 		new Thread() {
 			public void run() {
@@ -190,9 +192,15 @@ public class DoubanBusiness {
 				 
 				callback.onStart();
 				
+				
+				//根据文档要求,当当前用户收藏时用PUT,否则使用POSTE
+				int method = NetUtils.POST;
+				if(hasCollect)
+					method = NetUtils.PUT;
+				
 				s = NetUtils.getHttpEntity(
 						getBasicUrl(URLMananeger.BOOK_COLLECT_URL.replace(
-								":id", bookid)), NetUtils.POST, keys, values,
+								":id", bookid)), method, keys, values,
 						context);
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
@@ -211,6 +219,41 @@ public class DoubanBusiness {
 		}.start();
 	}
 	
+	
+	
+	public void deleteCollectBook(final String bookid,
+			final AsynCallback<DeleteSuccess> callback) {
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				DeleteSuccess result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+				
+				callback.onStart();
+				
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.DEL_BOOK_COL_URL.replace(
+								":id", bookid)), NetUtils.DELETE, keys, values,
+						context);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+						DebugUtils.d("NET",  "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+						DebugUtils.d("NET",  "right model");
+					result = gson.fromJson(s,
+							new TypeToken<DeleteSuccess>() {
+							}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
+	}
 	/**
 	 * 
 		GET  https://api.douban.com/v2/book/user/:name/collections
