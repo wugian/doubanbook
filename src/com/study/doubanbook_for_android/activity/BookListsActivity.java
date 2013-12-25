@@ -1,5 +1,6 @@
 package com.study.doubanbook_for_android.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -94,17 +95,6 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		startActivityForResult(intent, REQUEST_CODE_CHANGED);
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if(requestCode==REQUEST_CODE_CHANGED)
-			if(data!=null)
-				reUpdateData();
-			else{
-				data = getIntent();
-				
-			}
-	}
+
 
 }

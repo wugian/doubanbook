@@ -13,12 +13,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
+import com.study.doubanbook_for_android.api.WrongMsg;
+import com.study.doubanbook_for_android.auth.AccessToken;
+import com.study.doubanbook_for_android.auth.KeepToken;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
+import com.study.doubanbook_for_android.callback.AsynCallback;
 
 /**
  * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
+ * 
  * @author tezuka-pc
- *
+ * 
  */
 public class SerchInputActivity extends BaseActivity {
 
@@ -31,6 +36,7 @@ public class SerchInputActivity extends BaseActivity {
 	private TextView bookSearch;
 	private static final int SEARCH_BOOK = 0;// search book flag
 	private static final int SEARCH_READER = 1;// search reader flag
+	DoubanBusiness db = new DoubanBusiness(this);
 
 	private int flag = SEARCH_BOOK;// search flag
 
@@ -44,13 +50,14 @@ public class SerchInputActivity extends BaseActivity {
 		initWidgets();
 		initListners();
 		// auto auth
-		DoubanBusiness db = new DoubanBusiness(context);
 		db.auth();
+		
 	}
 
 	@Override
 	void findViews() {
 		super.findViews();
+		authBtn = (Button) this.findViewById(R.id.authBtn);
 		search_et = (EditText) this.findViewById(R.id.serchContent_et);
 		search_btn = (Button) this.findViewById(R.id.search_btn);
 		clear_tv = (TextView) this.findViewById(R.id.clear_tv);
@@ -146,7 +153,6 @@ public class SerchInputActivity extends BaseActivity {
 				// readerSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//
 				// 下划线
 				// readerSearch.getPaint().setFlags(Paint.););
-
 				bookSearch.setTextColor(Color.GRAY);
 				readerSearch.setTextColor(Color.BLACK);
 				search_et.setHint(getResources().getString(
@@ -155,7 +161,27 @@ public class SerchInputActivity extends BaseActivity {
 				System.out.println(flag);
 			}
 		});
+		authBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				 
+				db.getUserCollections("72719211", "wish", 0,
+						new AsynCallback<String>() {
+							@Override
+							public void onFailure(WrongMsg caught) {
+								super.onFailure(caught);
+								System.out.println("failure");
+							}
 
+							@Override
+							public void onSuccess(String data) {
+								// TODO Auto-generated method stub
+								super.onSuccess(data);
+								System.out.println("success");
+							}
+						});
+			}
+		});
 	}
 
 	boolean test = false;

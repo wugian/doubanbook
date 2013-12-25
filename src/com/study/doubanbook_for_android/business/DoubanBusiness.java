@@ -220,7 +220,14 @@ public class DoubanBusiness {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * DELETE  https://api.douban.com/v2/book/:id/collection
+	       返回: status = 204 无返回信息
+	 * 取消对基本图书的收藏
+	 * @param bookid
+	 * @param callback
+	 */
 	public void deleteCollectBook(final String bookid,
 			final AsynCallback<DeleteSuccess> callback) {
 		new Thread() {
@@ -263,46 +270,30 @@ public class DoubanBusiness {
 		from		按收藏更新时间过滤的起始时间	选填，格式为符合rfc3339的字符串，例如"2012-10-19T17:14:11"，其他信息默认为不传此项
 		to			按收藏更新时间过滤的结束时间	同上
 		rating	星评	选填，数字1～5为合法值，其他信息默认为不区分星评
-	 * @param bookid
 	 * @param collectmsg
 	 * @param start
 	 * @param callback
 	 */
-	public void getUserCollection(final String bookid,final CollectBookMsg collectmsg, final int start,
-			final AsynCallback<CollectSuccessResult> callback) {
+	public void getUserCollections( final String username,final String status,final int start,
+			final AsynCallback<String> callback) {
 		new Thread() {
 			public void run() {
 				WrongMsg wrongMsg = new WrongMsg();
-				CollectSuccessResult result = null;
+				String result = null;
 				Gson gson = new Gson();
 				String s = "";
 				List<String> keys = new ArrayList<String>();
 				List<String> values = new ArrayList<String>();
-
-				// init keys
-				// init values
+ 
 				keys.add("status");
-				values.add(collectmsg.getStatus());
-				//TODO NOT USE YET
-				//keys.add("tags");
-				if(collectmsg.getComment()!=null){
-					values.add(collectmsg.getComment());
-					keys.add("comment");
-				}
-				if(collectmsg.getPrivacy()){
-					keys.add("privacy");
-					values.add("private");
-				}
-				if(collectmsg.getRating()>=1&&collectmsg.getRating()<=5){
-					keys.add("rating");
-					values.add(String.valueOf(collectmsg.getRating()));
-				}
+				values.add(status);
+				 
 				 
 				callback.onStart();
 				
 				s = NetUtils.getHttpEntity(
-						getBasicUrl(URLMananeger.BOOK_COLLECT_URL.replace(
-								":name", bookid)), NetUtils.POST, keys, values,
+						getBasicUrl(URLMananeger.USER_COLLECTION_URL.replace(
+								":name", username)), NetUtils.GET, keys, values,
 						context);
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
@@ -312,7 +303,7 @@ public class DoubanBusiness {
 				} else {
 						DebugUtils.d("NET",  "right model");
 					result = gson.fromJson(s,
-							new TypeToken<CollectSuccessResult>() {
+							new TypeToken<String>() {
 							}.getType());
 					callback.onSuccess(result);
 				}

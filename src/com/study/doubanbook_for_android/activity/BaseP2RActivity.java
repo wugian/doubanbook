@@ -121,6 +121,15 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 		p2r_lv.onRefreshComplete();
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK
+				&& requestCode == REQUEST_CODE_CHANGED)
+			if (data != null)
+				reUpdateData();
+	}
+
 	// ------------------------------------------------
 
 	/**
