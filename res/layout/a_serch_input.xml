@@ -73,8 +73,9 @@
 
     <Button
         android:id="@+id/authBtn"
+        android:background="@drawable/btn_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AUTH" />
+        android:text="AUTH/UserDetail" />
 
 </LinearLayout>

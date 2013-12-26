@@ -31,6 +31,7 @@
         android:background="@null"
         android:paddingRight="@dimen/edge_margin"
         android:text="完成"
+        android:visibility="invisible"
         android:textColor="#ffffff"
         android:textSize="20sp" />
 

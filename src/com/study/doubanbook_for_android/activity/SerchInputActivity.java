@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,6 +21,9 @@ import com.study.doubanbook_for_android.auth.AccessToken;
 import com.study.doubanbook_for_android.auth.KeepToken;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
+import com.study.doubanbook_for_android.model.AuthorUser;
+import com.study.doubanbook_for_android.model.CollectionItem;
+import com.study.doubanbook_for_android.model.GeneralCollectionResult;
 
 /**
  * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
@@ -36,22 +42,67 @@ public class SerchInputActivity extends BaseActivity {
 	private TextView bookSearch;
 	private static final int SEARCH_BOOK = 0;// search book flag
 	private static final int SEARCH_READER = 1;// search reader flag
-	DoubanBusiness db = new DoubanBusiness(this);
+	private static final int GET_USERDETAIL_SUCCESS = 2;
+	private static final int GET_USERDETAIL_FAILURE = 3;
+
+	DoubanBusiness doubanBusiness = new DoubanBusiness(this);
 
 	private int flag = SEARCH_BOOK;// search flag
+
+	// thread
+	private MessageHandler msgHandler;
+
+	class MessageHandler extends Handler {
+		public MessageHandler(Looper looper) {
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.arg1) {
+			case GET_USERDETAIL_SUCCESS:
+				AuthorUser ud = (AuthorUser) msg.obj;
+				Intent intent = new Intent(context, UserDetailActivity.class);
+				intent.putExtra("userDetail", ud);
+				startActivity(intent);
+				break;
+			case GET_USERDETAIL_FAILURE:
+				// TODO toast and charge the code
+				toast(((WrongMsg) msg.obj).getMsg());
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	/**
+	 * 利用MESSAGEHANDLER发送消息到UI线程
+	 * 
+	 * @param b
+	 * @param status
+	 */
+	void sendMessage(Object b, int status) {
+		Message message = Message.obtain();
+		message.arg1 = status;
+		message.obj = b;
+		msgHandler.sendMessage(message);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_serch_input);
+		Looper looper = Looper.myLooper();
+		msgHandler = new MessageHandler(looper);
 
 		context = this;
 		findViews();
 		initWidgets();
 		initListners();
 		// auto auth
-		db.auth();
-		
+		doubanBusiness.auth();
+
 	}
 
 	@Override
@@ -164,22 +215,22 @@ public class SerchInputActivity extends BaseActivity {
 		authBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				 
-				db.getUserCollections("72719211", "wish", 0,
-						new AsynCallback<String>() {
-							@Override
-							public void onFailure(WrongMsg caught) {
-								super.onFailure(caught);
-								System.out.println("failure");
-							}
+				AccessToken ac = KeepToken.readAccessToken(context);
+				if (notNull(ac.getDoubanUserId())) {
+					doubanBusiness.getUserDetail(ac.getDoubanUserId(),
+							new AsynCallback<AuthorUser>() {
+								public void onSuccess(AuthorUser data) {
+									sendMessage(data, GET_USERDETAIL_SUCCESS);
+								};
 
-							@Override
-							public void onSuccess(String data) {
-								// TODO Auto-generated method stub
-								super.onSuccess(data);
-								System.out.println("success");
-							}
-						});
+								public void onFailure(WrongMsg caught) {
+									sendMessage(caught, GET_USERDETAIL_FAILURE);
+								};
+							});
+				} else{
+					toast("请先进行登录授权");
+					doubanBusiness.auth();
+				}
 			}
 		});
 	}

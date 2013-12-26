@@ -41,6 +41,8 @@ public class BookDetailActivity extends BaseActivity {
 	private static final int COLLETE_DELETE_FAILURE = 3;// 取消收藏成功
 	private static final int COLLETE_SUCCESS = 1;// 收藏成功
 	private static final int COLLETE_FAILUR = 2;// 收藏失败
+	
+	BookItem bookItem = null;
 
 	DoubanBusiness doubanBusiness = new DoubanBusiness(this);
 	private boolean hasCollectFirst = false;
@@ -50,7 +52,6 @@ public class BookDetailActivity extends BaseActivity {
 	ImageView bookImg;
 	TextView authorSumary_tv;
 	TextView bookSumary;
-	BookItem bookItem = null;
 	TextView title;
 	TextView author;
 	TextView price;

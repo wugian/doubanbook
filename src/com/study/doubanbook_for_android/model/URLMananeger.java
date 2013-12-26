@@ -3,6 +3,8 @@ package com.study.doubanbook_for_android.model;
 public class URLMananeger {
 	// root url
 	public static final String ROOT_ULR = "https://api.douban.com";
+	//user detail url得到当前登录用户的信息
+	public static final String USER_DETAIL = "/v2/user/~me";
 	// book writer search url
 	public static final String BOOK_WRITER_SEARCHR_URL = "/v2/book/search";
 	// book note url

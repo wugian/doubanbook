@@ -15,9 +15,11 @@ import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.auth.Douban;
 import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.callback.AsynCallback;
+import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
 import com.study.doubanbook_for_android.model.DeleteSuccess;
+import com.study.doubanbook_for_android.model.GeneralCollectionResult;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
@@ -38,6 +40,39 @@ public class DoubanBusiness {
 	public void auth(){
 		Douban douban = Douban.getInstance();
 		douban.authorize(context, new SimpleDoubanOAuthListener());
+	}
+	/**
+	 * GET http://api.douban.com/labs/bubbler/user/ahbei  ahbei is user id
+	 * @param id
+	 * @param callback
+	 */
+	public void getUserDetail(final String id,final AsynCallback<AuthorUser> callback){
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				AuthorUser result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+				callback.onStart();
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.USER_DETAIL),
+						NetUtils.GET, keys, values, context);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+					DebugUtils.e("NET", "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+					DebugUtils.d("NET", "right model");
+					result = gson.fromJson(s, new TypeToken<AuthorUser>() {
+					}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
 	}
 
 	// TODO 修改整个方法,利用线程,回调,得到 DONE
@@ -263,23 +298,23 @@ public class DoubanBusiness {
 	}
 	/**
 	 * 
-		GET  https://api.douban.com/v2/book/user/:name/collections
+		GET  https://api.douban.com/v2/book/user/:name/collections name 是userid而不是	USERNAME
 		参数			意义						备注
 		status		收藏状态					选填（想读：wish 在读：reading 读过：read）默认为所有状态
 		tag			收藏标签					选填
 		from		按收藏更新时间过滤的起始时间	选填，格式为符合rfc3339的字符串，例如"2012-10-19T17:14:11"，其他信息默认为不传此项
 		to			按收藏更新时间过滤的结束时间	同上
 		rating	星评	选填，数字1～5为合法值，其他信息默认为不区分星评
-	 * @param collectmsg
-	 * @param start
+	 * @param  
+	 * @param  
 	 * @param callback
 	 */
-	public void getUserCollections( final String username,final String status,final int start,
-			final AsynCallback<String> callback) {
+	public void getUserCollections( final String username,final String status ,
+			final AsynCallback<GeneralCollectionResult> callback) {
 		new Thread() {
 			public void run() {
 				WrongMsg wrongMsg = new WrongMsg();
-				String result = null;
+				GeneralCollectionResult result = null;
 				Gson gson = new Gson();
 				String s = "";
 				List<String> keys = new ArrayList<String>();
@@ -298,12 +333,12 @@ public class DoubanBusiness {
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
-						DebugUtils.d("NET",  "wrongmsg model");
+						DebugUtils.e("NET",  "wrongmsg model");
 					callback.onFailure(wrongMsg);
 				} else {
 						DebugUtils.d("NET",  "right model");
 					result = gson.fromJson(s,
-							new TypeToken<String>() {
+							new TypeToken<GeneralCollectionResult>() {
 							}.getType());
 					callback.onSuccess(result);
 				}

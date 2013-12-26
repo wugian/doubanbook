@@ -11,7 +11,7 @@ public class Annotations implements Serializable {
 	private static final long serialVersionUID = 7536027048811655857L;
 
 	private String chapter;
-	 private BookItem book;
+	private BookItem book;
 	private AuthorUser author_user;// ": {
 	// "name": "谁也认不出哥",
 	// "is_banned": false,
