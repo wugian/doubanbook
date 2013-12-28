@@ -36,7 +36,7 @@ public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 		bookid = getIntent().getStringExtra("bookid");
 		bookItem = (BookItem) getIntent().getSerializableExtra("bookItem");
 		fetchData();
-		setInvagator(bookItem.getTitle() + " 的笔记");
+		setNavagator(bookItem.getTitle() + " 的笔记");
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 	@Override
 	public void fetchData() {
 		super.fetchData();
-		db.getNoteList(bookid, pageIndex * PAGE_COUNT + 1,
+		db.getNoteList(bookid, pageIndex * PAGE_COUNT ,
 				new AsynCallback<GeneralNoteResult>() {
 					public void onSuccess(GeneralNoteResult data) {
 						pageIndex++;

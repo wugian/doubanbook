@@ -158,7 +158,7 @@ public class UserDetailActivity extends BaseActivity {
 		DebugUtils.e("CLASS", getClass().getName());
 		findViews();
 		initDatas();
-		setInvagator(userDetail.getName() + " 的个人主页");
+		setNavagator(userDetail.getName() + " 的个人主页");
 		initWidgets();
 		initListners();
 		getData();

@@ -33,7 +33,7 @@ public class UserListActivity extends BaseP2RActivity<AuthorUser> {
 		adapter = new UserListAdapter(dataList, this);
 		initP2RLvAndThread();
 		searchContent = getIntent().getStringExtra("searchContent");
-		setInvagator("'"+searchContent+"' 的搜索结果");
+		setNavagator("'"+searchContent+"' 的搜索结果");
 		fetchData();
 	}
 

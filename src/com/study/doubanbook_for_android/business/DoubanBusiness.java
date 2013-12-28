@@ -219,7 +219,8 @@ public class DoubanBusiness {
 	}
  
 	/**
-	 * 
+	 * 得到用户的所有笔记
+	 * GET  https://api.douban.com/v2/book/user/:name/annotations
 	 * @param userId
 	 * @param start
 	 * @param callback
@@ -245,6 +246,70 @@ public class DoubanBusiness {
 				s = NetUtils.getHttpEntity(
 						getBasicUrl(URLMananeger.USER_ALL_NOTE_URL.replace(
 								":name", userId)), NetUtils.GET, keys, values,
+						null);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+						DebugUtils.d("NET",  "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+						DebugUtils.d("NET",  "right model");
+					result = gson.fromJson(s,
+							new TypeToken<GeneralNoteResult>() {
+							}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
+	}
+	
+ 
+	/**
+	 * POST  https://api.douban.com/v2/book/:id/annotations
+		参数			意义			备注
+		content		笔记内容		必填，需多于15字
+		page		页码			页码或章节名选填其一，最多6位正整数
+		chapter		章节名		页码或章节名选填其一，最多100字
+		privacy		隐私设置		选填，值为'private'为设置成仅自己可见，其他默认为公开
+	 * 
+	 * @param bookId
+	 * @param content
+	 * @param page
+	 * @param chapName
+	 * @param privace
+	 * @param callback
+	 */
+	public void writeNote(final String bookId,final String content,final String page,final String chapName,final boolean privace, 
+			final AsynCallback<GeneralNoteResult> callback) {
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				GeneralNoteResult result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+
+				// init keys and values
+				keys.add("content");
+				if(page!=null){
+					keys.add("page");
+					values.add(String.valueOf(page));
+				}
+				if(chapName!=null){
+					keys.add("chapter");
+					values.add(chapName);
+				}
+				if(privace){
+					values.add("private");
+					keys.add("privacy");
+					}
+				 
+				callback.onStart();
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.BOOK_NOTE_WRITE_URL.replace(
+								":id", bookId)), NetUtils.POST, keys, values,
 						null);
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());

@@ -36,7 +36,7 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 		userName = getIntent().getStringExtra("userName");
 		authorUser = (AuthorUser)getIntent().getSerializableExtra("authorUser");
 		fetchData();
-		setInvagator(authorUser.getName()+" 的笔记");
+		setNavagator(authorUser.getName()+" 的笔记");
 	}
 
 	@Override

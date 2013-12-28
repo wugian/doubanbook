@@ -11,6 +11,8 @@ public class URLMananeger {
 	public static final String BOOK_DETAIL_URL="/v2/book/:id";
 	// book note url
 	public static final String BOOK_NOTE_LIST_URL = "/v2/book/:id/annotations";
+	//book note write by user
+	public static final String BOOK_NOTE_WRITE_URL="/v2/book/:id/annotations";
 	// user all note about book
 	public static final String USER_ALL_NOTE_URL = "/v2/book/user/:name/annotations";
 	//collect book url

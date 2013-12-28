@@ -121,7 +121,7 @@ public class BookDetailActivity extends BaseActivity {
 		findViews();
 		setRightButton();
 		initDatas();
-		setInvagator(bookItem.getTitle());
+		setNavagator(bookItem.getTitle());
 		initWidgets();
 		initListners();
 		initPopWindow();
@@ -412,6 +412,8 @@ public class BookDetailActivity extends BaseActivity {
 			public void onClick(View v) {
 
 				//TODO add write comment activity and xml
+				Intent intent = new Intent(context,NoteEditActivity.class);
+				startActivity(intent);
 			}
 		});
 	}

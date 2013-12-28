@@ -33,7 +33,7 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		adapter = new BookAdapter(dataList, this);
 		initP2RLvAndThread();
 		searchContent = getIntent().getStringExtra("searchContent");
-		setInvagator("'"+searchContent+"' 的搜索结果");
+		setNavagator("'"+searchContent+"' 的搜索结果");
 		fetchData();
 	}
 

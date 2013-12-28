@@ -1,5 +1,6 @@
 package com.study.doubanbook_for_android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,7 +26,7 @@ public class NoteAndUserDetailActivity extends BaseActivity {
 		DebugUtils.e("CLASS", getClass().getName());
 		initDatas();
 		findViews();
-		setInvagator(annotations.getBook().getTitle()+"的评论");
+		setNavagator(annotations.getBook().getTitle() + "的评论");
 		setRightButton();
 		initWidgets();
 		initListners();
@@ -34,9 +35,15 @@ public class NoteAndUserDetailActivity extends BaseActivity {
 	@Override
 	void initRightListener() {
 		super.initRightListener();
-		//TODO add note detail activity and xml 
-	
+		// TODO add note detail activity and xml
+		Intent intent = new Intent(context, NoteEditActivity.class);
+		intent.putExtra("annotations", annotations);
+		startActivity(intent);
+		// TODO for result
+		// startActivityForResult(intent, 100);
+
 	}
+
 	@Override
 	void initDatas() {
 		super.initDatas();

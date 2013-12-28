@@ -32,7 +32,7 @@ public class BaseActivity extends Activity {
 	TextView title;
 	Button back;
 
-	void setInvagator(String searchContent) {
+	void setNavagator(String searchContent) {
 		title = (TextView) findViewById(R.id.title_tv);
 		back = (Button) findViewById(R.id.back_btn);
 		title.setText(searchContent);
