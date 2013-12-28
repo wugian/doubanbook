@@ -18,43 +18,80 @@ public class BaseActivity extends Activity {
 	public final static int PAGE_COUNT = 10;
 	protected ImageDownloader imageDownloader;
 	protected Context context;
-	private TextView pageTile_tv;
-	private Button back_btn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bar_all);
 		DebugUtils.d("TTT", "base Activity oncreate");
-		pageTile_tv = (TextView) findViewById(R.id.pageTitle_tv);
-		back_btn = (Button) findViewById(R.id.back_btn);
-
-		back_btn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
 		context = this;
 		imageDownloader = new ImageDownloader(this);
+
 	}
 
-	void setTitle(String s) {
-		pageTile_tv.setText(s);
+	TextView title;
+	Button back;
+
+	void setInvagator(String searchContent) {
+		title = (TextView) findViewById(R.id.title_tv);
+		back = (Button) findViewById(R.id.back_btn);
+		title.setText(searchContent);
+		back.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setResultThenFinish();
+			}
+		});
+	}
+	
+	Button showComment_btn;
+	void setRightButton(){
+		showComment_btn=(Button) findViewById(R.id.showComment_btn);
+		showComment_btn.setVisibility(View.VISIBLE);
+		showComment_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				initRightListener();
+			}
+		});
+	}
+	
+	void initRightListener() {
+		
 	}
 
+	/**
+	 * 若有必要时重写该方法添加其他内容
+	 */
+	void setResultThenFinish(){
+		finish();
+	}
+
+	/**
+	 * find the views in xml layout
+	 */
 	void findViews() {
 		DebugUtils.d("TTT", "base Activity findview");
 	}
 
+	/**
+	 * initial the data what you need use
+	 */
 	void initDatas() {
 		DebugUtils.d("TTT", "base Activity initDatas");
 	}
 
+	/**
+	 * initial the widget it should be when first show
+	 */
 	void initWidgets() {
 		DebugUtils.d("TTT", "base Activity initwidgets");
 	}
 
+	/**
+	 * initial the click listener of other listener
+	 */
 	void initListners() {
 		DebugUtils.d("TTT", "base Activity initlisternser");
 	}

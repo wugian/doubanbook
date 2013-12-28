@@ -41,7 +41,7 @@ public class BookDetailActivity extends BaseActivity {
 	private static final int COLLETE_DELETE_FAILURE = 3;// 取消收藏成功
 	private static final int COLLETE_SUCCESS = 1;// 收藏成功
 	private static final int COLLETE_FAILUR = 2;// 收藏失败
-	
+
 	BookItem bookItem = null;
 
 	DoubanBusiness doubanBusiness = new DoubanBusiness(this);
@@ -67,10 +67,12 @@ public class BookDetailActivity extends BaseActivity {
 	private LinearLayout bookDetail;
 	private LinearLayout collet_lyt;
 
+	TextView pageTitle_tv;
+	Button comment_btn;
+
 	private String popTitleStr = "";// 弹出窗口的标题
 
 	private MessageHandler msgHandler;// 消息处理器
-	private Button back_btn;
 
 	class MessageHandler extends Handler {
 		public MessageHandler(Looper looper) {
@@ -115,11 +117,32 @@ public class BookDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_book_detail);
+		DebugUtils.e("CLASS", getClass().getName());
 		findViews();
+		setRightButton();
 		initDatas();
+		setInvagator(bookItem.getTitle());
 		initWidgets();
 		initListners();
 		initPopWindow();
+	}
+
+	@Override
+	void initRightListener() {
+		super.initRightListener();
+		Intent intent = new Intent(context, BookNoteListActivity.class);
+		// TODO 添加传递BOOKITEM 或者添加传递BOOK NAME 参数 done
+		intent.putExtra("bookid", bookid);
+		intent.putExtra("bookItem", bookItem);
+
+		startActivity(intent);
+	}
+
+	@Override
+	void setResultThenFinish() {
+		super.setResultThenFinish();
+		setResult();
+		finish();
 	}
 
 	/**
@@ -227,8 +250,6 @@ public class BookDetailActivity extends BaseActivity {
 	void findViews() {
 		super.findViews();
 
-		back_btn = (Button) findViewById(R.id.back_btn);
-
 		bookDetail = (LinearLayout) findViewById(R.id.bookDetail_lyt);
 		collet_lyt = (LinearLayout) findViewById(R.id.collet_lyt);
 		bookImg = (ImageView) findViewById(R.id.bookImg_iv);
@@ -244,6 +265,8 @@ public class BookDetailActivity extends BaseActivity {
 		reading = (Button) findViewById(R.id.reading_btn);
 		done = (Button) findViewById(R.id.read_btn);
 		delCollect = (Button) findViewById(R.id.delCollect_btn);
+		comment_btn= (Button) findViewById(R.id.comment_btn);
+
 	}
 
 	@Override
@@ -263,6 +286,7 @@ public class BookDetailActivity extends BaseActivity {
 	@Override
 	void initWidgets() {
 		super.initWidgets();
+
 		imageDownloader.download(bookItem.getImages().getMedium(), bookImg,
 				null);
 		authorSumary_tv.setText("作者简介:" + bookItem.getAuthor_intro());
@@ -331,15 +355,7 @@ public class BookDetailActivity extends BaseActivity {
 	@Override
 	void initListners() {
 		super.initListners();
-		// 显示评论
-		comment.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, BookNoteListActivity.class);
-				intent.putExtra("bookid", bookid);
-				startActivity(intent);
-			}
-		});
+
 		wish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -364,13 +380,10 @@ public class BookDetailActivity extends BaseActivity {
 				showPop();
 			}
 		});
-
 		delCollect.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// 想读：wish 在读：reading 或 doing 读过：read 或 done）
-				DebugUtils.d("NULL", bookid);
-				DebugUtils.d("NULL", bookItem.toString());
 				doubanBusiness.deleteCollectBook(bookid,
 						new AsynCallback<DeleteSuccess>() {
 							@Override
@@ -393,12 +406,12 @@ public class BookDetailActivity extends BaseActivity {
 						});
 			}
 		});
-		back_btn.setOnClickListener(new OnClickListener() {
+		comment_btn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				setResult();
-				finish();
+
+				//TODO add write comment activity and xml
 			}
 		});
 	}
@@ -438,6 +451,6 @@ public class BookDetailActivity extends BaseActivity {
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
-		
+
 	}
 }

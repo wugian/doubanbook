@@ -7,8 +7,12 @@ public class URLMananeger {
 	public static final String USER_DETAIL = "/v2/user/~me";
 	// book writer search url
 	public static final String BOOK_WRITER_SEARCHR_URL = "/v2/book/search";
+	// book detail by id
+	public static final String BOOK_DETAIL_URL="/v2/book/:id";
 	// book note url
 	public static final String BOOK_NOTE_LIST_URL = "/v2/book/:id/annotations";
+	// user all note about book
+	public static final String USER_ALL_NOTE_URL = "/v2/book/user/:name/annotations";
 	//collect book url
 	public static final String BOOK_COLLECT_URL = "/v2/book/:id/collection";
 	//delete collect book url

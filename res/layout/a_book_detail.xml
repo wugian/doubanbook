@@ -6,39 +6,10 @@
     android:background="@drawable/ic_general_bg"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <include
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/light_blue" >
-
-        <TextView
-            android:id="@+id/pageTitle_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="title"
-            android:textColor="#ffffffff"
-            android:textSize="23sp" />
-
-        <Button
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_back" />
-
-        <Button
-            android:id="@+id/showComment_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/comment_selector"
-            android:padding="1dp"
-            android:paddingRight="@dimen/edge_margin" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        layout="@layout/bar_all" />
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -179,9 +150,9 @@
             <Button
                 android:id="@+id/comment_btn"
                 android:layout_width="wrap_content"
-                android:background="@drawable/btn_selector"
                 android:layout_height="wrap_content"
-                android:text="show note" />
+                android:background="@drawable/btn_selector"
+                android:text="write comment" />
         </LinearLayout>
     </ScrollView>
 

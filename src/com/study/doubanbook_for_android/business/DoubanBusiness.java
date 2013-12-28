@@ -16,6 +16,7 @@ import com.study.doubanbook_for_android.auth.Douban;
 import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.AuthorUser;
+import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
 import com.study.doubanbook_for_android.model.DeleteSuccess;
@@ -132,6 +133,42 @@ public class DoubanBusiness {
 			};
 		}.start();
 	}
+	
+	/**
+	 * GET  https://api.douban.com/v2/book/:id
+	 * @param bookid
+	 * @param callback
+	 */
+	public void getBookDetailById(final String bookid,final AsynCallback<BookItem> callback){
+		new Thread(){
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				BookItem result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+
+				callback.onStart();
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.BOOK_DETAIL_URL.replace(
+								":id", bookid)),
+						NetUtils.GET, keys, values, context);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+					DebugUtils.e("NET", "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+					DebugUtils.d("NET", "right model");
+					result = gson.fromJson(s, new TypeToken<BookItem>() {
+					}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
+	}
 
 	/**
 	 * format 	返回content字段格式 	选填（编辑伪标签格式：text, HTML格式：html），默认为text 
@@ -181,6 +218,50 @@ public class DoubanBusiness {
 		}.start();
 	}
  
+	/**
+	 * 
+	 * @param userId
+	 * @param start
+	 * @param callback
+	 */
+	public void getUserNotes(final String userId, final int start,
+			final AsynCallback<GeneralNoteResult> callback) {
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				GeneralNoteResult result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+
+				// init keys
+				keys.add("start");
+				keys.add("count");
+				// init values
+				values.add(start + "");
+				values.add(BaseActivity.PAGE_COUNT + "");
+				callback.onStart();
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.USER_ALL_NOTE_URL.replace(
+								":name", userId)), NetUtils.GET, keys, values,
+						null);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+						DebugUtils.d("NET",  "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+						DebugUtils.d("NET",  "right model");
+					result = gson.fromJson(s,
+							new TypeToken<GeneralNoteResult>() {
+							}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
+	}
 	/**
 	 * 
 	 * 用户收藏图书或者修改收藏状态

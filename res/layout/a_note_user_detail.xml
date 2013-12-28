@@ -5,6 +5,11 @@
     android:background="@drawable/ic_general_bg"
     android:orientation="vertical" >
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/bar_all" />
+
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
@@ -37,7 +42,8 @@
                         android:id="@+id/userName_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
+                        android:text="TextView"
+                        android:textColor="@color/blue" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

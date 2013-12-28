@@ -5,9 +5,12 @@
     android:background="@color/light_blue" >
 
     <TextView
-        android:id="@+id/pageTitle_tv"
+        android:id="@+id/title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:maxLength="15"
+        android:ellipsize="end"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="title"
@@ -22,17 +25,16 @@
         android:layout_centerVertical="true"
         android:background="@drawable/ic_back" />
 
-    <Button
-        android:id="@+id/read_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@null"
-        android:paddingRight="@dimen/edge_margin"
-        android:text="完成"
-        android:visibility="invisible"
-        android:textColor="#ffffff"
-        android:textSize="20sp" />
+     <Button
+            android:id="@+id/showComment_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="invisible"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/ic_note"
+            android:padding="8dp"
+            android:paddingRight="@dimen/edge_margin" />
 
 </RelativeLayout>

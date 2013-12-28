@@ -16,6 +16,7 @@ import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
 public class UserListActivity extends BaseP2RActivity<AuthorUser> {
 
@@ -27,10 +28,12 @@ public class UserListActivity extends BaseP2RActivity<AuthorUser> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.f_comment_list);
+		DebugUtils.e("CLASS", getClass().getName());
 		pageIndex = 0;
 		adapter = new UserListAdapter(dataList, this);
 		initP2RLvAndThread();
 		searchContent = getIntent().getStringExtra("searchContent");
+		setInvagator("'"+searchContent+"' 的搜索结果");
 		fetchData();
 	}
 

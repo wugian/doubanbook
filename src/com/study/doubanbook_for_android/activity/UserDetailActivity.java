@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,14 +21,23 @@ import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 import com.study.doubanbook_for_android.model.AuthorUser;
+import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.CollectionItem;
 import com.study.doubanbook_for_android.model.GeneralCollectionResult;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
+/**
+ * 1 Task has not done
+ * 
+ * @author tezuka-pc
+ * 
+ */
 public class UserDetailActivity extends BaseActivity {
 	private static final int GET_WISH_SUCCESS = 0;
 	private static final int GET_READ_SUCCESS = 1;
 	private static final int GET_READING_SUCCESS = 2;
 	private static final int GET_FAILURE = 3;
+	private static final int GET_BOOK_DETAIL_SUCCESS = 4;
 
 	GeneralCollectionResult wishResult;
 	GeneralCollectionResult readResult;
@@ -41,6 +51,7 @@ public class UserDetailActivity extends BaseActivity {
 	DoubanBusiness doubanBusiness = new DoubanBusiness(this);
 	// thread
 	private MessageHandler msgHandler;
+	private Button showAllNote_btn;
 
 	class MessageHandler extends Handler {
 		public MessageHandler(Looper looper) {
@@ -63,6 +74,9 @@ public class UserDetailActivity extends BaseActivity {
 				// TODO charge code
 				toast(((WrongMsg) msg.obj).getMsg());
 				break;
+			case GET_BOOK_DETAIL_SUCCESS:
+				showBookDetail(msg);
+				break;
 			default:
 				break;
 			}
@@ -83,6 +97,13 @@ public class UserDetailActivity extends BaseActivity {
 		msgHandler.sendMessage(message);
 	}
 
+	public void showBookDetail(Message msg) {
+		BookItem bookItem1 = (BookItem) msg.obj;
+		Intent intent = new Intent(context, BookDetailActivity.class);
+		intent.putExtra("bookItem", bookItem1);
+		startActivity(intent);
+	}
+
 	void setWidgetsAndListener(Message msg, LinearLayout lyt,
 			LinearLayout list_lyt) {
 		List<CollectionItem> alls = ((GeneralCollectionResult) msg.obj)
@@ -101,14 +122,12 @@ public class UserDetailActivity extends BaseActivity {
 				margin.setVisibility(View.INVISIBLE);
 				list_lyt.addView(margin);
 				iv.setOnClickListener(new OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
-						//TODO reget bookData by API GET  https://api.douban.com/v2/book/:id
-						Intent intent = new Intent(context,
-								BookDetailActivity.class);
-						intent.putExtra("bookItem", au.getBook());
-						startActivity(intent);
+						// TODO reget bookData by API GET
+						// https://api.douban.com/v2/book/:id done by
+						// 13-12-18-10:21
+						getBookDetail(au.getBook().getId());
 					}
 				});
 			}
@@ -116,18 +135,37 @@ public class UserDetailActivity extends BaseActivity {
 		}
 	}
 
+	protected void getBookDetail(int id) {
+		doubanBusiness.getBookDetailById(String.valueOf(id),
+				new AsynCallback<BookItem>() {
+					@Override
+					public void onSuccess(BookItem data) {
+						super.onSuccess(data);
+						sendMessage(data, GET_BOOK_DETAIL_SUCCESS);
+					}
+
+					@Override
+					public void onFailure(WrongMsg caught) {
+						super.onFailure(caught);
+					}
+				});
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(layout.a_user_detail);
+		DebugUtils.e("CLASS", getClass().getName());
 		findViews();
 		initDatas();
+		setInvagator(userDetail.getName() + " 的个人主页");
 		initWidgets();
+		initListners();
 		getData();
+
 	}
 
 	void getData() {
-
 		doubanBusiness.getUserCollections(String.valueOf(userDetail.getId()),
 				"wish", new AsynCallback<GeneralCollectionResult>() {
 					@Override
@@ -186,6 +224,8 @@ public class UserDetailActivity extends BaseActivity {
 		reading_lyt = (LinearLayout) this.findViewById(R.id.reading_lyt);
 		readingList_lyt = (LinearLayout) this
 				.findViewById(R.id.readingList_lyt);
+
+		showAllNote_btn = (Button) findViewById(R.id.showAllNote_btn);
 	}
 
 	@Override
@@ -210,4 +250,16 @@ public class UserDetailActivity extends BaseActivity {
 		reading_lyt.setVisibility(View.GONE);
 	}
 
+	@Override
+	void initListners() {
+		super.initListners();
+		showAllNote_btn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context,UserNoteListActivity.class);
+				intent.putExtra("authorUser", userDetail);
+				startActivity(intent);
+			}
+		});
+	}
 }

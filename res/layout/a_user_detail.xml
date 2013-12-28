@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <include
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/bar_all" />
 
@@ -107,6 +107,13 @@
                         android:orientation="horizontal" >
                     </LinearLayout>
                 </HorizontalScrollView>
+
+                <Button
+                    android:id="@+id/showAllNote_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_selector"
+                    android:text="查看全部笔记" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.model.Annotations;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
 public class NoteAndUserDetailActivity extends BaseActivity {
 
@@ -21,12 +22,21 @@ public class NoteAndUserDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_note_user_detail);
+		DebugUtils.e("CLASS", getClass().getName());
 		initDatas();
 		findViews();
+		setInvagator(annotations.getBook().getTitle()+"的评论");
+		setRightButton();
 		initWidgets();
 		initListners();
 	}
 
+	@Override
+	void initRightListener() {
+		super.initRightListener();
+		//TODO add note detail activity and xml 
+	
+	}
 	@Override
 	void initDatas() {
 		super.initDatas();

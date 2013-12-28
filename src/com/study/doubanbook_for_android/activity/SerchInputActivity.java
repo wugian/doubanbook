@@ -22,8 +22,7 @@ import com.study.doubanbook_for_android.auth.KeepToken;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.AuthorUser;
-import com.study.doubanbook_for_android.model.CollectionItem;
-import com.study.doubanbook_for_android.model.GeneralCollectionResult;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
 /**
  * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
@@ -63,6 +62,7 @@ public class SerchInputActivity extends BaseActivity {
 			case GET_USERDETAIL_SUCCESS:
 				AuthorUser ud = (AuthorUser) msg.obj;
 				Intent intent = new Intent(context, UserDetailActivity.class);
+				AccessToken ac = KeepToken.readAccessToken(context);
 				intent.putExtra("userDetail", ud);
 				startActivity(intent);
 				break;
@@ -93,6 +93,7 @@ public class SerchInputActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_serch_input);
+		DebugUtils.e("CLASS", getClass().getName());
 		Looper looper = Looper.myLooper();
 		msgHandler = new MessageHandler(looper);
 

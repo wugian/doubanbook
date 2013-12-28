@@ -15,24 +15,28 @@ import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.Annotations;
+import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
+import com.study.doubanbook_for_android.utils.DebugUtils;
 
 public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 
 	String bookid = null;
+	BookItem bookItem = null;
 	GeneralNoteResult result;
 	DoubanBusiness db = new DoubanBusiness(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DebugUtils.e("CLASS", getClass().getName());
 		setContentView(R.layout.f_comment_list);
-		pageIndex = 0;
-
 		adapter = new UserNoteAdapter(dataList, context);
 		initP2RLvAndThread();
 		bookid = getIntent().getStringExtra("bookid");
+		bookItem = (BookItem) getIntent().getSerializableExtra("bookItem");
 		fetchData();
+		setInvagator(bookItem.getTitle() + " 的笔记");
 	}
 
 	@Override
@@ -41,8 +45,10 @@ public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 		switch (arg1) {
 		case SUCCESS:
 			result = (GeneralNoteResult) (msg.obj);
-			if (result.getAnnotations().size() == 0)
-				finish();
+			if (result.getAnnotations().size() == 0) {
+				toast("本书还没有笔记");
+				// finish();
+			}
 			addData(result.getAnnotations());
 			break;
 		case FAILURE:

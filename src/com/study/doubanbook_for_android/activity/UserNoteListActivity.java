@@ -10,31 +10,33 @@ import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
-import com.study.doubanbook_for_android.adapter.BookAdapter;
+import com.study.doubanbook_for_android.adapter.UserNoteAdapter;
 import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
-import com.study.doubanbook_for_android.model.BookItem;
-import com.study.doubanbook_for_android.model.GeneralResult;
+import com.study.doubanbook_for_android.model.Annotations;
+import com.study.doubanbook_for_android.model.AuthorUser;
+import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 
-public class BookListsActivity extends BaseP2RActivity<BookItem> {
+public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 
-	String searchContent = "";
-	GeneralResult result;
+	String userName = null;
+	AuthorUser authorUser = null;
+	GeneralNoteResult result;
 	DoubanBusiness db = new DoubanBusiness(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		DebugUtils.e("CLASS", getClass().getName());
 		setContentView(R.layout.f_comment_list);
-		adapter = new BookAdapter(dataList, this);
+		DebugUtils.e("CLASS", getClass().getName());
+		adapter = new UserNoteAdapter(dataList, context);
 		initP2RLvAndThread();
-		searchContent = getIntent().getStringExtra("searchContent");
-		setInvagator("'"+searchContent+"' 的搜索结果");
+		userName = getIntent().getStringExtra("userName");
+		authorUser = (AuthorUser)getIntent().getSerializableExtra("authorUser");
 		fetchData();
+		setInvagator(authorUser.getName()+" 的笔记");
 	}
 
 	@Override
@@ -42,8 +44,10 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		int arg1 = msg.arg1;
 		switch (arg1) {
 		case SUCCESS:
-			result = (GeneralResult) (msg.obj);
-			addData(result.getBooks());
+			result = (GeneralNoteResult) (msg.obj);
+			if (result.getAnnotations().size() == 0)
+				finish();
+			addData(result.getAnnotations());
 			break;
 		case FAILURE:
 			WrongMsg w = (WrongMsg) (msg.obj);
@@ -60,9 +64,9 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	@Override
 	public void fetchData() {
 		super.fetchData();
-		db.getSearchList(searchContent, pageIndex * PAGE_COUNT,
-				new AsynCallback<GeneralResult>() {
-					public void onSuccess(GeneralResult data) {
+		db.getUserNotes(String.valueOf(authorUser.getId()), pageIndex * PAGE_COUNT + 1,
+				new AsynCallback<GeneralNoteResult>() {
+					public void onSuccess(GeneralNoteResult data) {
 						pageIndex++;
 						sendMessage(data, SUCCESS);
 					};
@@ -72,6 +76,7 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 						sendMessage(caught, FAILURE);
 					};
 				});
+
 	}
 
 	@Override
@@ -83,16 +88,17 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		} else {
 			refreshCompleted();
 		}
+
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		super.onItemClick(arg0, arg1, position, arg3);
-		Intent intent = new Intent(this, BookDetailActivity.class);
+		Intent intent = new Intent(this, NoteAndUserDetailActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("bookItem", dataList.get(position - 1));
+		bundle.putSerializable("annotations", dataList.get(position - 1));
 		intent.putExtras(bundle);
-		startActivityForResult(intent, REQUEST_CODE_CHANGED);
+		startActivity(intent);
 	}
 }
