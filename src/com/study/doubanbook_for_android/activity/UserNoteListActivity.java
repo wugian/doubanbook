@@ -6,18 +6,17 @@ import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.adapter.UserNoteAdapter;
-import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.Annotations;
 import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
 public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 
@@ -34,9 +33,10 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 		adapter = new UserNoteAdapter(dataList, context);
 		initP2RLvAndThread();
 		userName = getIntent().getStringExtra("userName");
-		authorUser = (AuthorUser)getIntent().getSerializableExtra("authorUser");
+		authorUser = (AuthorUser) getIntent()
+				.getSerializableExtra("authorUser");
 		fetchData();
-		setNavagator(authorUser.getName()+" 的笔记");
+		setNavagator(authorUser.getName() + " 的笔记");
 	}
 
 	@Override
@@ -46,14 +46,11 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 		case SUCCESS:
 			result = (GeneralNoteResult) (msg.obj);
 			if (result.getAnnotations().size() == 0)
-				finish();
+				toast("本书还没有笔记");
 			addData(result.getAnnotations());
 			break;
 		case FAILURE:
-			WrongMsg w = (WrongMsg) (msg.obj);
-			Toast.makeText(this,
-					w.getCode() + " " + w.getMsg() + " " + w.getRequest(),
-					Toast.LENGTH_SHORT).show();
+			ShowErrorUtils.showWrongMsg(context, msg);
 			finish();
 			break;
 		default:
@@ -64,18 +61,18 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 	@Override
 	public void fetchData() {
 		super.fetchData();
-		db.getUserNotes(String.valueOf(authorUser.getId()), pageIndex * PAGE_COUNT + 1,
-				new AsynCallback<GeneralNoteResult>() {
-					public void onSuccess(GeneralNoteResult data) {
-						pageIndex++;
-						sendMessage(data, SUCCESS);
-					};
+		db.getUserNotes(String.valueOf(authorUser.getId()), pageIndex
+				* PAGE_COUNT + 1, new AsynCallback<GeneralNoteResult>() {
+			public void onSuccess(GeneralNoteResult data) {
+				pageIndex++;
+				sendMessage(data, SUCCESS);
+			};
 
-					public void onFailure(
-							com.study.doubanbook_for_android.api.WrongMsg caught) {
-						sendMessage(caught, FAILURE);
-					};
-				});
+			public void onFailure(
+					com.study.doubanbook_for_android.api.WrongMsg caught) {
+				sendMessage(caught, FAILURE);
+			};
+		});
 
 	}
 
@@ -88,7 +85,6 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 		} else {
 			refreshCompleted();
 		}
-
 	}
 
 	@Override
@@ -99,6 +95,6 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("annotations", dataList.get(position - 1));
 		intent.putExtras(bundle);
-		startActivity(intent);
+		startActivityForResult(intent, REQUEST_CODE_CHANGED);
 	}
 }

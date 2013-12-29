@@ -13,6 +13,7 @@
     <string name="show_qr_code">个人评论主页二维码</string>
     <string name="reader_intro">读者简介</string>
     <string name="reading">在\t读</string>
+    <string name="write_note">写笔记</string>
     <string name="wish">想\t读</string>
     <string name="read">读\t过</string>
     <string name="write_comment">写书评</string>
@@ -22,4 +23,12 @@
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="privacy_promote">仅对自己可见</string>
+    <string name="del">删除</string>
+    <string name="modify">修改</string>
+    <string name="chapName_hint">章节名(不超过100字)</string>
+    <string name="chapName">章节名</string>
+    <string name="page_no">章节页码</string>
+    <string name="page_no_hint">章节页码(不超过6位数)</string>
+    <string name="comment_hint">评论(不少于15字)</string>
+
 </resources>

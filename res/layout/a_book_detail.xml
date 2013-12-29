@@ -52,6 +52,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="bookName" />
+                        <Button
+                            android:id="@+id/writeNote_btn"
+                            android:layout_width="@dimen/small_btn_w"
+                            android:layout_height="@dimen/small_btn_h"
+                            android:layout_marginLeft="@dimen/small_margin"
+                            android:background="@drawable/btn_selector"
+                            android:padding="1dip"
+                            android:text="@string/write_note"
+                            android:textSize="@dimen/small_txt_size" />
                     </LinearLayout>
 
                     <TextView

@@ -23,6 +23,7 @@ import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
 /**
  * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
@@ -67,8 +68,7 @@ public class SerchInputActivity extends BaseActivity {
 				startActivity(intent);
 				break;
 			case GET_USERDETAIL_FAILURE:
-				// TODO toast and charge the code
-				toast(((WrongMsg) msg.obj).getMsg());
+				ShowErrorUtils.showWrongMsg(context, msg);
 				break;
 			default:
 				break;
@@ -103,6 +103,20 @@ public class SerchInputActivity extends BaseActivity {
 		initListners();
 		// auto auth
 		doubanBusiness.auth();
+		search_et.setText("求魔");
+		
+		doubanBusiness.getCommentList("9863114952", new AsynCallback<String>(){
+			@Override
+			public void onSuccess(String data) {
+				super.onSuccess(data);
+				System.out.println(data);
+			}
+			@Override
+			public void onFailure(WrongMsg caught) {
+				super.onFailure(caught);
+				System.out.println(caught.getMessage());
+			}
+		});
 
 	}
 
@@ -228,7 +242,7 @@ public class SerchInputActivity extends BaseActivity {
 									sendMessage(caught, GET_USERDETAIL_FAILURE);
 								};
 							});
-				} else{
+				} else {
 					toast("请先进行登录授权");
 					doubanBusiness.auth();
 				}
@@ -236,5 +250,17 @@ public class SerchInputActivity extends BaseActivity {
 		});
 	}
 
-	boolean test = false;
+	long exitTime = 0;
+
+	// 线程安全
+	@Override
+	public void onBackPressed() {
+		if ((System.currentTimeMillis() - exitTime) > 2000) {
+			toast("再按一次退出");
+			exitTime = System.currentTimeMillis();
+		} else {
+			super.onBackPressed();
+			KeepToken.clear(context);
+		}
+	}
 }

@@ -25,6 +25,7 @@ import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.CollectionItem;
 import com.study.doubanbook_for_android.model.GeneralCollectionResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
 /**
  * 1 Task has not done
@@ -71,8 +72,7 @@ public class UserDetailActivity extends BaseActivity {
 				setWidgetsAndListener(msg, reading_lyt, reading_lyt);
 				break;
 			case GET_FAILURE:
-				// TODO charge code
-				toast(((WrongMsg) msg.obj).getMsg());
+				ShowErrorUtils.showWrongMsg(context, msg);
 				break;
 			case GET_BOOK_DETAIL_SUCCESS:
 				showBookDetail(msg);

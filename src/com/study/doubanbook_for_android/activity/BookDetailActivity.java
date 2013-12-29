@@ -33,8 +33,10 @@ import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
 import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
-//TODO add slid menu to show book note
+//TODO add slid menu to show book note then can't show the comment list so cancel
+//TODO add comment api in v1
 public class BookDetailActivity extends BaseActivity {
 
 	private static final int COLLETE_DELETE_SUCCESS = 0;// 取消收藏成功
@@ -73,6 +75,7 @@ public class BookDetailActivity extends BaseActivity {
 	private String popTitleStr = "";// 弹出窗口的标题
 
 	private MessageHandler msgHandler;// 消息处理器
+	private Button writeNote_btn;
 
 	class MessageHandler extends Handler {
 		public MessageHandler(Looper looper) {
@@ -106,6 +109,7 @@ public class BookDetailActivity extends BaseActivity {
 			case COLLETE_FAILUR:
 				showDelete();
 				toast("收藏图书失败");
+				ShowErrorUtils.showWrongMsg(context, msg);
 				break;
 			default:
 				break;
@@ -260,12 +264,13 @@ public class BookDetailActivity extends BaseActivity {
 		price = (TextView) findViewById(R.id.bookPrice_tv);
 		publisher = (TextView) findViewById(R.id.bookPublisher_tv);
 		grade = (TextView) findViewById(R.id.bookGrade_tv);
-		comment = (Button) findViewById(R.id.comment_btn);
 		wish = (Button) findViewById(R.id.wish_btn);
 		reading = (Button) findViewById(R.id.reading_btn);
 		done = (Button) findViewById(R.id.read_btn);
 		delCollect = (Button) findViewById(R.id.delCollect_btn);
 		comment_btn= (Button) findViewById(R.id.comment_btn);
+		
+		writeNote_btn = (Button) findViewById(R.id.writeNote_btn);
 
 	}
 
@@ -273,6 +278,7 @@ public class BookDetailActivity extends BaseActivity {
 	void initDatas() {
 		super.initDatas();
 		// initial msgHandler
+		
 		Looper looper = Looper.myLooper();
 		msgHandler = new MessageHandler(looper);
 
@@ -412,7 +418,17 @@ public class BookDetailActivity extends BaseActivity {
 			public void onClick(View v) {
 
 				//TODO add write comment activity and xml
+				//here as test
 				Intent intent = new Intent(context,NoteEditActivity.class);
+				startActivity(intent);
+			}
+		});
+		writeNote_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context,NoteEditActivity.class);
+				intent.putExtra("bookItem", bookItem);
 				startActivity(intent);
 			}
 		});

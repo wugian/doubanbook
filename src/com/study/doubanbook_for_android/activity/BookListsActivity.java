@@ -17,6 +17,7 @@ import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
 public class BookListsActivity extends BaseP2RActivity<BookItem> {
 
@@ -46,10 +47,7 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 			addData(result.getBooks());
 			break;
 		case FAILURE:
-			WrongMsg w = (WrongMsg) (msg.obj);
-			Toast.makeText(this,
-					w.getCode() + " " + w.getMsg() + " " + w.getRequest(),
-					Toast.LENGTH_SHORT).show();
+			ShowErrorUtils.showWrongMsg(context, msg);
 			finish();
 			break;
 		default:

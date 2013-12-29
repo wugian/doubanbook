@@ -24,7 +24,7 @@ public class Annotations implements Serializable {
 	// "id": "2727575",
 	// "large_avatar": "http://img3.douban.com/icon/up2727575-7.jpg"
 	// },
-	private int privacy;// ": 2,
+	private int privacy;// ": 2,表示对所有人可见,1表示仅仅自己可以见
 	private String abstract_photo;// 摘要图片": "",
 	@SerializedName("abstract")
 	private String abstracts;// ": " 我愿意这样，朋友——\r\n

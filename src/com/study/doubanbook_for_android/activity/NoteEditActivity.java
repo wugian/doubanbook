@@ -1,8 +1,7 @@
 package com.study.doubanbook_for_android.activity;
 
-import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
-
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,12 +13,18 @@ import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.Annotations;
-import com.study.doubanbook_for_android.model.GeneralNoteResult;
+import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
 public class NoteEditActivity extends BaseActivity {
 
+	public static final int NOTE_EDIT_SUCCESS = 0;
+	public static final int NOTE_ADD_SUCCESS = 1;
+	public static final int NOTE_EDIT_FAILURE = 2;
+
 	Annotations annotations = null;
+	BookItem bookItem = null;
 	EditText content_et;
 	EditText page_et;
 	EditText chapName_et;
@@ -28,13 +33,39 @@ public class NoteEditActivity extends BaseActivity {
 	DoubanBusiness doubanBusiness = new DoubanBusiness(this);
 
 	@Override
+	public void baseSelfHandleMsg(Message msg) {
+		super.baseSelfHandleMsg(msg);
+		int status = msg.arg1;
+		switch (status) {
+		case NOTE_ADD_SUCCESS:
+			toast("笔记添加成功");
+			//TODO 是否有必要修改成功,在上个页面刷新数据
+			finish();
+			break;
+		case NOTE_EDIT_SUCCESS:
+			toast("笔记修改成功");
+			finish();
+			break;
+		case NOTE_EDIT_FAILURE:
+			ShowErrorUtils.showWrongMsg(context, msg);
+			toast("笔记编辑失败");
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_book_note_edit);
 		DebugUtils.e("CLASS", getClass().getName());
-		setNavagator("添加笔记");
-		findViews();
 		initDatas();
+		if (annotations == null)
+			setNavagator("添加" + bookItem.getTitle() + "的笔记");
+		else
+			setNavagator("修改笔记");
+		findViews();
 		initWidgets();
 		initListners();
 	}
@@ -42,7 +73,7 @@ public class NoteEditActivity extends BaseActivity {
 	@Override
 	void findViews() {
 		super.findViews();
-		content_et = (EditText) findViewById(R.id.comment_et);
+		content_et = (EditText) findViewById(R.id.content_et);
 		page_et = (EditText) findViewById(R.id.page_et);
 		chapName_et = (EditText) findViewById(R.id.chapName_et);
 		privacy_cb = (CheckBox) findViewById(R.id.privacey_cb);
@@ -55,6 +86,7 @@ public class NoteEditActivity extends BaseActivity {
 		try {
 			annotations = (Annotations) getIntent().getSerializableExtra(
 					"annotations");
+			bookItem = (BookItem) getIntent().getSerializableExtra("bookItem");
 		} catch (Exception e) {
 			DebugUtils.d("NET", e.getMessage());
 		}
@@ -66,7 +98,7 @@ public class NoteEditActivity extends BaseActivity {
 		if (annotations != null) {
 			content_et.setText(annotations.getContent());
 			if (notZero(annotations.getPage_no())) {
-				page_et.setText(annotations.getPage_no());
+				page_et.setText(annotations.getPage_no() + "");
 			}
 			if (notNull(annotations.getChapter()))
 				chapName_et.setText(annotations.getChapter());
@@ -93,22 +125,42 @@ public class NoteEditActivity extends BaseActivity {
 					toast("章节名字和页数不能同时为空");
 					return;
 				}
-				doubanBusiness.writeNote(
-						String.valueOf(annotations.getBook_id()), content,
-						page, chapName, privace,
-						new AsynCallback<GeneralNoteResult>() {
-							@Override
-							public void onSuccess(GeneralNoteResult data) {
-								super.onSuccess(data);
-								System.out.println("success");
-							}
-							@Override
-							public void onFailure(WrongMsg caught) {
-								super.onFailure(caught);
-								System.out.println("failure");
-							}
-						});
+
+				if (annotations != null) {
+					doubanBusiness.editNote(
+							String.valueOf(annotations.getId()), content, page,
+							chapName, privace, new AsynCallback<Annotations>() {
+								@Override
+								public void onSuccess(Annotations data) {
+									super.onSuccess(data);
+									baseSendMessage(data, NOTE_EDIT_SUCCESS);
+								}
+
+								@Override
+								public void onFailure(WrongMsg caught) {
+									super.onFailure(caught);
+									baseSendMessage(caught, NOTE_EDIT_FAILURE);
+								}
+							});
+				} else {
+					doubanBusiness.writeNote(String.valueOf(bookItem.getId()),
+							content, page, chapName, privace,
+							new AsynCallback<Annotations>() {
+								@Override
+								public void onSuccess(Annotations data) {
+									super.onSuccess(data);
+									baseSendMessage(data, NOTE_ADD_SUCCESS);
+								}
+
+								@Override
+								public void onFailure(WrongMsg caught) {
+									super.onFailure(caught);
+									baseSendMessage(caught, NOTE_EDIT_FAILURE);
+								}
+							});
+				}
 			}
+
 		});
 	}
 }

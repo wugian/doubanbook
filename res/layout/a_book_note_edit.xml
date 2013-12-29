@@ -21,51 +21,75 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <EditText
-                android:id="@+id/content_et"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:ems="10" >
-            </EditText>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edge_margin"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chapName"
+                    android:textSize="@dimen/middle_text_size" />
+
+                <EditText
+                    android:id="@+id/chapName_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/chapName_hint" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:gravity="center" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/page_no"
+                    android:textSize="@dimen/middle_text_size" />
 
                 <EditText
                     android:id="@+id/page_et"
                     android:layout_width="0dip"
-                    android:inputType="number"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10" >
+                    android:ems="10"
+                    android:hint="@string/page_no_hint"
+                    android:inputType="number" >
                 </EditText>
 
                 <CheckBox
                     android:id="@+id/privacey_cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/light_blue"
-                    android:text="@string/privacy_promote" />
+                    android:text="@string/privacy_promote"
+                    android:textColor="@color/light_blue" />
             </LinearLayout>
 
             <EditText
-                android:id="@+id/chapName_et"
+                android:id="@+id/content_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10" >
-
-                <requestFocus />
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/comment_hint" >
             </EditText>
 
             <Button
                 android:id="@+id/ok_btn"
-                android:background="@drawable/serch_selector"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:textSize="@dimen/middle_text_size"
+                android:layout_marginTop="@dimen/margin"
+                android:background="@drawable/btn_selector"
                 android:text="@string/ok" />
-
         </LinearLayout>
     </ScrollView>
 

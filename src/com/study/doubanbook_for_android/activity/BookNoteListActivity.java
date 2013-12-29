@@ -18,6 +18,7 @@ import com.study.doubanbook_for_android.model.Annotations;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
 public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 
@@ -52,10 +53,7 @@ public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 			addData(result.getAnnotations());
 			break;
 		case FAILURE:
-			WrongMsg w = (WrongMsg) (msg.obj);
-			Toast.makeText(this,
-					w.getCode() + " " + w.getMsg() + " " + w.getRequest(),
-					Toast.LENGTH_SHORT).show();
+			ShowErrorUtils.showWrongMsg(context, msg);
 			finish();
 			break;
 		default:

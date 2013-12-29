@@ -15,6 +15,7 @@ import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.auth.Douban;
 import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.callback.AsynCallback;
+import com.study.doubanbook_for_android.model.Annotations;
 import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
@@ -80,10 +81,10 @@ public class DoubanBusiness {
 	// 得到字符串,转化成MODEL时没有TRY CATCH,怎样判断是否是错误信息,先变成WRONGMSG
 	// MODEL?判断CODE?添加TAG,CODE==0转化成对应模型否则转化成WRONGMSG
 	/**
-	 * 	q 		查询关键字 q和tag必传其一
-	 *  tag 	查询的tag q和tag必传其一 
-	 *  start 	取结果的offset 默认为0 
-	 *  count 	取结果的条数 * 默认为20，最大为100
+	 * 	q 		查询关键字 			q和tag必传其一
+	 *  tag 	查询的tag 		q和tag必传其一 
+	 *  start 	取结果的offset 	默认为0 
+	 *  count 	取结果的条数 * 		默认为20，最大为100
 	 * 
 	 * @param q
 	 * @param start
@@ -246,7 +247,7 @@ public class DoubanBusiness {
 				s = NetUtils.getHttpEntity(
 						getBasicUrl(URLMananeger.USER_ALL_NOTE_URL.replace(
 								":name", userId)), NetUtils.GET, keys, values,
-						null);
+						context);
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
@@ -281,11 +282,11 @@ public class DoubanBusiness {
 	 * @param callback
 	 */
 	public void writeNote(final String bookId,final String content,final String page,final String chapName,final boolean privace, 
-			final AsynCallback<GeneralNoteResult> callback) {
+			final AsynCallback<Annotations> callback) {
 		new Thread() {
 			public void run() {
 				WrongMsg wrongMsg = new WrongMsg();
-				GeneralNoteResult result = null;
+				Annotations result = null;
 				Gson gson = new Gson();
 				String s = "";
 				List<String> keys = new ArrayList<String>();
@@ -293,6 +294,7 @@ public class DoubanBusiness {
 
 				// init keys and values
 				keys.add("content");
+				values.add(content);
 				if(page!=null){
 					keys.add("page");
 					values.add(String.valueOf(page));
@@ -304,13 +306,13 @@ public class DoubanBusiness {
 				if(privace){
 					values.add("private");
 					keys.add("privacy");
-					}
+				}
 				 
 				callback.onStart();
 				s = NetUtils.getHttpEntity(
 						getBasicUrl(URLMananeger.BOOK_NOTE_WRITE_URL.replace(
 								":id", bookId)), NetUtils.POST, keys, values,
-						null);
+						context);
 				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
 				}.getType());
 				if (wrongMsg.getCode() != 0) {
@@ -319,7 +321,108 @@ public class DoubanBusiness {
 				} else {
 						DebugUtils.d("NET",  "right model");
 					result = gson.fromJson(s,
-							new TypeToken<GeneralNoteResult>() {
+							new TypeToken<Annotations>() {
+							}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
+	}
+	
+	/**
+	 * PUT  https://api.douban.com/v2/book/annotation/:id
+		参数			意义		备注
+		content		笔记内容	必填，需多于15字
+		page		页码		页码或章节名选填其一，最多6位正整数
+		chapter		章节名	页码或章节名选填其一，最多100字
+		privacy		隐私设置	选填，值为'private'为设置成仅自己可见，其他默认为公开
+
+	 * @param noteId
+	 * @param content
+	 * @param page
+	 * @param chapName
+	 * @param privace
+	 * @param callback
+	 */
+	public void editNote(final String noteId,final String content,final String page,final String chapName,final boolean privace, 
+			final AsynCallback<Annotations> callback) {
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				Annotations result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+
+				// init keys and values
+				keys.add("content");
+				values.add(content);
+				if(page!=null){
+					keys.add("page");
+					values.add(String.valueOf(page));
+				}
+				if(chapName!=null){
+					keys.add("chapter");
+					values.add(chapName);
+				}
+				if(privace){
+					values.add("private");
+					keys.add("privacy");
+				}
+				 
+				callback.onStart();
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.BOOK_NOTE_EDIT_URL.replace(
+								":id", noteId)), NetUtils.PUT, keys, values,
+						context);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+						DebugUtils.d("NET",  "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+						DebugUtils.d("NET",  "right model");
+					result = gson.fromJson(s,
+							new TypeToken<Annotations>() {
+							}.getType());
+					callback.onSuccess(result);
+				}
+				callback.onDone();
+			};
+		}.start();
+	}
+	
+	/**
+	 * DELETE  https://api.douban.com/v2/book/:id/annotations
+	 * @param noteId
+	 * @param callback
+	 */
+	public void deleteNote(final String noteId,final AsynCallback<DeleteSuccess> callback) {
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				DeleteSuccess result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+				 
+				callback.onStart();
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.BOOK_NOTE_EDIT_URL.replace(
+								":id", noteId)), NetUtils.DELETE, keys, values,
+						context);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+						DebugUtils.d("NET",  "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+						DebugUtils.d("NET",  "right model");
+					result = gson.fromJson(s,
+							new TypeToken<DeleteSuccess>() {
 							}.getType());
 					callback.onSuccess(result);
 				}
@@ -342,7 +445,7 @@ public class DoubanBusiness {
 	 * @param start
 	 * @param callback
 	 */
-	//TODO NEED TEST when success show toast
+	//TODO NEED TEST when success show toast done
 	public void collectBook(final String bookid,final CollectBookMsg collectmsg,final boolean hasCollect,
 			final AsynCallback<CollectSuccessResult> callback) {
 		new Thread() {
@@ -494,8 +597,6 @@ public class DoubanBusiness {
 	}
 	
 	
-	
-	
 	//TODO NOT FIND TEST BY POSTMAN DONE BY 2013-12-20-20:39
 	/**
 	 * GET  https://api.douban.com/v2/user
@@ -554,6 +655,43 @@ public class DoubanBusiness {
 					callback.onSuccess(result);
 				}
 				
+				callback.onDone();
+			};
+		}.start();
+	}
+	
+	
+	String xml_url = "http://api.douban.com/book/subject/isbn/:isbn/reviews";
+	
+	//----------comment in api v1
+	// http://api.douban.com/book/subject/isbn/9863114952/reviews 
+	public void getCommentList(final String isbn,final AsynCallback<String> callback){
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				String result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+				 
+				callback.onStart();
+				
+				s = NetUtils.getHttpEntity(
+						xml_url.replace(":isbn", isbn),
+						NetUtils.GET, keys, values, null);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+						DebugUtils.d("NET",  "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+						DebugUtils.d("NET",  "right model");
+					result = gson.fromJson(s, new TypeToken<String>() {
+					}.getType());
+					
+					callback.onSuccess(result);
+				}
 				callback.onDone();
 			};
 		}.start();

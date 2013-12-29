@@ -3,6 +3,9 @@ package com.study.doubanbook_for_android.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,6 +21,42 @@ public class BaseActivity extends Activity {
 	public final static int PAGE_COUNT = 10;
 	protected ImageDownloader imageDownloader;
 	protected Context context;
+	// thread
+	private BaseMessageHandler baseMsgHandle;
+
+	class BaseMessageHandler extends Handler {
+		public BaseMessageHandler(Looper looper) {
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			baseSelfHandleMsg(msg);
+		}
+	}
+
+	/**
+	 * 利用MESSAGEHANDLER发送消息到UI线程
+	 * 
+	 * @param b
+	 * @param status
+	 */
+	void baseSendMessage(Object b, int status) {
+		Message message = Message.obtain();
+		message.arg1 = status;
+		message.obj = b;
+		baseMsgHandle.sendMessage(message);
+	}
+
+	/**
+	 * 怎样处理接受到的消息,自己覆盖方法判断使用
+	 * 
+	 * @param msg
+	 */
+	public void baseSelfHandleMsg(Message msg) {
+		// TODO Auto-generated method stub
+
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +65,9 @@ public class BaseActivity extends Activity {
 		DebugUtils.d("TTT", "base Activity oncreate");
 		context = this;
 		imageDownloader = new ImageDownloader(this);
+		// init baseMsgHandle
+		Looper looper = Looper.myLooper();
+		baseMsgHandle = new BaseMessageHandler(looper);
 
 	}
 
@@ -43,28 +85,29 @@ public class BaseActivity extends Activity {
 			}
 		});
 	}
-	
+
 	Button showComment_btn;
-	void setRightButton(){
-		showComment_btn=(Button) findViewById(R.id.showComment_btn);
+
+	void setRightButton() {
+		showComment_btn = (Button) findViewById(R.id.showComment_btn);
 		showComment_btn.setVisibility(View.VISIBLE);
 		showComment_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				initRightListener();
 			}
 		});
 	}
-	
+
 	void initRightListener() {
-		
+
 	}
 
 	/**
 	 * 若有必要时重写该方法添加其他内容
 	 */
-	void setResultThenFinish(){
+	void setResultThenFinish() {
 		finish();
 	}
 
