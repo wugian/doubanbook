@@ -27,6 +27,7 @@ import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
 import com.study.doubanbook_for_android.model.URLMananeger;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.xmlpaser.CommentReslult;
 
 
 public class DoubanBusiness {
@@ -666,21 +667,37 @@ public class DoubanBusiness {
 	//----------comment in api v1
 	//http://api.douban.com/book/subject/isbn/7508630068/reviews?start-index=1&max-results=3
 	// http://api.douban.com/book/subject/isbn/9863114952/reviews 
-	public void getCommentList(final String isbn,final AsynCallback<String> callback){
-		new Thread() {
+	public void getCommentList(final String isbn,final int start,final AsynCallback<CommentReslult> callback){
+		new Thread() { 
 			public void run() {
 				WrongMsg wrongMsg = new WrongMsg();
-				String result = null;
+				CommentReslult result = null;
+				Gson gson = new Gson();
 				String s = "";
 				List<String> keys = new ArrayList<String>();
 				List<String> values = new ArrayList<String>();
+				keys.add("start-index");
+				keys.add("max-results");
+				
+				values.add(String.valueOf(start));
+				values.add(String.valueOf(BaseActivity.PAGE_COUNT));
 				 
 				callback.onStart();
 				
-				s = NetUtils.getHttpEntity(
-				xml_url.replace(":isbn", isbn),
-				NetUtils.GET, keys, values, null);
-				callback.onSuccess(s);
+				s = NetUtils.getHttpEntity(xml_url.replace(":isbn", isbn),
+				NetUtils.GET, keys, values, context);
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+						DebugUtils.d("NET",  "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+						DebugUtils.d("NET",  "right model");
+					result = gson.fromJson(s, new TypeToken<CommentReslult>() {
+					}.getType());
+					
+					callback.onSuccess(result);
+				}
 				callback.onDone();
 			};
 		}.start();
