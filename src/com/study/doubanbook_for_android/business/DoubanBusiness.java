@@ -664,13 +664,13 @@ public class DoubanBusiness {
 	String xml_url = "http://api.douban.com/book/subject/isbn/:isbn/reviews";
 	
 	//----------comment in api v1
+	//http://api.douban.com/book/subject/isbn/7508630068/reviews?start-index=1&max-results=3
 	// http://api.douban.com/book/subject/isbn/9863114952/reviews 
 	public void getCommentList(final String isbn,final AsynCallback<String> callback){
 		new Thread() {
 			public void run() {
 				WrongMsg wrongMsg = new WrongMsg();
 				String result = null;
-				Gson gson = new Gson();
 				String s = "";
 				List<String> keys = new ArrayList<String>();
 				List<String> values = new ArrayList<String>();
@@ -678,20 +678,9 @@ public class DoubanBusiness {
 				callback.onStart();
 				
 				s = NetUtils.getHttpEntity(
-						xml_url.replace(":isbn", isbn),
-						NetUtils.GET, keys, values, null);
-				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
-				}.getType());
-				if (wrongMsg.getCode() != 0) {
-						DebugUtils.d("NET",  "wrongmsg model");
-					callback.onFailure(wrongMsg);
-				} else {
-						DebugUtils.d("NET",  "right model");
-					result = gson.fromJson(s, new TypeToken<String>() {
-					}.getType());
-					
-					callback.onSuccess(result);
-				}
+				xml_url.replace(":isbn", isbn),
+				NetUtils.GET, keys, values, null);
+				callback.onSuccess(s);
 				callback.onDone();
 			};
 		}.start();

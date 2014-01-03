@@ -1,5 +1,9 @@
 package com.study.doubanbook_for_android.activity;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,6 +28,7 @@ import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
+import com.study.doubanbook_for_android.xmlpaser.XMLReader;
 
 /**
  * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
@@ -70,6 +75,22 @@ public class SerchInputActivity extends BaseActivity {
 			case GET_USERDETAIL_FAILURE:
 				ShowErrorUtils.showWrongMsg(context, msg);
 				break;
+			case 8:
+				String string = (String) msg.obj;
+				InputStream input = null;
+				try {
+					input = new ByteArrayInputStream(string.getBytes("UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+				try {
+					XMLReader.parseXml(input);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// CommentReslult al = XmlUtils.readXML(input);
+				// System.out.println(al.toString());
 			default:
 				break;
 			}
@@ -104,13 +125,27 @@ public class SerchInputActivity extends BaseActivity {
 		// auto auth
 		doubanBusiness.auth();
 		search_et.setText("求魔");
-		
-		doubanBusiness.getCommentList("9863114952", new AsynCallback<String>(){
+
+		// DoubanReviewService instance = new DoubanReviewService();
+		// DoubanReviewFeedObj result = null;
+		// try {
+		// result = instance.getBookReviewsByISBNId("7508630068");
+		// } catch (DoubanException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// System.out.println(result.toString());
+		doubanBusiness.getCommentList("7564211172", new AsynCallback<String>() {
 			@Override
 			public void onSuccess(String data) {
 				super.onSuccess(data);
+				sendMessage(data, 8);
 				System.out.println(data);
 			}
+
 			@Override
 			public void onFailure(WrongMsg caught) {
 				super.onFailure(caught);

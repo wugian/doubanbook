@@ -268,8 +268,8 @@ public class BookDetailActivity extends BaseActivity {
 		reading = (Button) findViewById(R.id.reading_btn);
 		done = (Button) findViewById(R.id.read_btn);
 		delCollect = (Button) findViewById(R.id.delCollect_btn);
-		comment_btn= (Button) findViewById(R.id.comment_btn);
-		
+		comment_btn = (Button) findViewById(R.id.comment_btn);
+
 		writeNote_btn = (Button) findViewById(R.id.writeNote_btn);
 
 	}
@@ -278,7 +278,7 @@ public class BookDetailActivity extends BaseActivity {
 	void initDatas() {
 		super.initDatas();
 		// initial msgHandler
-		
+
 		Looper looper = Looper.myLooper();
 		msgHandler = new MessageHandler(looper);
 
@@ -417,17 +417,18 @@ public class BookDetailActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 
-				//TODO add write comment activity and xml
-				//here as test
-				Intent intent = new Intent(context,NoteEditActivity.class);
+				// TODO add write comment activity and xml
+				// here as test
+				Intent intent = new Intent(context, CommentWriteActivity.class);
+				intent.putExtra("bookItem", bookItem);
 				startActivity(intent);
 			}
 		});
 		writeNote_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(context,NoteEditActivity.class);
+				Intent intent = new Intent(context, NoteEditActivity.class);
 				intent.putExtra("bookItem", bookItem);
 				startActivity(intent);
 			}
