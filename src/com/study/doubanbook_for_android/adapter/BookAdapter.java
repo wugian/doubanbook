@@ -28,7 +28,6 @@ public class BookAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		return books.size();
-		// return 5;
 	}
 
 	@Override

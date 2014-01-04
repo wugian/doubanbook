@@ -28,7 +28,7 @@ import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
-import com.study.doubanbook_for_android.xmlpaser.XMLReader;
+import com.study.doubanbook_for_android.utils.XMLReader;
 
 /**
  * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
@@ -125,34 +125,6 @@ public class SerchInputActivity extends BaseActivity {
 		// auto auth
 		doubanBusiness.auth();
 		search_et.setText("求魔");
-
-		// DoubanReviewService instance = new DoubanReviewService();
-		// DoubanReviewFeedObj result = null;
-		// try {
-		// result = instance.getBookReviewsByISBNId("7508630068");
-		// } catch (DoubanException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// System.out.println(result.toString());
-		doubanBusiness.getCommentList("7564211172", new AsynCallback<String>() {
-			@Override
-			public void onSuccess(String data) {
-				super.onSuccess(data);
-				sendMessage(data, 8);
-				System.out.println(data);
-			}
-
-			@Override
-			public void onFailure(WrongMsg caught) {
-				super.onFailure(caught);
-				System.out.println(caught.getMessage());
-			}
-		});
-
 	}
 
 	@Override

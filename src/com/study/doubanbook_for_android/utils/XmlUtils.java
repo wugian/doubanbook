@@ -13,8 +13,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.study.doubanbook_for_android.xmlpaser.CommentReslult;
-import com.study.doubanbook_for_android.xmlpaser.Entry;
+import com.study.doubanbook_for_android.model.CommentReslult;
+import com.study.doubanbook_for_android.model.Entry;
 
 //TODO add three method to explain xml files or string
 public class XmlUtils {

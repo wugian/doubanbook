@@ -6,7 +6,7 @@ import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.adapter.UserListAdapter.ViewHolder;
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 import com.study.doubanbook_for_android.model.AuthorUser;
-import com.study.doubanbook_for_android.xmlpaser.Entry;
+import com.study.doubanbook_for_android.model.Entry;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -44,39 +44,34 @@ public class CommentAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-
-		ImageDownloader imgDownloader = new ImageDownloader(context);
 		Entry item = entrys.get(position);
 		ViewHolder holder = new ViewHolder();
-
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.i_user,
+			convertView = LayoutInflater.from(context).inflate(R.layout.i_comment,
 					null);
-			holder.img = (ImageView) convertView.findViewById(R.id.portrait_iv);
+			holder.title = (TextView) convertView
+					.findViewById(R.id.title_tv);
+			holder.summary = (TextView) convertView
+					.findViewById(R.id.summary_tv);
 			holder.userName = (TextView) convertView
 					.findViewById(R.id.userName_tv);
-			holder.introduce = (TextView) convertView
-					.findViewById(R.id.introduce_tv);
+			holder.updatedTime = (TextView) convertView
+					.findViewById(R.id.updatedTime_tv);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-		/* 设置 */
-//		if (item.getName() == null)
-//			holder.userName.setVisibility(View.GONE);
-//		else
-//			holder.userName.setText(item.getName().trim() + "");
-//		holder.introduce.setText(item.getCreated().trim() + "  "
-//				+ item.getLoc_name());
-		// TODO change to get the w and h is must?
-//		imgDownloader.download(item.getAvatar(), holder.img, null);
+		holder.title.setText(item.getTitle());
+		holder.summary.setText(item.getSummay());
+		holder.userName.setText(item.getAuthor().getName());
+		holder.updatedTime.setText(item.getUpdated());
 		return convertView;
 	}
 
 	static class ViewHolder {
-		ImageView img;
+		TextView title;
+		TextView summary;
 		TextView userName;
-		TextView introduce;
+		TextView updatedTime;
 	}
 }

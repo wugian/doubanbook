@@ -9,33 +9,42 @@ import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
-import com.study.doubanbook_for_android.adapter.BookAdapter;
 import com.study.doubanbook_for_android.adapter.CommentAdapter;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
-import com.study.doubanbook_for_android.model.GeneralResult;
+import com.study.doubanbook_for_android.model.BookItem;
+import com.study.doubanbook_for_android.model.CommentReslult;
+import com.study.doubanbook_for_android.model.Entry;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
-import com.study.doubanbook_for_android.xmlpaser.CommentReslult;
-import com.study.doubanbook_for_android.xmlpaser.Entry;
 
 public class CommentListActivity extends BaseP2RActivity<Entry> {
 
 	String isbn = "";
 	CommentReslult result;
 	DoubanBusiness db = new DoubanBusiness(this);
+	BookItem bookItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		DebugUtils.e("CLASS", getClass().getName());
 		setContentView(R.layout.f_comment_list);
 		adapter = new CommentAdapter(dataList, this);
 		initP2RLvAndThread();
-		isbn = getIntent().getStringExtra("isbn10");
-		setNavagator("'" + isbn + "' 的搜索结果");
+		bookItem = (BookItem) getIntent().getSerializableExtra("bookItem");
+		isbn = bookItem.getIsbn10();
+		if (bookItem.getCurrent_user_collection() != null) {
+			setRightButton();
+		}
+		setNavagator("'" + bookItem.getTitle() + "' 的评论");
 		fetchData();
+	}
+
+	@Override
+	void initRightListener() {
+		super.initRightListener();
+		// TODO add lister when the user is authed
 	}
 
 	@Override
@@ -87,9 +96,9 @@ public class CommentListActivity extends BaseP2RActivity<Entry> {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		super.onItemClick(arg0, arg1, position, arg3);
-		Intent intent = new Intent(this, BookDetailActivity.class);
+		Intent intent = new Intent(this, CommentDetailActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("bookItem", dataList.get(position - 1));
+		bundle.putSerializable("entryItem", dataList.get(position - 1));
 		intent.putExtras(bundle);
 		startActivityForResult(intent, REQUEST_CODE_CHANGED);
 	}

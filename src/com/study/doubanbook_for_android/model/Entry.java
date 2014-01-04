@@ -1,7 +1,14 @@
-package com.study.doubanbook_for_android.xmlpaser;
+package com.study.doubanbook_for_android.model;
+
+import java.io.Serializable;
 
 
-public class Entry {
+public class Entry implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8232394162475460017L;
 	
 	private String id;
 	private String title;
@@ -56,6 +63,13 @@ public class Entry {
 
 	public void setSummay(String summay) {
 		this.summay = summay;
+	}
+
+	@Override
+	public String toString() {
+		return "Entry [id=" + id + ", title=" + title + ", author=" + author
+				+ ", published=" + published + ", updated=" + updated
+				+ ", summay=" + summay + "]";
 	}
 
 }

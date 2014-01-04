@@ -1,4 +1,4 @@
-package com.study.doubanbook_for_android.xmlpaser;
+package com.study.doubanbook_for_android.model;
 
 import java.util.Arrays;
 import java.util.List;

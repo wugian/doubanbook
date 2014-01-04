@@ -30,5 +30,7 @@
     <string name="page_no">章节页码</string>
     <string name="page_no_hint">章节页码(不超过6位数)</string>
     <string name="comment_hint">评论(不少于15字)</string>
+    <string name="comment_title">标题</string>
+    <string name="content">内容</string>
 
 </resources>

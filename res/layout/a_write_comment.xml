@@ -11,13 +11,26 @@
         layout="@layout/bar_all" />
 
     <EditText
-        android:id="@+id/comment_et"
+        android:id="@+id/commentTitle_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_edge"
+        android:ems="10"
         android:gravity="top|left"
+        android:hint="@string/comment_title" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/comment_et"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/margin_edge"
         android:layout_weight="1"
-        android:ems="10" >
+        android:ems="10"
+        android:gravity="top|left"
+        android:hint="@string/content" >
 
         <requestFocus />
     </EditText>
@@ -30,7 +43,7 @@
         <Button
             android:id="@+id/ok_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@drawable/btn_selector"
             android:text="@string/ok" />
@@ -38,7 +51,7 @@
         <Button
             android:id="@+id/cancel_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginLeft="@dimen/margin"
             android:layout_weight="1"
             android:background="@drawable/btn_selector"

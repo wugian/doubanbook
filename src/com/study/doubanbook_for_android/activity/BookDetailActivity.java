@@ -416,10 +416,9 @@ public class BookDetailActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-
 				// TODO add write comment activity and xml
 				// here as test
-				Intent intent = new Intent(context, CommentWriteActivity.class);
+				Intent intent = new Intent(context, CommentListActivity.class);
 				intent.putExtra("bookItem", bookItem);
 				startActivity(intent);
 			}

@@ -1,9 +1,16 @@
 package com.study.doubanbook_for_android.business;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import android.content.Context;
 
@@ -20,6 +27,7 @@ import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
+import com.study.doubanbook_for_android.model.CommentReslult;
 import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.model.GeneralCollectionResult;
 import com.study.doubanbook_for_android.model.GeneralNoteResult;
@@ -27,7 +35,7 @@ import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
 import com.study.doubanbook_for_android.model.URLMananeger;
 import com.study.doubanbook_for_android.utils.DebugUtils;
-import com.study.doubanbook_for_android.xmlpaser.CommentReslult;
+import com.study.doubanbook_for_android.utils.XMLReader;
 
 
 public class DoubanBusiness {
@@ -40,6 +48,7 @@ public class DoubanBusiness {
 		this.context = context;
 	}
 	
+	//--------------auth  userDetail-----------------------
 	public void auth(){
 		Douban douban = Douban.getInstance();
 		douban.authorize(context, new SimpleDoubanOAuthListener());
@@ -78,6 +87,7 @@ public class DoubanBusiness {
 		}.start();
 	}
 
+	//---------------book 相关---------------------
 	// TODO 修改整个方法,利用线程,回调,得到 DONE
 	// 得到字符串,转化成MODEL时没有TRY CATCH,怎样判断是否是错误信息,先变成WRONGMSG
 	// MODEL?判断CODE?添加TAG,CODE==0转化成对应模型否则转化成WRONGMSG
@@ -172,6 +182,9 @@ public class DoubanBusiness {
 		}.start();
 	}
 
+	
+	
+	//---------------note 相关---------------------
 	/**
 	 * format 	返回content字段格式 	选填（编辑伪标签格式：text, HTML格式：html），默认为text 
 	 * order 	排序 * 				选填（最新笔记：collect, 按有用程度：rank, 按页码先后：page），默认为rank 
@@ -431,6 +444,10 @@ public class DoubanBusiness {
 			};
 		}.start();
 	}
+	
+	
+	
+	//---------------收藏 相关---------------------
 	/**
 	 * 
 	 * 用户收藏图书或者修改收藏状态
@@ -598,6 +615,8 @@ public class DoubanBusiness {
 	}
 	
 	
+
+	//---------------用户 相关---------------------
 	//TODO NOT FIND TEST BY POSTMAN DONE BY 2013-12-20-20:39
 	/**
 	 * GET  https://api.douban.com/v2/user
@@ -662,6 +681,9 @@ public class DoubanBusiness {
 	}
 	
 	
+	
+	
+	//---------------评论 相关---------------------
 	String xml_url = "http://api.douban.com/book/subject/isbn/:isbn/reviews";
 	
 	//----------comment in api v1
@@ -670,9 +692,7 @@ public class DoubanBusiness {
 	public void getCommentList(final String isbn,final int start,final AsynCallback<CommentReslult> callback){
 		new Thread() { 
 			public void run() {
-				WrongMsg wrongMsg = new WrongMsg();
 				CommentReslult result = null;
-				Gson gson = new Gson();
 				String s = "";
 				List<String> keys = new ArrayList<String>();
 				List<String> values = new ArrayList<String>();
@@ -685,19 +705,21 @@ public class DoubanBusiness {
 				callback.onStart();
 				
 				s = NetUtils.getHttpEntity(xml_url.replace(":isbn", isbn),
-				NetUtils.GET, keys, values, context);
-				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
-				}.getType());
-				if (wrongMsg.getCode() != 0) {
-						DebugUtils.d("NET",  "wrongmsg model");
-					callback.onFailure(wrongMsg);
-				} else {
-						DebugUtils.d("NET",  "right model");
-					result = gson.fromJson(s, new TypeToken<CommentReslult>() {
-					}.getType());
-					
-					callback.onSuccess(result);
+				NetUtils.GET, keys, values, null);
+				
+				InputStream input = new ByteArrayInputStream(s.getBytes());
+				 
+				try {
+					result = XMLReader.parseXml(input);
+				} catch (ParserConfigurationException e) {
+					e.printStackTrace();
+				} catch (SAXException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+					
+				callback.onSuccess(result);
 				callback.onDone();
 			};
 		}.start();

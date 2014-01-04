@@ -78,6 +78,14 @@
             android:name="com.study.doubanbook_for_android.activity.CommentWriteActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="com.study.doubanbook_for_android.activity.CommentListActivity"
+            android:label="@string/app_name" >
+        </activity>
+         <activity
+            android:name="com.study.doubanbook_for_android.activity.CommentDetailActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

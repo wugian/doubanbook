@@ -1,7 +1,13 @@
-package com.study.doubanbook_for_android.xmlpaser;
+package com.study.doubanbook_for_android.model;
 
-public class Author {
+import java.io.Serializable;
 
+public class Author implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4962015958780135346L;
 	private String name;
 	private String uri;
 
