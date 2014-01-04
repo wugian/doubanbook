@@ -35,7 +35,7 @@ public class CommentDetailActivity extends BaseActivity {
 	@Override
 	void initRightListener() {
 		super.initRightListener();
-		Intent intent = new Intent(this,CommentWriteActivity.class);
+		Intent intent = new Intent(this,CommentEditActivity.class);
 		intent.putExtra("entryItem", entryItem);
 		startActivity(intent);
 	}

@@ -52,18 +52,25 @@ import java.util.List;
 public class CommentReslult {
 
 	// <title>史蒂夫·乔布斯传 的评论</title>
-	// <link href="http://book.douban.com/subject/6798611/reviews"
+	// <link href="http://book.douban.com/subject/ /reviews"
 	// rel="alternate"/>
 	// <opensearch:startIndex>1</opensearch:startIndex>
 	// <opensearch:totalResults>607</opensearch:totalResults>
 	// <opensearch:itemsPerPage>2</opensearch:itemsPerPage>
-
 	private String title;
-	// private Link link;
 	private int start;
 	private int total;
 	private int count;
 	private List<Entry> entry;
+	private Link link;
+
+	public Link getLink() {
+		return link;
+	}
+
+	public void setLink(Link link) {
+		this.link = link;
+	}
 
 	public void add(Entry en) {
 		entry.add(en);

@@ -16,8 +16,8 @@ public class Douban {
 	private static Douban mDoubanInstance = null;
 	public static String URL_OAUTH2_ACCESS_AUTHORIZE = "https://www.douban.com/service/auth2/auth";
 	public static String URL_OAUTH2_ACCESS_TOKEN = "https://www.douban.com/service/auth2/token";
-	public static String app_key = "09561172f001e8251c023458d005b86f";// 第三方应用的appkey
-	public static String secret = "f31eaf3a7bf0a4cf";// 第三方应用的appkey
+	public static String app_key = "012716b9167db8c30375442b43792a49";// 第三方应用的appkey
+	public static String secret = "0c3826641a1fd905";// 第三方应用的appkey
 	public static String redirecturl = "http://developers.douban.com/";// 重定向url
 	public static String scope = "book_basic_r,book_basic_w,douban_basic_common";
 	public static final String KEY_TOKEN = "access_token";

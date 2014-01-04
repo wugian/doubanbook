@@ -27,6 +27,7 @@ import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.model.CollectBookMsg;
 import com.study.doubanbook_for_android.model.CollectSuccessResult;
+import com.study.doubanbook_for_android.model.CommentCallBackMsg;
 import com.study.doubanbook_for_android.model.CommentReslult;
 import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.model.GeneralCollectionResult;
@@ -720,6 +721,151 @@ public class DoubanBusiness {
 				}
 					
 				callback.onSuccess(result);
+				callback.onDone();
+			};
+		}.start();
+	}
+	
+	/**
+	 * POST  https://api.douban.com/v2/book/reviews
+		参数	意义	备注
+		book	评论所针对的book id	必传
+		title	评论头	必传
+		content	评论内容	必传，且多于150字
+		rating	打分	非必传，数字1～5为合法值，其他信息默认为不打分
+返回： 返回status=201， 图书评论Review信息
+
+注意：此处的Review肯定是当前用户的书评，所以其返回的不是summary（摘要），而是content（全文）
+	 */
+	
+	public void writeComment(final String bookId, final String title,
+			final String content,
+			final AsynCallback<CommentCallBackMsg> callback) {
+
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				CommentCallBackMsg result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+				// init keys
+				keys.add("book");
+				keys.add("title");
+				keys.add("content");
+				// init values
+				values.add(bookId);
+				values.add(title);
+				values.add(content);
+
+				callback.onStart();
+
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.WRITE_COMMENT_URL),
+						NetUtils.POST, keys, values, context);
+
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+					DebugUtils.d("NET", "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+					DebugUtils.d("NET", "right model");
+					result = gson.fromJson(s,
+							new TypeToken<CommentCallBackMsg>() {
+							}.getType());
+
+					callback.onSuccess(result);
+				}
+
+				callback.onDone();
+			};
+		}.start();
+	}
+	
+	/**
+	 * 修改评论
+PUT  https://api.douban.com/v2/book/review/:id
+参数	意义	备注
+title	评论头	必传
+content	评论内容	必传，且多于150字
+rating	打分	非必传，数字1～5为合法值，其他信息默认为不打分
+返回： status = 202， 图书评论Review信息
+
+注意：此处的Review肯定是当前用户的书评，所以其返回的不是summary（摘要），而是content（全文）
+	 * @param commentId
+	 * @param title
+	 * @param content
+	 * @param callback
+	 */
+	public void editComment(final String commentId, final String title,
+			final String content,
+			final AsynCallback<CommentCallBackMsg> callback) {
+
+		new Thread() {
+			public void run() {
+				WrongMsg wrongMsg = new WrongMsg();
+				CommentCallBackMsg result = null;
+				Gson gson = new Gson();
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+				// init keys
+				keys.add("title");
+				keys.add("content");
+				// init values
+				values.add(title);
+				values.add(content);
+
+				callback.onStart();
+
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.DEL_COMMENT_URL.replace(":id", commentId)),
+						NetUtils.PUT, keys, values, context);
+
+				wrongMsg = gson.fromJson(s, new TypeToken<WrongMsg>() {
+				}.getType());
+				if (wrongMsg.getCode() != 0) {
+					DebugUtils.d("NET", "wrongmsg model");
+					callback.onFailure(wrongMsg);
+				} else {
+					DebugUtils.d("NET", "right model");
+					result = gson.fromJson(s,
+							new TypeToken<CommentCallBackMsg>() {
+							}.getType());
+
+					callback.onSuccess(result);
+				}
+
+				callback.onDone();
+			};
+		}.start();
+	}
+	/**
+	 * 
+	 * @param commentId
+	 * @param callback
+	 */
+	public void delComment(final String commentId,
+			final AsynCallback<String> callback) {
+		new Thread() {
+			public void run() {
+				String s = "";
+				List<String> keys = new ArrayList<String>();
+				List<String> values = new ArrayList<String>();
+
+				callback.onStart();
+
+				s = NetUtils.getHttpEntity(
+						getBasicUrl(URLMananeger.DEL_COMMENT_URL.replace(":id",
+								commentId)), NetUtils.DELETE, keys, values,
+						context);
+
+				if (s.equals("OK")) {
+					DebugUtils.d("NET", "right model");
+					callback.onSuccess(s);
+				}
 				callback.onDone();
 			};
 		}.start();

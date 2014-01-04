@@ -76,6 +76,7 @@ public class BookDetailActivity extends BaseActivity {
 
 	private MessageHandler msgHandler;// 消息处理器
 	private Button writeNote_btn;
+	private Button writeComment_btn;
 
 	class MessageHandler extends Handler {
 		public MessageHandler(Looper looper) {
@@ -166,7 +167,7 @@ public class BookDetailActivity extends BaseActivity {
 		final RatingBar ratingBar_rb = (RatingBar) view
 				.findViewById(R.id.ratingBar_rb);
 		final EditText comment_et = (EditText) view
-				.findViewById(R.id.comment_et);
+				.findViewById(R.id.commentContent_et);
 
 		Button cancle_btn = (Button) view.findViewById(R.id.cancle_btn);
 		Button ok_btn = (Button) view.findViewById(R.id.ok_btn);
@@ -271,7 +272,7 @@ public class BookDetailActivity extends BaseActivity {
 		comment_btn = (Button) findViewById(R.id.comment_btn);
 
 		writeNote_btn = (Button) findViewById(R.id.writeNote_btn);
-
+		writeComment_btn = (Button)findViewById(R.id.writeComment_btn);
 	}
 
 	@Override
@@ -428,6 +429,15 @@ public class BookDetailActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, NoteEditActivity.class);
+				intent.putExtra("bookItem", bookItem);
+				startActivity(intent);
+			}
+		});
+		
+		writeComment_btn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, CommentEditActivity.class);
 				intent.putExtra("bookItem", bookItem);
 				startActivity(intent);
 			}

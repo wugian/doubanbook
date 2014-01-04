@@ -162,6 +162,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_selector"
                 android:text="查看评论" />
+            <Button
+                android:id="@+id/writeComment_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:background="@drawable/btn_selector"
+                android:text="写评论" />
         </LinearLayout>
     </ScrollView>
 

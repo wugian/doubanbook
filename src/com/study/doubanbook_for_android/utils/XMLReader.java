@@ -11,12 +11,14 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.study.doubanbook_for_android.model.Author;
 import com.study.doubanbook_for_android.model.CommentReslult;
 import com.study.doubanbook_for_android.model.Entry;
+import com.study.doubanbook_for_android.model.Link;
 
 public class XMLReader {
 
@@ -24,7 +26,7 @@ public class XMLReader {
 			throws ParserConfigurationException, SAXException, IOException {
 		// 创建解析器工厂实例，并生成解析器
 		CommentReslult commentReslult = new CommentReslult();
-		List<Entry>entryList = new ArrayList<Entry>();
+		List<Entry> entryList = new ArrayList<Entry>();
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		// 创建需要解析的文档对象
@@ -37,15 +39,35 @@ public class XMLReader {
 		// 当然，你也可以直接找到元素集合，省略此步骤
 		Element root = doc.getDocumentElement();
 
+	
 		System.out.println("total title:" + getValue(root, "title"));
 		commentReslult.setTitle(getValue(root, "title"));
 		System.out.println("start index:"
 				+ getValue(root, "opensearch:startIndex"));
-		commentReslult.setStart(Integer.parseInt(getValue(root, "opensearch:startIndex")));
+		commentReslult.setStart(Integer.parseInt(getValue(root,
+				"opensearch:startIndex")));
 		System.out.println("total result:"
 				+ getValue(root, "opensearch:totalResults"));
-		commentReslult.setTotal(Integer.parseInt(getValue(root, "opensearch:totalResults")));
+		commentReslult.setTotal(Integer.parseInt(getValue(root,
+				"opensearch:totalResults")));
 		System.out.println();
+
+		// NodeList linkList = root.getChildNodes();
+		// for (int i = 0; i < linkList.getLength(); i++) {
+		// Node book = linkList.item(i);
+		// if (book.getNodeType() == Node.ELEMENT_NODE) {
+		// String email = book.getAttributes().getNamedItem("href")
+		// .getNodeValue();
+		// System.out.println(email);
+		// }
+		// }
+		// for (int j = 0; j < linkList.getLength(); j++) {
+		// Element curEle = (Element) linkList.item(j);
+		// Link link = new Link();
+		// link.setHref(getValue(curEle, "href"));
+		// link.setRel(getValue(curEle, "rel"));
+		// System.out.println("link " + j + ":" + link.toString());
+		// }
 		// 上面找到了根节点，这里开始获取根节点下的元素集合
 		NodeList list = root.getElementsByTagName("entry");
 		for (int i = 0; i < list.getLength(); i++) {
@@ -53,6 +75,8 @@ public class XMLReader {
 			// 通过item()方法找到集合中的节点，并向下转型为Element对象
 			Element n = (Element) list.item(i);
 			System.out.println("i: " + i);
+			System.out.println("entry id url:" + getValue(root, "id"));
+			entry.setId(getValue(root, "id"));
 			// 打印元素内容，代码很纠结，差不多是个固定格式
 			System.out.println("title: " + getValue(n, "title"));
 			entry.setTitle(getValue(n, "title"));
@@ -80,7 +104,7 @@ public class XMLReader {
 			return n.getElementsByTagName(s).item(0).getFirstChild()
 					.getNodeValue();
 		} catch (Exception e) {
-			System.out.println(e.getLocalizedMessage());
+			e.printStackTrace();
 		}
 		return null;
 	}

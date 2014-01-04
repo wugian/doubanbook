@@ -84,7 +84,7 @@ public class CommentListActivity extends BaseP2RActivity<Entry> {
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		super.onRefresh(refreshView);
-		if (pageIndex < pageIndex * PAGE_COUNT) {
+		if (pageIndex * PAGE_COUNT < result.getTotal()) {
 			fetchData();
 			refreshCompleted();
 		} else {

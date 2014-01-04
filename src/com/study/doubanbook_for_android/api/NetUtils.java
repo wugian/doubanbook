@@ -143,7 +143,7 @@ public class NetUtils {
 			// TODO add a delete success model and revert it to json
 			DeleteSuccess del = new DeleteSuccess();
 			del.setDelCode(200);
-			del.setDelMessage("delet success");
+			del.setDelMessage("delete success");
 			result = new StringBuffer(JsonUtil.toJsonObject(del));
 		} else {
 			// get the wrong message will return upstairs will charge in

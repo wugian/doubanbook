@@ -27,6 +27,10 @@ public class URLMananeger {
 	public static final String USER_COLLECTION_URL = "/v2/book/user/:name/collections";
 	// user search url
 	public static final String USER_SEARCH_URL = "/v2/user";
-	//
+	//add new comment url
+	public static final String WRITE_COMMENT_URL = "/v2/book/reviews";
+	//delete comment and modify url 			 
+	public static final String DEL_COMMENT_URL = "/v2/book/review/:id";
+	 
 
 }
