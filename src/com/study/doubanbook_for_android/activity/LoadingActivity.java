@@ -8,6 +8,11 @@ import android.view.ViewGroup;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.R.anim;
 
+/**
+ * 着陆页面,写的还行,可以作为借鉴
+ * @author tezuka-pc
+ *
+ */
 public class LoadingActivity extends BaseActivity implements Runnable {
 
 	ViewGroup start_lyt;

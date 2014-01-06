@@ -78,6 +78,9 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 
 	}
 
+	/**
+	 * 初始化下拉列表和线程,这是以前写的没有去修改,可以不使用这个基类里的纯种的
+	 */
 	void initP2RLvAndThread() {
 		// init p2r
 		p2r_lv = (PullToRefreshListView) this.findViewById(R.id.p2r_lv);
@@ -117,10 +120,16 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 		fetchData();
 	}
 
+	/**
+	 * 刷新结束完成
+	 */
 	protected void refreshCompleted() {
 		p2r_lv.onRefreshComplete();
 	}
 
+	/**
+	 * 监听是否要刷新当前页面的数据
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -141,11 +150,17 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 
 	}
 
+	/**
+	 * 单项单击事件,其中position 从0开始
+	 */
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
 	}
 
+	/**
+	 * 下拉到底的操作
+	 */
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 

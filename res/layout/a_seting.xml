@@ -71,6 +71,30 @@
                     android:layout_height="@dimen/settings_toggle_btn_height"
                     android:background="@drawable/ic_next" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/edge_margin"
+                android:layout_marginRight="@dimen/edge_margin"
+                android:layout_marginTop="@dimen/edge_margin"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/loginOut_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_weight="1"
+                    android:background="@color/red"
+                    android:gravity="center"
+                    android:padding="5dip"
+                    android:text="退出"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

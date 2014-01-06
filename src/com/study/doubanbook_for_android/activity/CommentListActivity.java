@@ -18,6 +18,12 @@ import com.study.doubanbook_for_android.model.Entry;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
+/**
+ * TODO
+ * 评论列表,其中的列表API解析的是V1中的,若以后V2开放列表API要做修改
+ * @author tezuka-pc
+ *
+ */
 public class CommentListActivity extends BaseP2RActivity<Entry> {
 
 	String isbn = "";
@@ -41,11 +47,7 @@ public class CommentListActivity extends BaseP2RActivity<Entry> {
 		fetchData();
 	}
 
-	@Override
-	void initRightListener() {
-		super.initRightListener();
-		// TODO add lister when the user is authed
-	}
+	 
 
 	@Override
 	public void selfHandleMsg(Message msg) {

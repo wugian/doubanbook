@@ -28,8 +28,8 @@ import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
 /**
- * 1 Task has not done
  * 
+ * 用户详情页面
  * @author tezuka-pc
  * 
  */
@@ -124,7 +124,6 @@ public class UserDetailActivity extends BaseActivity {
 				iv.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO reget bookData by API GET
 						// https://api.douban.com/v2/book/:id done by
 						// 13-12-18-10:21
 						getBookDetail(au.getBook().getId());

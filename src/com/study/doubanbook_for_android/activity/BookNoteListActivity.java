@@ -6,12 +6,10 @@ import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.adapter.UserNoteAdapter;
-import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.Annotations;
@@ -20,6 +18,11 @@ import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
+/**
+ * 图书笔记列表
+ * @author tezuka-pc
+ *
+ */
 public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 
 	String bookid = null;

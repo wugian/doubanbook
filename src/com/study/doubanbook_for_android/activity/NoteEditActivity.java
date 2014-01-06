@@ -17,6 +17,11 @@ import com.study.doubanbook_for_android.model.BookItem;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
+/**
+ * 编辑笔记
+ * @author tezuka-pc
+ *
+ */
 public class NoteEditActivity extends BaseActivity {
 
 	public static final int NOTE_EDIT_SUCCESS = 0;

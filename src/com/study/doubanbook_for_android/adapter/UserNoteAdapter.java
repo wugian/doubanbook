@@ -14,6 +14,12 @@ import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 import com.study.doubanbook_for_android.model.Annotations;
 
+/**
+ * 笔记ADAPTER
+ * 
+ * @author tezuka-pc
+ * 
+ */
 public class UserNoteAdapter extends BaseAdapter {
 
 	private ArrayList<Annotations> annotationList;

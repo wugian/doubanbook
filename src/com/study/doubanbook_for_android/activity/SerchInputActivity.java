@@ -1,5 +1,6 @@
 package com.study.doubanbook_for_android.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,7 +33,7 @@ import com.study.doubanbook_for_android.utils.PrefUtils;
 import com.study.doubanbook_for_android.utils.ToastUtils;
 
 /**
- * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
+ * 主搜索页面
  * 
  * @author tezuka-pc
  * 
@@ -71,7 +72,6 @@ public class SerchInputActivity extends BaseActivity {
 			case GET_USERDETAIL_SUCCESS:
 				AuthorUser ud = (AuthorUser) msg.obj;
 				Intent intent = new Intent(context, UserDetailActivity.class);
-				AccessToken ac = KeepToken.readAccessToken(context);
 				intent.putExtra("userDetail", ud);
 				startActivity(intent);
 				break;
@@ -120,15 +120,25 @@ public class SerchInputActivity extends BaseActivity {
 		if (PrefUtils.getAutoLogin(context)) {
 			auth();
 		}
-		// TODO this just test to delete
-		search_et.setText("求魔");
+		// this just test to delete
+		// search_et.setText("求魔");
 	}
 
 	@Override
 	void initRightListener() {
 		super.initRightListener();
 		Intent intent = new Intent(this, SettingActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, BaseP2RActivity.REQUEST_CODE_CHANGED);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK
+				&& requestCode == BaseP2RActivity.REQUEST_CODE_CHANGED)
+			if (data.getBooleanExtra("isChanged", false)) {
+				finish();
+			}
 	}
 
 	void auth() {

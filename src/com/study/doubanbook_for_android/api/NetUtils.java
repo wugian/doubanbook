@@ -36,9 +36,7 @@ import android.content.Context;
 import android.net.ParseException;
 
 import com.study.doubanbook_for_android.auth.AccessToken;
-import com.study.doubanbook_for_android.auth.Douban;
 import com.study.doubanbook_for_android.auth.KeepToken;
-import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.JsonUtil;
@@ -62,7 +60,7 @@ public class NetUtils {
 	 *            想要传递给服务器的参数列表
 	 * @return
 	 */
-	// TODO 2013-12-24 AFTER GET ACCESSTOKEN CHARGE NULL,IF NULL RETURN AND
+	// 2013-12-24 AFTER GET ACCESSTOKEN CHARGE NULL,IF NULL RETURN AND
 	// REQUEST
 	// USER TO
 	// AUTH,ELSE RIGTH FLOW RELATIVED TO SEARCHINPUTACTIVITY.JAVA
@@ -76,8 +74,8 @@ public class NetUtils {
 		// result StringBuffer
 		StringBuffer result = new StringBuffer();
 
-		//log out request urls
-		DebugUtils.d("NET",urls);
+		// log out request urls
+		DebugUtils.d("NET", urls);
 		// initial the method
 		switch (method) {
 		case GET:
@@ -142,15 +140,16 @@ public class NetUtils {
 				e.printStackTrace();
 			}
 		} else if (statusCode == 204) {// status = 204 无返回信息 如删除收藏图书 删除笔记
-			// TODO add a delete success model and revert it to json
+			// add a delete success model and revert it to json
 			DeleteSuccess del = new DeleteSuccess();
 			del.setDelCode(200);
 			del.setDelMessage("delete success");
 			result = new StringBuffer(JsonUtil.toJsonObject(del));
-		} /*else if(statusCode == 403){//出砚403重新AUTH
-			Douban db = Douban.getInstance();
-			db.authorize(context, new SimpleDoubanOAuthListener());
-		}*/else {
+		} /*
+		 * else if(statusCode == 403){//出砚403重新AUTH Douban db =
+		 * Douban.getInstance(); db.authorize(context, new
+		 * SimpleDoubanOAuthListener()); }
+		 */else {
 			// get the wrong message will return upstairs will charge in
 			// business level
 			// log out the status code and describe

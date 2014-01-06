@@ -14,6 +14,11 @@ import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 import com.study.doubanbook_for_android.model.BookItem;
 
+/**
+ * 图书ADAPTER
+ * @author tezuka-pc
+ *
+ */
 public class BookAdapter extends BaseAdapter {
 
 	private ArrayList<BookItem> books;

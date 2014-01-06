@@ -2,20 +2,21 @@ package com.study.doubanbook_for_android.adapter;
 
 import java.util.ArrayList;
 
-import com.study.doubanbook_for_android.R;
-import com.study.doubanbook_for_android.adapter.UserListAdapter.ViewHolder;
-import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
-import com.study.doubanbook_for_android.model.AuthorUser;
-import com.study.doubanbook_for_android.model.Entry;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.study.doubanbook_for_android.R;
+import com.study.doubanbook_for_android.model.Entry;
+
+/**
+ * 评论ADAPTER
+ * @author tezuka-pc
+ *
+ */
 public class CommentAdapter extends BaseAdapter {
 
 	private ArrayList<Entry> entrys;

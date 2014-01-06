@@ -1,6 +1,8 @@
 package com.study.doubanbook_for_android.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -18,6 +20,11 @@ import com.study.doubanbook_for_android.model.CommentCallBackMsg;
 import com.study.doubanbook_for_android.model.Entry;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
+/**
+ * 评论编辑
+ * @author tezuka-pc
+ *
+ */
 public class CommentEditActivity extends BaseActivity {
 
 	private static final int COMMENT_SUCCESS = 0;
@@ -166,21 +173,43 @@ public class CommentEditActivity extends BaseActivity {
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String commentId = getUserId(entryItem.getId());
-				doubanBusiness.delComment(commentId,
-						new AsynCallback<String>() {
-							@Override
-							public void onSuccess(String data) {
-								super.onSuccess(data);
-								baseSendMessage(data, DEL_COMMENT_SUCCESS);
-							}
+				AlertDialog.Builder builder = new AlertDialog.Builder(context);
+				builder.setMessage("确定删除?")
+						.setCancelable(false)
+						.setPositiveButton("确定",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										toDeleteComment();
+										dialog.cancel();
+									}
+								})
+						.setNegativeButton("取消",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		});
+	}
 
-							@Override
-							public void onFailure(WrongMsg caught) {
-								super.onFailure(caught);
-								baseSendMessage(caught, FAILURE);
-							}
-						});
+	void toDeleteComment() {
+		String commentId = getUserId(entryItem.getId());
+		doubanBusiness.delComment(commentId, new AsynCallback<String>() {
+			@Override
+			public void onSuccess(String data) {
+				super.onSuccess(data);
+				baseSendMessage(data, DEL_COMMENT_SUCCESS);
+			}
+
+			@Override
+			public void onFailure(WrongMsg caught) {
+				super.onFailure(caught);
+				baseSendMessage(caught, FAILURE);
 			}
 		});
 	}

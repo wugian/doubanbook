@@ -23,6 +23,11 @@ import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
+/**
+ * 笔记详情
+ * @author tezuka-pc
+ *
+ */
 public class NoteAndUserDetailActivity extends BaseActivity {
 
 	private final static int DELETE_SUCCESS = 0;

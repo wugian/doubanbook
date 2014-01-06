@@ -35,8 +35,11 @@ import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
-//TODO add slid menu to show book note then can't show the comment list so cancel
-//TODO add comment api in v1
+/**
+ * 图书详情表
+ * @author tezuka-pc
+ *
+ */
 public class BookDetailActivity extends BaseActivity {
 
 	private static final int COLLETE_DELETE_SUCCESS = 0;// 取消收藏成功
@@ -136,7 +139,6 @@ public class BookDetailActivity extends BaseActivity {
 	void initRightListener() {
 		super.initRightListener();
 		Intent intent = new Intent(context, BookNoteListActivity.class);
-		// TODO 添加传递BOOKITEM 或者添加传递BOOK NAME 参数 done
 		intent.putExtra("bookid", bookid);
 		intent.putExtra("bookItem", bookItem);
 
@@ -313,7 +315,7 @@ public class BookDetailActivity extends BaseActivity {
 
 		}
 		author.setText(stringBuffer.toString());
-		// get accessToken
+		// get accessToken 添加基本页面,如启动页面,设置页面关于,我们页面,修改优化部分BUG及UI,UE
 		AccessToken accessToken = KeepToken.readAccessToken(context);
 		// if not login do not show collect and wish status
 		if (!notNull(accessToken.getToken())) {
@@ -419,8 +421,6 @@ public class BookDetailActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO add write comment activity and xml
-				// here as test
 				Intent intent = new Intent(context, CommentListActivity.class);
 				intent.putExtra("bookItem", bookItem);
 				startActivity(intent);

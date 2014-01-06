@@ -17,6 +17,11 @@ import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ToastUtils;
 
+/**
+ * ACTIVITY的基类,封闭了一些基本的常用方法
+ * @author tezuka-pc
+ *
+ */
 public class BaseActivity extends Activity {
 
 	public final static int PAGE_COUNT = 10;
@@ -51,7 +56,7 @@ public class BaseActivity extends Activity {
 
 	/**
 	 * 怎样处理接受到的消息,自己覆盖方法判断使用
-	 * 
+	 * 常用switch case 
 	 * @param msg
 	 */
 	public void baseSelfHandleMsg(Message msg) {
@@ -101,6 +106,9 @@ public class BaseActivity extends Activity {
 		}
 	}
 
+	/**
+	 * 设置右键的监听事件及反应initRightListerner
+	 */
 	void setRightButton() {
 		showComment_btn = (ImageButton) findViewById(R.id.showComment_btn);
 		showComment_btn.setVisibility(View.VISIBLE);
@@ -152,6 +160,11 @@ public class BaseActivity extends Activity {
 		DebugUtils.d("TTT", "base Activity initlisternser");
 	}
 
+	/**
+	 * get text of textview or editText
+	 * @param tv
+	 * @return
+	 */
 	String getText(TextView tv) {
 		return tv.getText().toString().trim();
 	}

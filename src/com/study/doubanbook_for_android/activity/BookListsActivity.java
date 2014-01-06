@@ -6,12 +6,10 @@ import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.adapter.BookAdapter;
-import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.BookItem;
@@ -19,6 +17,11 @@ import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
+/**
+ * 图书搜索结果列表
+ * @author tezuka-pc
+ *
+ */
 public class BookListsActivity extends BaseP2RActivity<BookItem> {
 
 	String searchContent = "";
@@ -34,7 +37,7 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 		adapter = new BookAdapter(dataList, this);
 		initP2RLvAndThread();
 		searchContent = getIntent().getStringExtra("searchContent");
-		setNavagator("'"+searchContent+"' 的搜索结果",0);
+		setNavagator("'" + searchContent + "' 的搜索结果", 0);
 		fetchData();
 	}
 
@@ -75,7 +78,7 @@ public class BookListsActivity extends BaseP2RActivity<BookItem> {
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		super.onRefresh(refreshView);
-		if (pageIndex < pageIndex * PAGE_COUNT) {
+		if (pageIndex * PAGE_COUNT < result.getTotal()) {
 			fetchData();
 			refreshCompleted();
 		} else {

@@ -11,6 +11,11 @@ import com.study.doubanbook_for_android.auth.KeepToken;
 import com.study.doubanbook_for_android.model.Entry;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 
+/**
+ * 评论详情列表
+ * @author tezuka-pc
+ *
+ */
 public class CommentDetailActivity extends BaseActivity {
 
 	Entry entryItem;

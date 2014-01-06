@@ -14,6 +14,11 @@ import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.imagedownloader.ImageDownloader;
 import com.study.doubanbook_for_android.model.AuthorUser;
 
+/**
+ * 用户ADAPTER
+ * @author tezuka-pc
+ *
+ */
 public class UserListAdapter extends BaseAdapter {
 
 	private ArrayList<AuthorUser> users;

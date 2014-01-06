@@ -18,6 +18,12 @@ import com.study.doubanbook_for_android.model.GeneralNoteResult;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.ShowErrorUtils;
 
+
+/**
+ * 图书笔记列表
+ * @author tezuka-pc
+ *
+ */
 public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 
 	String userName = null;
@@ -36,7 +42,7 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 		authorUser = (AuthorUser) getIntent()
 				.getSerializableExtra("authorUser");
 		fetchData();
-		setNavagator(authorUser.getName() + " 的笔记",0);
+		setNavagator(authorUser.getName() + " 的笔记", 0);
 	}
 
 	@Override
@@ -79,7 +85,7 @@ public class UserNoteListActivity extends BaseP2RActivity<Annotations> {
 	@Override
 	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		super.onRefresh(refreshView);
-		if (pageIndex < pageIndex * PAGE_COUNT) {
+		if (pageIndex * PAGE_COUNT < result.getTotal()) {
 			fetchData();
 			refreshCompleted();
 		} else {

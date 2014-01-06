@@ -4,6 +4,11 @@ import com.study.doubanbook_for_android.R;
 
 import android.os.Bundle;
 
+/**
+ * 关于我们,仅作为信息显示
+ * @author tezuka-pc
+ *
+ */
 public class AboutUsActivity extends BaseActivity {
 
 	@Override
