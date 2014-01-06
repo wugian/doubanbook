@@ -32,5 +32,6 @@
     <string name="comment_hint">评论(不少于15字)</string>
     <string name="comment_title">标题</string>
     <string name="content">内容</string>
+    <string name="about_us">豆瓣读书\n\n作者:李攀\n\n邮箱:sissilove812@gamil.com</string>
 
 </resources>

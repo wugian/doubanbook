@@ -23,7 +23,7 @@ public class CommentDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_comment_detail);
-		setNavagator("评论详情",0);
+		setNavagator("评论详情", 0);
 		initDatas();
 		DebugUtils.d("NET", entryItem.toString());
 		AccessToken ac = KeepToken.readAccessToken(this);
@@ -47,8 +47,12 @@ public class CommentDetailActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK
 				&& requestCode == BaseP2RActivity.REQUEST_CODE_CHANGED)
-			if (data.getBooleanExtra("isChanged", false))
-				setResultThenFinish();
+			if (data.getBooleanExtra("isChanged", false)) {
+				Intent intent = new Intent();
+				intent.putExtra("isChanged", true);
+				setResult(Activity.RESULT_OK, intent);
+				finish();
+			}
 	}
 
 	@Override

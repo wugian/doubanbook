@@ -318,6 +318,8 @@ public class BookDetailActivity extends BaseActivity {
 		// if not login do not show collect and wish status
 		if (!notNull(accessToken.getToken())) {
 			collet_lyt.setVisibility(View.GONE);
+			writeNote_btn.setVisibility(View.GONE);
+			writeComment_btn.setVisibility(View.GONE);
 		} else {
 			if (bookItem.getCurrent_user_collection() == null) {
 				resetTextColor(wish, reading, done);

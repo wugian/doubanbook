@@ -54,6 +54,10 @@ public class CommentListActivity extends BaseP2RActivity<Entry> {
 		case SUCCESS:
 			result = (CommentReslult) (msg.obj);
 			addData(result.getEntry());
+			if(dataList.size()==0){
+				toast("当前图书没有评论");
+				finish();
+			}
 			break;
 		case FAILURE:
 			ShowErrorUtils.showWrongMsg(context, msg);

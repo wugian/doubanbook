@@ -69,7 +69,7 @@ public class NoteAndUserDetailActivity extends BaseActivity {
 		DebugUtils.e("CLASS", getClass().getName());
 		initDatas();
 		findViews();
-		setNavagator(annotations.getBook().getTitle() + "的评论",0);
+		setNavagator(annotations.getBook().getTitle() + "的笔记",0);
 		initWidgets();
 		initListners();
 	}

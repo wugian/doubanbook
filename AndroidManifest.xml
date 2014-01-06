@@ -94,6 +94,10 @@
             android:name="com.study.doubanbook_for_android.activity.SettingActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="com.study.doubanbook_for_android.activity.AboutUsActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

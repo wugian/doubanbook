@@ -111,11 +111,11 @@ public class SerchInputActivity extends BaseActivity {
 		Looper looper = Looper.myLooper();
 		msgHandler = new MessageHandler(looper);
 		context = this;
-
 		findViews();
 		initWidgets();
 		initListners();
 		setNavagator("搜索主页", R.drawable.ic_setting);
+		back.setVisibility(View.INVISIBLE);
 		// auto auth
 		if (PrefUtils.getAutoLogin(context)) {
 			auth();

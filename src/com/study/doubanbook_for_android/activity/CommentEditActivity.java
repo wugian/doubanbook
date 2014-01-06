@@ -47,11 +47,14 @@ public class CommentEditActivity extends BaseActivity {
 		switch (status) {
 		case COMMENT_SUCCESS:
 			toast("评论发表成功");
-			setResultThenFinish();
+			finish();
 			break;
 		case DEL_COMMENT_SUCCESS:
 			toast("评论删除成功");
-			setResultThenFinish();
+			Intent intent = new Intent();
+			intent.putExtra("isChanged", true);
+			setResult(Activity.RESULT_OK, intent);
+			finish();
 			break;
 		case FAILURE:
 			ShowErrorUtils.showWrongMsg(this, msg);
@@ -68,9 +71,9 @@ public class CommentEditActivity extends BaseActivity {
 		initDatas();
 		findViews();
 		if (entryItem != null)
-			setNavagator("修改评论",0);
+			setNavagator("修改评论", 0);
 		else
-			setNavagator("给" + bookItem.getTitle() + "写评论",0);
+			setNavagator("给" + bookItem.getTitle() + "写评论", 0);
 		initWidgets();
 		initListners();
 	}
@@ -140,7 +143,8 @@ public class CommentEditActivity extends BaseActivity {
 							});
 				} else {
 					doubanBusiness.editComment(
-							String.valueOf(getUserId(entryItem.getId())), title, content,
+							String.valueOf(getUserId(entryItem.getId())),
+							title, content,
 							new AsynCallback<CommentCallBackMsg>() {
 								@Override
 								public void onSuccess(CommentCallBackMsg data) {
