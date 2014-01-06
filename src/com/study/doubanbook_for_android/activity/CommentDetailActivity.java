@@ -1,5 +1,6 @@
 package com.study.doubanbook_for_android.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ public class CommentDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_comment_detail);
-		setNavagator("评论详情");
+		setNavagator("评论详情",0);
 		initDatas();
 		DebugUtils.d("NET", entryItem.toString());
 		AccessToken ac = KeepToken.readAccessToken(this);
@@ -32,12 +33,31 @@ public class CommentDetailActivity extends BaseActivity {
 		findViews();
 		initWidgets();
 	}
+
 	@Override
 	void initRightListener() {
 		super.initRightListener();
-		Intent intent = new Intent(this,CommentEditActivity.class);
+		Intent intent = new Intent(this, CommentEditActivity.class);
 		intent.putExtra("entryItem", entryItem);
-		startActivity(intent);
+		startActivityForResult(intent, BaseP2RActivity.REQUEST_CODE_CHANGED);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK
+				&& requestCode == BaseP2RActivity.REQUEST_CODE_CHANGED)
+			if (data.getBooleanExtra("isChanged", false))
+				setResultThenFinish();
+	}
+
+	@Override
+	void setResultThenFinish() {
+		super.setResultThenFinish();
+		Intent intent = new Intent();
+		intent.putExtra("isChanged", true);
+		setResult(Activity.RESULT_OK, intent);
+		finish();
 	}
 
 	@Override
@@ -67,6 +87,6 @@ public class CommentDetailActivity extends BaseActivity {
 	String getUserId(String s) {
 		int index = s.lastIndexOf("/");
 		System.out.println(s.substring(index));
-		return s.substring(index+1);
+		return s.substring(index + 1);
 	}
 }

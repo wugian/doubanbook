@@ -126,8 +126,10 @@ public class BaseP2RActivity<T> extends BaseActivity implements
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK
 				&& requestCode == REQUEST_CODE_CHANGED)
-			if (data != null)
+			if (data.getBooleanExtra("isChanged", false)){
 				reUpdateData();
+				toast("正在刷新数据");
+			}
 	}
 
 	// ------------------------------------------------

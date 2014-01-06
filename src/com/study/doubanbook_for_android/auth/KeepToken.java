@@ -14,7 +14,7 @@ import android.content.SharedPreferences.Editor;
  * 
  */
 public class KeepToken {
-	private static final String PREFERENCES_NAME = "douban_android_sdk";
+	private static final String PREFERENCES_NAME = "douban_android_auth";
 
 	/**
 	 * 保存accesstoken到SharedPreferences

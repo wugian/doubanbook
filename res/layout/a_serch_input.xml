@@ -3,8 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_general_bg"
-    android:gravity="center"
+    android:gravity="left|top"
     android:orientation="vertical" >
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/bar_all" />
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -15,6 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
             android:gravity="center"
             android:orientation="vertical" >
 
@@ -60,22 +66,30 @@
                     android:id="@+id/clear_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_delete" />
+                    android:background="@drawable/ic_delete"
+                    android:padding="3dp" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/search_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edge_margin"
                 android:background="@drawable/serch_selector" />
         </LinearLayout>
     </ScrollView>
 
     <Button
         android:id="@+id/authBtn"
-        android:background="@drawable/btn_selector"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AUTH/UserDetail" />
+        android:layout_height="27dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_selector"
+        android:paddingBottom="3dip"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="3dip"
+        android:text="登录"
+        android:textColor="@color/btn_text_color" />
 
 </LinearLayout>

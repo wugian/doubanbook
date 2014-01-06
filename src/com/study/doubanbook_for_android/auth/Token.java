@@ -19,4 +19,6 @@ public class Token {
 	public long expires_in;
 	@SerializedName("douban_user_id")
 	public String douban_user_id;
+	@SerializedName("douban_user_name")
+	public String douban_user_name;
 }

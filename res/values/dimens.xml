@@ -46,7 +46,7 @@
     <dimen name="camera_width">50dp</dimen>
     <dimen name="camera_height">42dp</dimen>
     <dimen name="qr_code_width">248dp</dimen>
-    <dimen name="edit_text_padding">3dip</dimen>
+    <dimen name="edit_text_padding">5dip</dimen>
     <dimen name="list_img_width">75dp</dimen>
     <dimen name="list_img_height">105dp</dimen>
     <dimen name="small_btn_w">36dp</dimen>

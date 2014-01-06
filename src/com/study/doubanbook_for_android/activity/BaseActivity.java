@@ -9,6 +9,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.study.doubanbook_for_android.R;
@@ -73,8 +74,10 @@ public class BaseActivity extends Activity {
 
 	TextView title;
 	Button back;
+	ImageButton showComment_btn;
 
-	void setNavagator(String searchContent) {
+	@SuppressWarnings("deprecation")
+	void setNavagator(String searchContent, int id) {
 		title = (TextView) findViewById(R.id.title_tv);
 		back = (Button) findViewById(R.id.back_btn);
 		title.setText(searchContent);
@@ -84,12 +87,22 @@ public class BaseActivity extends Activity {
 				setResultThenFinish();
 			}
 		});
+		showComment_btn = (ImageButton) findViewById(R.id.showComment_btn);
+		if (id != 0) {
+			showComment_btn.setVisibility(View.VISIBLE);
+			showComment_btn.setBackgroundDrawable(getResources().getDrawable(id));
+			showComment_btn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					initRightListener();
+				}
+			});
+		}
 	}
 
-	Button showComment_btn;
-
 	void setRightButton() {
-		showComment_btn = (Button) findViewById(R.id.showComment_btn);
+		showComment_btn = (ImageButton) findViewById(R.id.showComment_btn);
 		showComment_btn.setVisibility(View.VISIBLE);
 		showComment_btn.setOnClickListener(new OnClickListener() {
 

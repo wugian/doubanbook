@@ -126,7 +126,7 @@ public class BookDetailActivity extends BaseActivity {
 		findViews();
 		setRightButton();
 		initDatas();
-		setNavagator(bookItem.getTitle());
+		setNavagator(bookItem.getTitle(),0);
 		initWidgets();
 		initListners();
 		initPopWindow();

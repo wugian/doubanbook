@@ -37,7 +37,7 @@ public class BookNoteListActivity extends BaseP2RActivity<Annotations> {
 		bookid = getIntent().getStringExtra("bookid");
 		bookItem = (BookItem) getIntent().getSerializableExtra("bookItem");
 		fetchData();
-		setNavagator(bookItem.getTitle() + " 的笔记");
+		setNavagator(bookItem.getTitle() + " 的笔记",0);
 	}
 
 	@Override

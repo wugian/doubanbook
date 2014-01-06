@@ -62,9 +62,9 @@ public class NoteEditActivity extends BaseActivity {
 		DebugUtils.e("CLASS", getClass().getName());
 		initDatas();
 		if (annotations == null)
-			setNavagator("添加" + bookItem.getTitle() + "的笔记");
+			setNavagator("添加" + bookItem.getTitle() + "的笔记",0);
 		else
-			setNavagator("修改笔记");
+			setNavagator("修改笔记",0);
 		findViews();
 		initWidgets();
 		initListners();

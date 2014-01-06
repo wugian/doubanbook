@@ -37,6 +37,7 @@ public class CommentEditActivity extends BaseActivity {
 		Intent intent = new Intent();
 		intent.putExtra("isChanged", true);
 		setResult(Activity.RESULT_OK, intent);
+		finish();
 	}
 
 	@Override
@@ -67,9 +68,9 @@ public class CommentEditActivity extends BaseActivity {
 		initDatas();
 		findViews();
 		if (entryItem != null)
-			setNavagator("修改评论");
+			setNavagator("修改评论",0);
 		else
-			setNavagator("给" + bookItem.getTitle() + "写评论");
+			setNavagator("给" + bookItem.getTitle() + "写评论",0);
 		initWidgets();
 		initListners();
 	}
@@ -167,13 +168,13 @@ public class CommentEditActivity extends BaseActivity {
 							@Override
 							public void onSuccess(String data) {
 								super.onSuccess(data);
-
+								baseSendMessage(data, DEL_COMMENT_SUCCESS);
 							}
 
 							@Override
 							public void onFailure(WrongMsg caught) {
 								super.onFailure(caught);
-
+								baseSendMessage(caught, FAILURE);
 							}
 						});
 			}

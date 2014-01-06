@@ -36,7 +36,9 @@ import android.content.Context;
 import android.net.ParseException;
 
 import com.study.doubanbook_for_android.auth.AccessToken;
+import com.study.doubanbook_for_android.auth.Douban;
 import com.study.doubanbook_for_android.auth.KeepToken;
+import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
 import com.study.doubanbook_for_android.model.DeleteSuccess;
 import com.study.doubanbook_for_android.utils.DebugUtils;
 import com.study.doubanbook_for_android.utils.JsonUtil;
@@ -145,7 +147,10 @@ public class NetUtils {
 			del.setDelCode(200);
 			del.setDelMessage("delete success");
 			result = new StringBuffer(JsonUtil.toJsonObject(del));
-		} else {
+		} /*else if(statusCode == 403){//出砚403重新AUTH
+			Douban db = Douban.getInstance();
+			db.authorize(context, new SimpleDoubanOAuthListener());
+		}*/else {
 			// get the wrong message will return upstairs will charge in
 			// business level
 			// log out the status code and describe

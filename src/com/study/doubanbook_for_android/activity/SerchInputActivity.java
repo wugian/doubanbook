@@ -1,9 +1,5 @@
 package com.study.doubanbook_for_android.activity;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,13 +19,17 @@ import android.widget.TextView;
 import com.study.doubanbook_for_android.R;
 import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.auth.AccessToken;
+import com.study.doubanbook_for_android.auth.Douban;
+import com.study.doubanbook_for_android.auth.DoubanDialogError;
 import com.study.doubanbook_for_android.auth.KeepToken;
+import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
+import com.study.doubanbook_for_android.auth.Token;
 import com.study.doubanbook_for_android.business.DoubanBusiness;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.AuthorUser;
 import com.study.doubanbook_for_android.utils.DebugUtils;
-import com.study.doubanbook_for_android.utils.ShowErrorUtils;
-import com.study.doubanbook_for_android.utils.XMLReader;
+import com.study.doubanbook_for_android.utils.PrefUtils;
+import com.study.doubanbook_for_android.utils.ToastUtils;
 
 /**
  * TODO 13-12-24 在初始页面结束时,清除所有XML的TOKEN,是否有必要清除WEBVIEW的授权凭证
@@ -49,6 +50,8 @@ public class SerchInputActivity extends BaseActivity {
 	private static final int SEARCH_READER = 1;// search reader flag
 	private static final int GET_USERDETAIL_SUCCESS = 2;
 	private static final int GET_USERDETAIL_FAILURE = 3;
+	private static final int AUTHOR_SUCCESS = 4;
+	private static final int AUTHOR_FAILURE = 5;
 
 	DoubanBusiness doubanBusiness = new DoubanBusiness(this);
 
@@ -72,25 +75,15 @@ public class SerchInputActivity extends BaseActivity {
 				intent.putExtra("userDetail", ud);
 				startActivity(intent);
 				break;
-			case GET_USERDETAIL_FAILURE:
-				ShowErrorUtils.showWrongMsg(context, msg);
+			case AUTHOR_SUCCESS:
+				Token token = (Token) msg.obj;
+				ToastUtils.toast(context, token.douban_user_name + "登录成功");
+				authBtn.setText(token.douban_user_name);
 				break;
-			case 8:
-				String string = (String) msg.obj;
-				InputStream input = null;
-				try {
-					input = new ByteArrayInputStream(string.getBytes("UTF-8"));
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-				try {
-					XMLReader.parseXml(input);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				// CommentReslult al = XmlUtils.readXML(input);
-				// System.out.println(al.toString());
+			case AUTHOR_FAILURE:
+				DoubanDialogError e2 = (DoubanDialogError) msg.obj;
+				ToastUtils.toast(context, e2.getMessage());
+				break;
 			default:
 				break;
 			}
@@ -117,14 +110,42 @@ public class SerchInputActivity extends BaseActivity {
 		DebugUtils.e("CLASS", getClass().getName());
 		Looper looper = Looper.myLooper();
 		msgHandler = new MessageHandler(looper);
-
 		context = this;
+
 		findViews();
 		initWidgets();
 		initListners();
+		setNavagator("搜索主页", R.drawable.ic_setting);
 		// auto auth
-		doubanBusiness.auth();
+		if (PrefUtils.getAutoLogin(context)) {
+			auth();
+		}
+		// TODO this just test to delete
 		search_et.setText("求魔");
+	}
+
+	@Override
+	void initRightListener() {
+		super.initRightListener();
+		Intent intent = new Intent(this, SettingActivity.class);
+		startActivity(intent);
+	}
+
+	void auth() {
+		Douban douban = Douban.getInstance();
+		douban.authorize(context, new SimpleDoubanOAuthListener() {
+			@Override
+			public void onComplete(Token token) {
+				super.onComplete(token);
+				sendMessage(token, AUTHOR_SUCCESS);
+			}
+
+			@Override
+			public void onError(DoubanDialogError e) {
+				super.onError(e);
+				sendMessage(e, AUTHOR_FAILURE);
+			}
+		});
 	}
 
 	@Override
@@ -145,6 +166,12 @@ public class SerchInputActivity extends BaseActivity {
 		clear_tv.setVisibility(View.GONE);
 		// bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);// 下划线
 		readerSearch.setTextColor(Color.GRAY);
+		// 这个是设置需要旋转的角度，我设置的是180度
+		RotateAnimation rotateAnimation = new RotateAnimation(0, 90, 40, 0);
+		// 这个是设置通话时间的
+		rotateAnimation.setDuration(10);
+		rotateAnimation.setFillAfter(true);
+		authBtn.startAnimation(rotateAnimation);
 	}
 
 	@Override
@@ -152,7 +179,6 @@ public class SerchInputActivity extends BaseActivity {
 		super.initListners();
 
 		search_btn.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				System.out.println(flag);
@@ -209,7 +235,6 @@ public class SerchInputActivity extends BaseActivity {
 			public void onClick(View v) {
 				// bookSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//
 				// 下划线
-				// readerSearch.getPaint().setFlags(Paint.););
 				bookSearch.setTextColor(Color.BLACK);
 				readerSearch.setTextColor(Color.GRAY);
 				search_et.setHint(getResources().getString(
@@ -225,7 +250,6 @@ public class SerchInputActivity extends BaseActivity {
 			public void onClick(View v) {
 				// readerSearch.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//
 				// 下划线
-				// readerSearch.getPaint().setFlags(Paint.););
 				bookSearch.setTextColor(Color.GRAY);
 				readerSearch.setTextColor(Color.BLACK);
 				search_et.setHint(getResources().getString(
@@ -251,7 +275,7 @@ public class SerchInputActivity extends BaseActivity {
 							});
 				} else {
 					toast("请先进行登录授权");
-					doubanBusiness.auth();
+					auth();
 				}
 			}
 		});

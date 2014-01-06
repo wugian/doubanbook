@@ -1,5 +1,6 @@
 package com.study.doubanbook_for_android.auth;
 
+import com.study.doubanbook_for_android.utils.ToastUtils;
 import com.study.doubanbook_for_android.utils.UriUtils;
 
 import android.Manifest;
@@ -107,6 +108,7 @@ public class Douban {
 							+ accessToken.getToken() + " expires="
 							+ accessToken.getExpiresTime() + " refresh_token="
 							+ accessToken.getRefreshToken());
+					
 					KeepToken.keepAccessToken(context, accessToken);
 					listener.onComplete(token);
 				} else {

@@ -20,7 +20,9 @@ import com.study.doubanbook_for_android.activity.BaseActivity;
 import com.study.doubanbook_for_android.api.NetUtils;
 import com.study.doubanbook_for_android.api.WrongMsg;
 import com.study.doubanbook_for_android.auth.Douban;
+import com.study.doubanbook_for_android.auth.DoubanDialogError;
 import com.study.doubanbook_for_android.auth.SimpleDoubanOAuthListener;
+import com.study.doubanbook_for_android.auth.Token;
 import com.study.doubanbook_for_android.callback.AsynCallback;
 import com.study.doubanbook_for_android.model.Annotations;
 import com.study.doubanbook_for_android.model.AuthorUser;
@@ -36,6 +38,7 @@ import com.study.doubanbook_for_android.model.GeneralResult;
 import com.study.doubanbook_for_android.model.GeneralUserResult;
 import com.study.doubanbook_for_android.model.URLMananeger;
 import com.study.doubanbook_for_android.utils.DebugUtils;
+import com.study.doubanbook_for_android.utils.ToastUtils;
 import com.study.doubanbook_for_android.utils.XMLReader;
 
 
@@ -52,7 +55,18 @@ public class DoubanBusiness {
 	//--------------auth  userDetail-----------------------
 	public void auth(){
 		Douban douban = Douban.getInstance();
-		douban.authorize(context, new SimpleDoubanOAuthListener());
+		douban.authorize(context, new SimpleDoubanOAuthListener(){
+			@Override
+			public void onComplete(Token token) {
+				super.onComplete(token);
+				ToastUtils.toast(context, token.douban_user_name+"登录成功");
+			}
+			@Override
+			public void onError(DoubanDialogError e) {
+				super.onError(e);
+				ToastUtils.toast(context, e.getMessage());
+			}
+		});
 	}
 	/**
 	 * GET http://api.douban.com/labs/bubbler/user/ahbei  ahbei is user id
@@ -862,7 +876,7 @@ rating	打分	非必传，数字1～5为合法值，其他信息默认为不打�
 								commentId)), NetUtils.DELETE, keys, values,
 						context);
 
-				if (s.equals("OK")) {
+				if (s.equals("\"OK\"")) {
 					DebugUtils.d("NET", "right model");
 					callback.onSuccess(s);
 				}

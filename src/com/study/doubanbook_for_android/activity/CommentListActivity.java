@@ -37,7 +37,7 @@ public class CommentListActivity extends BaseP2RActivity<Entry> {
 		if (bookItem.getCurrent_user_collection() != null) {
 			setRightButton();
 		}
-		setNavagator("'" + bookItem.getTitle() + "' 的评论");
+		setNavagator("'" + bookItem.getTitle() + "' 的评论",0);
 		fetchData();
 	}
 
